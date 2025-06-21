@@ -26,16 +26,16 @@ class BestVacationPeriod {
     required this.worthScore,
   });
 
-  String formatDate(DateTime date) {
-    return '${_weekdayName(date.weekday)} ${date.day.toString().padLeft(2, '0')} ${_monthName(date.month)} ${date.year}';
+  static String formatDate(DateTime date) {
+    return '${weekdayName(date.weekday)} ${date.day.toString().padLeft(2, '0')} ${monthName(date.month)} ${date.year}';
   }
 
-  String _weekdayName(int weekday) {
+  static String weekdayName(int weekday) {
     const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return names[weekday - 1];
   }
 
-  String _monthName(int month) {
+  static String monthName(int month) {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'

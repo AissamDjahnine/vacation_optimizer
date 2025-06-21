@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'models/holiday.dart';
 import 'services/holiday_service.dart';
 import 'utils/date_optimizer.dart';
 import 'models/best_vacation_period.dart';
@@ -15,9 +14,7 @@ class VacationOptimizerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Vacation Optimizer',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
+      theme: ThemeData(primarySwatch: Colors.teal),
       home: const VacationHomePage(),
     );
   }
@@ -39,7 +36,6 @@ class _VacationHomePageState extends State<VacationHomePage> {
   List<BestVacationPeriod> optimizedPeriods = [];
 
   final _formKey = GlobalKey<FormState>();
-
   final List<int> availableYears = [2024, 2025, 2026];
   final List<int> availableMonths = List.generate(12, (index) => index + 1);
   final List<String> availableCountries = ['FR', 'US', 'DE'];
@@ -147,26 +143,50 @@ class _VacationHomePageState extends State<VacationHomePage> {
 
   Widget _buildResultCard(BestVacationPeriod period) {
     return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "🗓 ${period.formatDate(period.startDate)} → ${period.formatDate(period.endDate)}",
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              "🗓 ${BestVacationPeriod.formatDate(period.startDate)} → ${BestVacationPeriod.formatDate(period.endDate)}",
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text("🎉 Public Holiday: ${period.formatDate(period.relatedHoliday.date)} - ${period.relatedHoliday.localName}"),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
+            Text(
+              "🎉 Public Holiday: ${BestVacationPeriod.formatDate(period.relatedHoliday.date)} – ${period.relatedHoliday.localName}",
+              style: const TextStyle(fontSize: 14),
+            ),
+            const Divider(height: 20),
             Text("🏖️ Vacation used: ${period.vacationDaysUsed} days"),
-            Text("🎁 Total days off: ${period.totalDaysOff} days"),
-            const SizedBox(height: 6),
-            Text("🗂️ Vacation days to take:"),
-            Text(period.vacationDates.map(period.formatDate).join(", "), style: const TextStyle(color: Colors.blue)),
+            Text("😎 Total days off: ${period.totalDaysOff} days"),
+            Text("⭐ Worth score: ${period.worthScore.toStringAsFixed(2)}"),
+            const Divider(height: 20),
+            _buildDateGroup("➕ Vacation Days", period.vacationDates),
+            _buildDateGroup("🧩 Bridge Days", period.bridgeDates),
+            _buildDateGroup("😴 Weekend", period.weekendDates),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildDateGroup(String title, List<DateTime> dates) {
+    if (dates.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Text(
+          dates.map((d) => BestVacationPeriod.formatDate(d)).join(', '),
+          style: const TextStyle(color: Colors.teal),
+        ),
+        const SizedBox(height: 12),
+      ],
     );
   }
 }
