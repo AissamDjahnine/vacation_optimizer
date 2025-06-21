@@ -1,3 +1,4 @@
+// lib/models/best_vacation_period.dart
 import 'holiday.dart';
 
 class BestVacationPeriod {
@@ -8,10 +9,10 @@ class BestVacationPeriod {
   final double worthScore;
   final Holiday relatedHoliday;
 
-  final List<DateTime> vacationDates; // ➕ Leave you take
-  final List<DateTime> bridgeDates;   // 🧩 Adjacent to holiday
-  final List<DateTime> weekendDates;  // 😴 Saturday/Sunday
-  final DateTime holidayDate;         // 🎉 The holiday itself
+  final List<DateTime> vacationDates;
+  final List<DateTime> bridgeDates;
+  final List<DateTime> weekendDates;
+  final DateTime holidayDate;
 
   BestVacationPeriod({
     required this.startDate,
@@ -26,38 +27,20 @@ class BestVacationPeriod {
     required this.worthScore,
   });
 
-  static String formatDate(DateTime date) {
-    return '${weekdayName(date.weekday)} ${date.day.toString().padLeft(2, '0')} ${monthName(date.month)} ${date.year}';
+  String formatDate(DateTime date) {
+    return '${_weekdayName(date.weekday)} ${date.day.toString().padLeft(2, '0')} ${_monthName(date.month)} ${date.year}';
   }
 
-  static String weekdayName(int weekday) {
+  String _weekdayName(int weekday) {
     const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return names[weekday - 1];
   }
 
-  static String monthName(int month) {
+  String _monthName(int month) {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
     return months[month - 1];
-  }
-
-  String getSummary() {
-    final bridgeStr = bridgeDates.map(formatDate).join(', ');
-    final vacationStr = vacationDates.map(formatDate).join(', ');
-    final weekendStr = weekendDates.map(formatDate).join(', ');
-
-    return '''
-🗓 ${formatDate(startDate)} → ${formatDate(endDate)}
-🎉 Focused holiday: ${formatDate(holidayDate)} – ${relatedHoliday.localName}
-🏖️ Vacation used: $vacationDaysUsed days
-🎉 Total off: $totalDaysOff days
-⭐ Worth score: ${worthScore.toStringAsFixed(2)}
-
-🧩 Bridge days: ${bridgeStr.isEmpty ? 'None' : bridgeStr}
-➕ Extra vacation: ${vacationStr.isEmpty ? 'None' : vacationStr}
-😴 Weekend: ${weekendStr.isEmpty ? 'None' : weekendStr}
-''';
   }
 }
