@@ -1,4 +1,3 @@
-// lib/models/best_vacation_period.dart
 import 'holiday.dart';
 
 class BestVacationPeriod {
@@ -9,10 +8,9 @@ class BestVacationPeriod {
   final double worthScore;
   final Holiday relatedHoliday;
 
-  final List<DateTime> vacationDates;
-  final List<DateTime> bridgeDates;
-  final List<DateTime> weekendDates;
-  final DateTime holidayDate;
+  final List<DateTime> vacationDates; // ➕ Leave you take
+  final List<DateTime> bridgeDates;   // 🧩 Adjacent to holiday
+  final List<DateTime> weekendDates;  // 😴 Saturday/Sunday
 
   BestVacationPeriod({
     required this.startDate,
@@ -23,7 +21,6 @@ class BestVacationPeriod {
     required this.vacationDates,
     required this.bridgeDates,
     required this.weekendDates,
-    required this.holidayDate,
     required this.worthScore,
   });
 
@@ -42,5 +39,31 @@ class BestVacationPeriod {
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
     return months[month - 1];
+  }
+
+  String getRankColorEmoji() {
+    final diff = totalDaysOff - vacationDaysUsed;
+    if (diff >= 3) return '🟢';
+    if (diff == 2) return '🟠';
+    return '🔴';
+  }
+
+  String getSummary() {
+    final bridgeStr = bridgeDates.map(formatDate).join(', ');
+    final vacationStr = vacationDates.map(formatDate).join(', ');
+    final weekendStr = weekendDates.map(formatDate).join(', ');
+
+    return '''
+🗓 ${formatDate(startDate)} → ${formatDate(endDate)}
+🎉 Focused holiday: ${formatDate(relatedHoliday.date)} – ${relatedHoliday.localName}
+🏖️ Vacation used: $vacationDaysUsed days
+🎉 Total off: $totalDaysOff days
+⭐ Worth score: ${worthScore.toStringAsFixed(2)}
+${getRankColorEmoji()} Rank
+
+🧩 Bridge days: ${bridgeStr.isEmpty ? 'None' : bridgeStr}
+➕ Extra vacation: ${vacationStr.isEmpty ? 'None' : vacationStr}
+😴 Weekend: ${weekendStr.isEmpty ? 'None' : weekendStr}
+''';
   }
 }
