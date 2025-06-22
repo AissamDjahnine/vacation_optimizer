@@ -4,6 +4,11 @@ import '../utils/date_optimizer.dart';
 import 'results_screen.dart';
 import 'package:country_flags/country_flags.dart';
 
+const List<String> monthNames = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 class OptimizerScreen extends StatefulWidget {
   final String selectedCountry;
 
@@ -19,8 +24,16 @@ class _OptimizerScreenState extends State<OptimizerScreen> {
   int? vacationDays;
 
   final _formKey = GlobalKey<FormState>();
-  final availableYears = [2024, 2025, 2026];
-  final availableMonths = List.generate(12, (i) => i + 1);
+  final List<int> availableYears = [2024, 2025, 2026];
+
+  // ✅ Use this instead of conflicting `availableMonths`
+  final List<Map<String, dynamic>> monthOptions = List.generate(
+    12,
+        (index) => {
+      'label': monthNames[index],
+      'value': index + 1,
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +67,21 @@ class _OptimizerScreenState extends State<OptimizerScreen> {
               children: [
                 DropdownButtonFormField<int>(
                   decoration: const InputDecoration(labelText: 'Year', border: OutlineInputBorder()),
-                  items: availableYears.map((y) => DropdownMenuItem(value: y, child: Text('$y'))).toList(),
+                  items: availableYears
+                      .map((y) => DropdownMenuItem(value: y, child: Text('$y')))
+                      .toList(),
                   value: selectedYear,
                   onChanged: (v) => setState(() => selectedYear = v),
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<int>(
                   decoration: const InputDecoration(labelText: 'Month', border: OutlineInputBorder()),
-                  items: availableMonths.map((m) => DropdownMenuItem(value: m, child: Text(m.toString()))).toList(),
+                  items: monthOptions
+                      .map((m) => DropdownMenuItem<int>(
+                    value: m['value'],
+                    child: Text(m['label']),
+                  ))
+                      .toList(),
                   value: selectedMonth,
                   onChanged: (v) => setState(() => selectedMonth = v),
                 ),

@@ -18,10 +18,20 @@ class ResultsScreen extends StatefulWidget {
 class _ResultsScreenState extends State<ResultsScreen> {
   int visibleCount = 3;
 
+  List<String> selectedColors = ['🟢'];
+
+  // Active filters
+  final Set<String> selectedRanks = {'🟢', '🟠'};
+
   @override
   Widget build(BuildContext context) {
-    final visiblePeriods = widget.periods.take(visibleCount).toList();
-    final hasMore = visibleCount < widget.periods.length;
+    // Filtrage par couleur
+    final filteredPeriods = widget.periods
+        .where((p) => selectedRanks.contains(p.getRankColorEmoji()))
+        .toList();
+
+    final visiblePeriods = filteredPeriods.take(visibleCount).toList();
+    final hasMore = visibleCount < filteredPeriods.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,28 +43,78 @@ class _ResultsScreenState extends State<ResultsScreen> {
           )
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: hasMore ? visiblePeriods.length + 1 : visiblePeriods.length,
-        itemBuilder: (_, index) {
-          if (index < visiblePeriods.length) {
-            final period = visiblePeriods[index];
-            return _buildPeriodCard(period);
-          } else {
-            // "Load More" button
-            return Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    visibleCount += 3;
-                  });
-                },
-                child: const Text("Load more options"),
-              ),
-            );
-          }
-        },
+      body: Column(
+        children: [
+          _buildLegendAndFilters(),
+          const Divider(height: 0),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: hasMore ? visiblePeriods.length + 1 : visiblePeriods.length,
+              itemBuilder: (_, index) {
+                if (index < visiblePeriods.length) {
+                  return _buildPeriodCard(visiblePeriods[index]);
+                } else {
+                  return Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          visibleCount += 3;
+                        });
+                      },
+                      child: const Text("Load more options"),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+
+  Widget _buildLegendAndFilters() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Filter", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            children: [
+              _buildFilterCheckbox('🟢', 'Great (≥ +3)'),
+              _buildFilterCheckbox('🟠', 'Medium (+2)'),
+              _buildFilterCheckbox('🔴', 'Low (≤ +1)'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterCheckbox(String emoji, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Checkbox(
+          value: selectedRanks.contains(emoji),
+          onChanged: (_) {
+            setState(() {
+              if (selectedRanks.contains(emoji)) {
+                selectedRanks.remove(emoji);
+              } else {
+                selectedRanks.add(emoji);
+              }
+              visibleCount = 3; // Reset pagination
+            });
+          },
+        ),
+        Text('$emoji $label'),
+      ],
     );
   }
 
@@ -95,7 +155,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
       children: [
         Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        Text(dates.map((d) => period.formatDate(d)).join(', '), style: const TextStyle(color: Colors.teal)),
+        Text(
+          dates.map((d) => period.formatDate(d)).join(', '),
+          style: const TextStyle(color: Colors.teal),
+        ),
         const SizedBox(height: 12),
       ],
     );
