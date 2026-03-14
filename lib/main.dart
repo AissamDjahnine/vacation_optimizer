@@ -6,6 +6,7 @@ import 'app_routes.dart';
 import 'models/best_vacation_period.dart';
 import 'models/holiday.dart';
 import 'models/school_holiday_period.dart';
+import 'pages/content/bridges_year_page.dart';
 import 'services/holiday_service.dart';
 import 'services/school_holiday_service.dart';
 import 'utils/date_optimizer.dart';
@@ -27,6 +28,9 @@ class VacationOptimizerApp extends StatelessWidget {
     Widget page;
     if (routePath.isHome) {
       page = VacationSitePage(language: language);
+    } else if (routePath.contentPageType == ContentPageType.bridges &&
+        routePath.year != null) {
+      page = BridgesYearPage(year: routePath.year!, language: language);
     } else if (routePath.contentPageType == ContentPageType.holidays &&
         routePath.year != null) {
       page = HolidayCalendarPage(
