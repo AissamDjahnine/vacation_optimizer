@@ -46,6 +46,12 @@ class ContentPageScaffold extends StatelessWidget {
           ),
         ),
         iconTheme: const IconThemeData(color: Color(0xFF123458)),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: AppLanguageSwitch(language: language),
+          ),
+        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -65,16 +71,50 @@ class ContentPageScaffold extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      tr(title),
-                      style: theme.textTheme.displayMedium,
-                    ),
-                    const SizedBox(height: 12),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 760),
-                      child: Text(
-                        tr(subtitle),
-                        style: theme.textTheme.bodyLarge,
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.94),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: const Color(0xFFE2EAF3)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 7,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8FBFD),
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                color: const Color(0xFFE2EAF3),
+                              ),
+                            ),
+                            child: Text(
+                              isEnglish ? 'Guide' : 'Guide',
+                              style: const TextStyle(
+                                color: Color(0xFF123458),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            tr(title),
+                            style: theme.textTheme.displayMedium,
+                          ),
+                          const SizedBox(height: 12),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 760),
+                            child: Text(
+                              tr(subtitle),
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -105,7 +145,7 @@ class ContentPageScaffold extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: const Color(0xFFF8FBFD),
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(color: const Color(0xFFE2EAF3)),
                       ),
@@ -157,7 +197,7 @@ class _ContentSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 22, 24, 22),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(28),

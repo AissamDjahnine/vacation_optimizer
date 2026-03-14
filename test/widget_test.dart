@@ -23,6 +23,20 @@ void main() {
     expect(find.text('Ressources utiles'), findsOneWidget);
   });
 
+  testWidgets('le switch de langue fonctionne sur la page principale', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const VacationOptimizerApp());
+
+    expect(find.text('Simulateur'), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.text('EN').first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Planner'), findsAtLeastNWidgets(1));
+    expect(find.text('Recommended bridges'), findsAtLeastNWidgets(1));
+  });
+
   testWidgets('navigue vers la page Ponts et retrouve le CTA simulateur', (
     WidgetTester tester,
   ) async {
@@ -56,5 +70,27 @@ void main() {
 
     expect(find.text('Bridge ideas in France for 2026'), findsAtLeastNWidgets(1));
     expect(find.text('Use the planner'), findsOneWidget);
+  });
+
+  testWidgets('le switch de langue fonctionne aussi sur une page contenu', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const VacationOptimizerApp());
+
+    await tester.ensureVisible(find.text('Voir tous les ponts 2026'));
+    await tester.tap(find.text('Voir tous les ponts 2026'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ponts 2026 en France'), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.text('EN').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bridge ideas in France for 2026'), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.text('FR').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ponts 2026 en France'), findsAtLeastNWidgets(1));
   });
 }

@@ -243,7 +243,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
   final List<int> availableRttOptions = [0, 1, 2, 3];
   final List<String> availableSchoolZones = ['A', 'B', 'C'];
 
-  bool get isEnglish => widget.language == AppLanguage.en;
+  bool get isEnglish => appLanguageNotifier.value == AppLanguage.en;
   String tr(String fr, String en) => isEnglish ? en : fr;
   String get currentLocaleCode => isEnglish ? 'en' : 'fr';
   String _monthName(int month) {
@@ -327,6 +327,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
     super.initState();
     _applyInitialConfig();
     _refreshComputedCopy();
+    appLanguageNotifier.addListener(_handleLanguageChange);
     _scrollController.addListener(_handleScroll);
   }
 
@@ -340,6 +341,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
   @override
   void dispose() {
+    appLanguageNotifier.removeListener(_handleLanguageChange);
     _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
     super.dispose();
@@ -449,7 +451,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                                 label: tr('Simulateur', 'Planner'),
                                 onTap: () => _scrollTo(_homeKey),
                               ),
-                              _LanguageSwitch(language: widget.language),
+                              AppLanguageSwitch(language: widget.language),
                             ],
                           ),
                         ],
@@ -490,7 +492,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                           onTap: () => _scrollTo(_plannerKey),
                         ),
                         const SizedBox(width: 10),
-                        _LanguageSwitch(language: widget.language),
+                        AppLanguageSwitch(language: widget.language),
                       ],
                     );
                   },
@@ -997,7 +999,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              '$vacationDays jour${vacationDays == 1 ? '' : 's'}',
+              tr(
+                '$vacationDays jour${vacationDays == 1 ? '' : 's'}',
+                '$vacationDays day${vacationDays == 1 ? '' : 's'}',
+              ),
               style: const TextStyle(
                 color: Color(0xFF123458),
                 fontWeight: FontWeight.w700,
@@ -1482,7 +1487,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
         ),
         const SizedBox(height: 10),
         Text(
-          '${period.formatDate(period.startDate)} au ${period.formatDate(period.endDate)}',
+          tr(
+            '${period.formatDate(period.startDate)} au ${period.formatDate(period.endDate)}',
+            '${period.formatDate(period.startDate)} to ${period.formatDate(period.endDate)}',
+          ),
           style: const TextStyle(
             color: Color(0xFF60768D),
             fontWeight: FontWeight.w600,
@@ -2180,6 +2188,13 @@ class _VacationSitePageState extends State<VacationSitePage> {
     }
   }
 
+  void _handleLanguageChange() {
+    if (!mounted) {
+      return;
+    }
+    setState(_refreshComputedCopy);
+  }
+
   Future<void> _scrollToTop() async {
     await _scrollController.animateTo(
       0,
@@ -2656,33 +2671,6 @@ class _DayVisualStyle {
   final String label;
   final Color background;
   final Color foreground;
-}
-
-class _LanguageSwitch extends StatelessWidget {
-  const _LanguageSwitch({required this.language});
-
-  final AppLanguage language;
-
-  @override
-  Widget build(BuildContext context) {
-    return SegmentedButton<AppLanguage>(
-      segments: const [
-        ButtonSegment(value: AppLanguage.fr, label: Text('FR')),
-        ButtonSegment(value: AppLanguage.en, label: Text('EN')),
-      ],
-      selected: {language},
-      onSelectionChanged: (selection) {
-        appLanguageNotifier.value = selection.first;
-      },
-      showSelectedIcon: false,
-      style: ButtonStyle(
-        visualDensity: VisualDensity.compact,
-        padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-        ),
-      ),
-    );
-  }
 }
 
 class _EntranceReveal extends StatefulWidget {

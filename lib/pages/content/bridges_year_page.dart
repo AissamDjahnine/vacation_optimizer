@@ -20,31 +20,37 @@ class BridgesYearPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = buildBridgesPageContent(year);
+    return ValueListenableBuilder<AppLanguage>(
+      valueListenable: appLanguageNotifier,
+      builder: (context, currentLanguage, _) {
+        final content = buildBridgesPageContent(year);
 
-    return ContentPageScaffold(
-      language: language,
-      title: content.title,
-      subtitle: content.subtitle,
-      sections: content.sections,
-      simulatorLabel: const LocalizedTextData(
-        fr: 'Utiliser le simulateur',
-        en: 'Use the planner',
-      ),
-      onOpenSimulator: () => Navigator.of(context).pushNamed(AppRoutePath.homePath()),
-      relatedLinks: [
-        RelatedContentLinkData(
-          label: const LocalizedTextData(
-            fr: 'Voir les jours fériés',
-            en: 'See public holidays',
+        return ContentPageScaffold(
+          language: currentLanguage,
+          title: content.title,
+          subtitle: content.subtitle,
+          sections: content.sections,
+          simulatorLabel: const LocalizedTextData(
+            fr: 'Utiliser le simulateur',
+            en: 'Use the planner',
           ),
-          route: AppRoutePath.contentPath(ContentPageType.holidays, year),
-        ),
-      ],
-      beforeSections: _BridgesScenarioPanel(
-        language: language,
-        scenarios: content.scenarios,
-      ),
+          onOpenSimulator: () =>
+              Navigator.of(context).pushNamed(AppRoutePath.homePath()),
+          relatedLinks: [
+            RelatedContentLinkData(
+              label: const LocalizedTextData(
+                fr: 'Voir les jours fériés',
+                en: 'See public holidays',
+              ),
+              route: AppRoutePath.contentPath(ContentPageType.holidays, year),
+            ),
+          ],
+          beforeSections: _BridgesScenarioPanel(
+            language: currentLanguage,
+            scenarios: content.scenarios,
+          ),
+        );
+      },
     );
   }
 }
@@ -67,7 +73,7 @@ class _BridgesScenarioPanel extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FBFD),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: const Color(0xFFE2EAF3)),
       ),
@@ -134,7 +140,7 @@ class _ScenarioCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFF8FBFD),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: const Color(0xFFE2EAF3)),
       ),

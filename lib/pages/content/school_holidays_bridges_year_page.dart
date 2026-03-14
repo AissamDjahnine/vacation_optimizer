@@ -35,7 +35,7 @@ class _SchoolHolidaysBridgesYearPageState
   bool isLoading = true;
   String? errorMessage;
 
-  bool get isEnglish => widget.language == AppLanguage.en;
+  bool get isEnglish => appLanguageNotifier.value == AppLanguage.en;
   String tr(String fr, String en) => isEnglish ? en : fr;
 
   @override
@@ -46,43 +46,54 @@ class _SchoolHolidaysBridgesYearPageState
 
   @override
   Widget build(BuildContext context) {
-    final content = buildSchoolHolidaysBridgesPageContent(selectedYear);
+    return ValueListenableBuilder<AppLanguage>(
+      valueListenable: appLanguageNotifier,
+      builder: (context, currentLanguage, _) {
+        final content = buildSchoolHolidaysBridgesPageContent(selectedYear);
 
-    return ContentPageScaffold(
-      language: widget.language,
-      title: content.title,
-      subtitle: content.subtitle,
-      sections: content.sections,
-      simulatorLabel: LocalizedTextData(
-        fr: 'Utiliser le simulateur en zone $selectedZone',
-        en: 'Use the planner for zone $selectedZone',
-      ),
-      onOpenSimulator: () => Navigator.of(context).pushNamed(
-        AppRoutePath.homePath(),
-        arguments: PlannerInitialConfig(
-          year: selectedYear,
-          schoolZone: selectedZone,
-          scrollToPlanner: true,
-        ),
-      ),
-      relatedLinks: [
-        RelatedContentLinkData(
-          label: const LocalizedTextData(
-            fr: 'Voir les ponts',
-            en: 'See bridge ideas',
+        return ContentPageScaffold(
+          language: currentLanguage,
+          title: content.title,
+          subtitle: content.subtitle,
+          sections: content.sections,
+          simulatorLabel: LocalizedTextData(
+            fr: 'Utiliser le simulateur en zone $selectedZone',
+            en: 'Use the planner for zone $selectedZone',
           ),
-          route: AppRoutePath.contentPath(ContentPageType.bridges, selectedYear),
-        ),
-        RelatedContentLinkData(
-          label: const LocalizedTextData(
-            fr: 'Voir les jours fériés',
-            en: 'See public holidays',
+          onOpenSimulator: () => Navigator.of(context).pushNamed(
+            AppRoutePath.homePath(),
+            arguments: PlannerInitialConfig(
+              year: selectedYear,
+              schoolZone: selectedZone,
+              scrollToPlanner: true,
+            ),
           ),
-          route: AppRoutePath.contentPath(ContentPageType.holidays, selectedYear),
-        ),
-      ],
-      beforeSections: _buildPeriodsPanel(),
-      afterSections: _buildSources(),
+          relatedLinks: [
+            RelatedContentLinkData(
+              label: const LocalizedTextData(
+                fr: 'Voir les ponts',
+                en: 'See bridge ideas',
+              ),
+              route: AppRoutePath.contentPath(
+                ContentPageType.bridges,
+                selectedYear,
+              ),
+            ),
+            RelatedContentLinkData(
+              label: const LocalizedTextData(
+                fr: 'Voir les jours fériés',
+                en: 'See public holidays',
+              ),
+              route: AppRoutePath.contentPath(
+                ContentPageType.holidays,
+                selectedYear,
+              ),
+            ),
+          ],
+          beforeSections: _buildPeriodsPanel(),
+          afterSections: _buildSources(),
+        );
+      },
     );
   }
 
@@ -166,8 +177,8 @@ class _SchoolHolidaysBridgesYearPageState
                   isLoading
                       ? tr('Chargement…', 'Loading...')
                       : tr(
-                          '${periods.length} périodes trouvées',
-                          '${periods.length} periods found',
+                          '${periods.length} périodes pour la zone $selectedZone',
+                          '${periods.length} periods for zone $selectedZone',
                         ),
                   style: const TextStyle(
                     color: Color(0xFF123458),
@@ -263,7 +274,7 @@ class _SchoolHolidaysBridgesYearPageState
                 for (var index = 0; index < periods.length; index++) ...[
                   _SchoolHolidayPeriodCard(
                     period: periods[index],
-                    language: widget.language,
+                    language: appLanguageNotifier.value,
                   ),
                   if (index < periods.length - 1) const SizedBox(height: 12),
                 ],
@@ -287,8 +298,8 @@ class _SchoolHolidaysBridgesYearPageState
       (
         title: 'data.gouv.fr',
         description: tr(
-          'API calendrier scolaire utilisée pour charger les périodes',
-          'School holiday API used to load the periods',
+          'Source des périodes affichées sur cette page',
+          'Source of the periods shown on this page',
         ),
         url: 'https://www.data.gouv.fr/fr/dataservices/api-calendrier-scolaire/',
       ),

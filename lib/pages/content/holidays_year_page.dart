@@ -31,7 +31,7 @@ class _HolidaysYearPageState extends State<HolidaysYearPage> {
   bool isLoading = true;
   String? errorMessage;
 
-  bool get isEnglish => widget.language == AppLanguage.en;
+  bool get isEnglish => appLanguageNotifier.value == AppLanguage.en;
   String tr(String fr, String en) => isEnglish ? en : fr;
 
   @override
@@ -42,30 +42,38 @@ class _HolidaysYearPageState extends State<HolidaysYearPage> {
 
   @override
   Widget build(BuildContext context) {
-    final content = buildHolidaysPageContent(selectedYear);
+    return ValueListenableBuilder<AppLanguage>(
+      valueListenable: appLanguageNotifier,
+      builder: (context, currentLanguage, _) {
+        final content = buildHolidaysPageContent(selectedYear);
 
-    return ContentPageScaffold(
-      language: widget.language,
-      title: content.title,
-      subtitle: content.subtitle,
-      sections: content.sections,
-      simulatorLabel: const LocalizedTextData(
-        fr: 'Utiliser le simulateur',
-        en: 'Use the planner',
-      ),
-      onOpenSimulator: () =>
-          Navigator.of(context).pushNamed(AppRoutePath.homePath()),
-      relatedLinks: [
-        RelatedContentLinkData(
-          label: const LocalizedTextData(
-            fr: 'Voir les ponts',
-            en: 'See bridge ideas',
+        return ContentPageScaffold(
+          language: currentLanguage,
+          title: content.title,
+          subtitle: content.subtitle,
+          sections: content.sections,
+          simulatorLabel: const LocalizedTextData(
+            fr: 'Utiliser le simulateur',
+            en: 'Use the planner',
           ),
-          route: AppRoutePath.contentPath(ContentPageType.bridges, selectedYear),
-        ),
-      ],
-      beforeSections: _buildAnnualPanel(),
-      afterSections: _buildOfficialSources(),
+          onOpenSimulator: () =>
+              Navigator.of(context).pushNamed(AppRoutePath.homePath()),
+          relatedLinks: [
+            RelatedContentLinkData(
+              label: const LocalizedTextData(
+                fr: 'Voir les ponts',
+                en: 'See bridge ideas',
+              ),
+              route: AppRoutePath.contentPath(
+                ContentPageType.bridges,
+                selectedYear,
+              ),
+            ),
+          ],
+          beforeSections: _buildAnnualPanel(),
+          afterSections: _buildOfficialSources(),
+        );
+      },
     );
   }
 
@@ -127,8 +135,8 @@ class _HolidaysYearPageState extends State<HolidaysYearPage> {
                   isLoading
                       ? tr('Chargement…', 'Loading...')
                       : tr(
-                          '${holidays.length} jours fériés chargés',
-                          '${holidays.length} public holidays loaded',
+                          '${holidays.length} jours fériés en $selectedYear',
+                          '${holidays.length} public holidays in $selectedYear',
                         ),
                   style: const TextStyle(
                     color: Color(0xFF123458),
@@ -234,7 +242,7 @@ class _HolidaysYearPageState extends State<HolidaysYearPage> {
                   _MonthHolidayBlock(
                     monthLabel: _monthName(entry.key),
                     holidays: entry.value,
-                    language: widget.language,
+                    language: appLanguageNotifier.value,
                   ),
                   const SizedBox(height: 14),
                 ],
@@ -266,8 +274,8 @@ class _HolidaysYearPageState extends State<HolidaysYearPage> {
       (
         title: 'Nager.Date',
         subtitle: tr(
-          'Source API des jours fériés utilisée dans l’application',
-          'Holiday API source used by the app',
+          'Source des dates affichées sur cette page',
+          'Source of the dates shown on this page',
         ),
         url: 'https://date.nager.at',
       ),
