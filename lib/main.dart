@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'app_routes.dart';
 import 'models/best_vacation_period.dart';
 import 'models/holiday.dart';
 import 'models/school_holiday_period.dart';
@@ -21,6 +22,38 @@ void main() {
 
 class VacationOptimizerApp extends StatelessWidget {
   const VacationOptimizerApp({super.key});
+
+  Route<dynamic> _buildRoute(
+    RouteSettings settings,
+    AppLanguage language,
+  ) {
+    final routePath = AppRoutePath.parse(settings.name);
+    Widget page;
+    if (routePath.isHome) {
+      page = VacationSitePage(language: language);
+    } else if (routePath.contentPageType == ContentPageType.holidays &&
+        routePath.year != null) {
+      page = HolidayCalendarPage(
+        availableYears: VacationSitePage.availableYears,
+        initialYear: routePath.year!,
+        language: language,
+      );
+    } else {
+      page = VacationSitePage(language: language);
+    }
+
+    return MaterialPageRoute<void>(
+      settings: RouteSettings(
+        name: routePath.isHome
+            ? AppRoutePath.homePath()
+            : AppRoutePath.contentPath(
+                routePath.contentPageType!,
+                routePath.year!,
+              ),
+      ),
+      builder: (_) => page,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +170,8 @@ class VacationOptimizerApp extends StatelessWidget {
               ),
             ),
           ),
-          home: VacationSitePage(language: language),
+          initialRoute: AppRoutePath.homePath(),
+          onGenerateRoute: (settings) => _buildRoute(settings, language),
         );
       },
     );
@@ -148,6 +182,10 @@ class VacationSitePage extends StatefulWidget {
   const VacationSitePage({super.key, required this.language});
 
   final AppLanguage language;
+  static final List<int> availableYears = List.generate(
+    4,
+    (index) => DateTime.now().year + index,
+  );
 
   @override
   State<VacationSitePage> createState() => _VacationSitePageState();
@@ -180,10 +218,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
   bool showBackToTopButton = false;
   bool hasSearchedOnce = false;
 
-  late final List<int> availableYears = List.generate(
-    4,
-    (index) => DateTime.now().year + index,
-  );
+  late final List<int> availableYears = VacationSitePage.availableYears;
   final List<int> availableMonths = List.generate(12, (index) => index + 1);
   final List<int> availableRttOptions = [0, 1, 2, 3];
   final List<String> availableSchoolZones = ['A', 'B', 'C'];
@@ -2003,10 +2038,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
   }
 
   void _openHolidayPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => HolidayCalendarPage(availableYears: availableYears),
-      ),
+    Navigator.of(
+      context,
+    ).pushNamed(
+      AppRoutePath.contentPath(ContentPageType.holidays, selectedYear),
     );
   }
 }
@@ -2363,16 +2398,23 @@ class _EntranceRevealState extends State<_EntranceReveal> {
 }
 
 class HolidayCalendarPage extends StatefulWidget {
-  const HolidayCalendarPage({super.key, required this.availableYears});
+  const HolidayCalendarPage({
+    super.key,
+    required this.availableYears,
+    required this.initialYear,
+    required this.language,
+  });
 
   final List<int> availableYears;
+  final int initialYear;
+  final AppLanguage language;
 
   @override
   State<HolidayCalendarPage> createState() => _HolidayCalendarPageState();
 }
 
 class _HolidayCalendarPageState extends State<HolidayCalendarPage> {
-  late int selectedYear = widget.availableYears.first;
+  late int selectedYear = widget.initialYear;
   List<Holiday> holidays = [];
   bool isLoading = true;
   String? errorMessage;
