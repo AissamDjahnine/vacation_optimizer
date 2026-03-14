@@ -219,9 +219,6 @@ class _VacationSitePageState extends State<VacationSitePage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _homeKey = GlobalKey();
   final GlobalKey _plannerKey = GlobalKey();
-  final GlobalKey _aboutKey = GlobalKey();
-  final GlobalKey _privacyKey = GlobalKey();
-  final GlobalKey _contactKey = GlobalKey();
 
   int selectedYear = DateTime.now().year;
   int selectedMonth = DateTime.now().month;
@@ -369,6 +366,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
               children: [
                 _buildTopNavigation(theme),
                 _buildPlannerSection(theme),
+                _buildResourcesSection(theme),
                 _buildFooter(theme),
               ],
             ),
@@ -412,28 +410,36 @@ class _VacationSitePageState extends State<VacationSitePage> {
                             runSpacing: 6,
                             children: [
                               _NavButton(
-                                label: tr('Ponts', 'Bridges'),
-                                onTap: () => _scrollTo(_homeKey),
-                              ),
-                              _NavButton(
-                                label: tr('Simulateur', 'Planner'),
-                                onTap: () => _scrollTo(_plannerKey),
+                                label: tr(
+                                  'Ponts $selectedYear',
+                                  'Bridge ideas $selectedYear',
+                                ),
+                                onTap: () => Navigator.of(context).pushNamed(
+                                  AppRoutePath.contentPath(
+                                    ContentPageType.bridges,
+                                    selectedYear,
+                                  ),
+                                ),
                               ),
                               _NavButton(
                                 label: tr('Jours fériés', 'Holidays'),
                                 onTap: _openHolidayPage,
                               ),
                               _NavButton(
-                                label: tr('À propos', 'About'),
-                                onTap: () => _scrollTo(_aboutKey),
+                                label: tr(
+                                  'Vacances scolaires',
+                                  'School holidays',
+                                ),
+                                onTap: () => Navigator.of(context).pushNamed(
+                                  AppRoutePath.contentPath(
+                                    ContentPageType.schoolHolidaysBridges,
+                                    selectedYear,
+                                  ),
+                                ),
                               ),
                               _NavButton(
-                                label: tr('Confidentialité', 'Privacy'),
-                                onTap: () => _scrollTo(_privacyKey),
-                              ),
-                              _NavButton(
-                                label: tr('Contact', 'Contact'),
-                                onTap: () => _scrollTo(_contactKey),
+                                label: tr('Simulateur', 'Planner'),
+                                onTap: () => _scrollTo(_homeKey),
                               ),
                               _LanguageSwitch(language: widget.language),
                             ],
@@ -447,28 +453,33 @@ class _VacationSitePageState extends State<VacationSitePage> {
                         _buildBrand(theme),
                         const Spacer(),
                         _NavButton(
-                          label: tr('Ponts', 'Bridges'),
-                          onTap: () => _scrollTo(_homeKey),
-                        ),
-                        _NavButton(
-                          label: tr('Simulateur', 'Planner'),
-                          onTap: () => _scrollTo(_plannerKey),
+                          label: tr(
+                            'Ponts $selectedYear',
+                            'Bridge ideas $selectedYear',
+                          ),
+                          onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutePath.contentPath(
+                              ContentPageType.bridges,
+                              selectedYear,
+                            ),
+                          ),
                         ),
                         _NavButton(
                           label: tr('Jours fériés', 'Holidays'),
                           onTap: _openHolidayPage,
                         ),
                         _NavButton(
-                          label: tr('À propos', 'About'),
-                          onTap: () => _scrollTo(_aboutKey),
+                          label: tr('Vacances scolaires', 'School holidays'),
+                          onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutePath.contentPath(
+                              ContentPageType.schoolHolidaysBridges,
+                              selectedYear,
+                            ),
+                          ),
                         ),
                         _NavButton(
-                          label: tr('Confidentialité', 'Privacy'),
-                          onTap: () => _scrollTo(_privacyKey),
-                        ),
-                        _NavButton(
-                          label: tr('Contact', 'Contact'),
-                          onTap: () => _scrollTo(_contactKey),
+                          label: tr('Simulateur', 'Planner'),
+                          onTap: () => _scrollTo(_plannerKey),
                         ),
                         const SizedBox(width: 10),
                         _LanguageSwitch(language: widget.language),
@@ -1658,17 +1669,22 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
               final columns = [
                 _FooterColumn(
-                  key: _aboutKey,
                   title: 'PRODUIT',
-                  items: const ['Ponts par mois'],
+                  items: [
+                    tr('Ponts par mois', 'Bridges by month'),
+                    tr('Pages de contenu', 'Content pages'),
+                  ],
                 ),
                 _FooterColumn(
-                  key: _privacyKey,
                   title: 'CONFIDENTIALITÉ',
-                  items: const ['Pas de compte ni base de données'],
+                  items: [
+                    tr(
+                      'Pas de compte ni base de données',
+                      'No account or database',
+                    ),
+                  ],
                 ),
                 _FooterColumn(
-                  key: _contactKey,
                   title: 'CONTACT',
                   items: const ['contact@pontsmalins.com'],
                 ),
@@ -2092,6 +2108,116 @@ class _VacationSitePageState extends State<VacationSitePage> {
       AppRoutePath.contentPath(ContentPageType.holidays, selectedYear),
     );
   }
+
+  Widget _buildResourcesSection(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1180),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.95),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: const Color(0xFFE2EAF3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tr('Ressources utiles', 'Useful resources'),
+                  style: theme.textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  tr(
+                    'Trois pages pour préparer vos congés avant de lancer une simulation.',
+                    'Three pages to prepare your leave before launching a simulation.',
+                  ),
+                  style: theme.textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 20),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final stacked = constraints.maxWidth < 860;
+                    final cards = [
+                      _ResourceCard(
+                        title: tr(
+                          'Voir tous les ponts $selectedYear',
+                          'See all bridge ideas for $selectedYear',
+                        ),
+                        description: tr(
+                          'Résumé des scénarios et des logiques de pont.',
+                          'A compact summary of bridge scenarios and patterns.',
+                        ),
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutePath.contentPath(
+                            ContentPageType.bridges,
+                            selectedYear,
+                          ),
+                        ),
+                      ),
+                      _ResourceCard(
+                        title: tr(
+                          'Jours fériés $selectedYear',
+                          'Public holidays in $selectedYear',
+                        ),
+                        description: tr(
+                          'Liste annuelle, mois par mois, avec sources officielles.',
+                          'Yearly list, month by month, with official references.',
+                        ),
+                        onTap: _openHolidayPage,
+                      ),
+                      _ResourceCard(
+                        title: tr(
+                          'Vacances scolaires et ponts',
+                          'School holidays and bridges',
+                        ),
+                        description: tr(
+                          'Calendrier par zone A, B, C et impact sur les ponts.',
+                          'Zone A, B, C calendar and impact on bridge planning.',
+                        ),
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutePath.contentPath(
+                            ContentPageType.schoolHolidaysBridges,
+                            selectedYear,
+                          ),
+                        ),
+                      ),
+                    ];
+
+                    if (stacked) {
+                      return Column(
+                        children: [
+                          for (var index = 0; index < cards.length; index++) ...[
+                            cards[index],
+                            if (index < cards.length - 1)
+                              const SizedBox(height: 12),
+                          ],
+                        ],
+                      );
+                    }
+
+                    return Row(
+                      children: [
+                        for (var index = 0; index < cards.length; index++) ...[
+                          Expanded(child: cards[index]),
+                          if (index < cards.length - 1)
+                            const SizedBox(width: 14),
+                        ],
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _NavButton extends StatelessWidget {
@@ -2116,7 +2242,7 @@ class _NavButton extends StatelessWidget {
 }
 
 class _FooterColumn extends StatelessWidget {
-  const _FooterColumn({super.key, required this.title, required this.items});
+  const _FooterColumn({required this.title, required this.items});
 
   final String title;
   final List<String> items;
@@ -2268,6 +2394,63 @@ class _MonthArrowButton extends StatelessWidget {
           border: Border.all(color: const Color(0xFFE2EAF3)),
         ),
         child: Icon(icon, color: const Color(0xFF123458)),
+      ),
+    );
+  }
+}
+
+class _ResourceCard extends StatelessWidget {
+  const _ResourceCard({
+    required this.title,
+    required this.description,
+    required this.onTap,
+  });
+
+  final String title;
+  final String description;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FBFD),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0xFFE2EAF3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF123458),
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: const TextStyle(
+                color: Color(0xFF49627C),
+                height: 1.55,
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Ouvrir',
+              style: TextStyle(
+                color: Color(0xFFFF7A59),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
