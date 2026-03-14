@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_language.dart';
 import '../../app_routes.dart';
@@ -86,6 +87,7 @@ class _HolidaysAndBridges2027PageState
               ),
             ],
           ),
+          afterSections: _Holidays2027Sources(language: language),
         );
       },
     );
@@ -426,5 +428,112 @@ class _TableCell extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _Holidays2027Sources extends StatelessWidget {
+  const _Holidays2027Sources({required this.language});
+
+  final AppLanguage language;
+
+  bool get isEnglish => language == AppLanguage.en;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      (
+        'Service-Public.fr',
+        isEnglish ? 'Bridge days and yearly calendar' : 'Ponts et calendrier annuel',
+        'https://www.service-public.fr/particuliers/actualites/A15602',
+      ),
+      (
+        'Nager.Date',
+        isEnglish ? 'Source of the dates shown on this page' : 'Source des dates affichées sur cette page',
+        'https://date.nager.at',
+      ),
+    ];
+
+    return _SourcePanel(
+      title: isEnglish ? 'Official references' : 'Références officielles',
+      items: items,
+    );
+  }
+}
+
+class _SourcePanel extends StatelessWidget {
+  const _SourcePanel({
+    required this.title,
+    required this.items,
+  });
+
+  final String title;
+  final List<(String, String, String)> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0xFFE2EAF3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          const SizedBox(height: 16),
+          for (var index = 0; index < items.length; index++) ...[
+            InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () => _open(items[index].$3),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FBFD),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFFE2EAF3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      items[index].$1,
+                      style: const TextStyle(
+                        color: Color(0xFF123458),
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      items[index].$2,
+                      style: const TextStyle(
+                        color: Color(0xFF49627C),
+                        height: 1.45,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (index < items.length - 1) const SizedBox(height: 10),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Future<void> _open(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
   }
 }

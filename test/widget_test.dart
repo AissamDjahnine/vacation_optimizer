@@ -148,4 +148,20 @@ void main() {
     expect(find.text('FAQ – Ponts, jours fériés et congés'), findsAtLeastNWidgets(1));
     expect(find.text('Calculer mes ponts avec le simulateur'), findsOneWidget);
   });
+
+  testWidgets('le switch de langue fonctionne sur un guide', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const VacationOptimizerApp());
+
+    await tester.ensureVisible(find.text('Comment bien poser ses congés en 2026'));
+    await tester.tap(find.text('Comment bien poser ses congés en 2026'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('EN').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('How to plan your leave well in 2026'), findsAtLeastNWidgets(1));
+    expect(find.text('Use the 2026 planner'), findsOneWidget);
+  });
 }
