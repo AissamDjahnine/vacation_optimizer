@@ -240,6 +240,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _homeKey = GlobalKey();
   final GlobalKey _plannerKey = GlobalKey();
+  final GlobalKey _resourcesKey = GlobalKey();
 
   int selectedYear = DateTime.now().year;
   int selectedMonth = DateTime.now().month;
@@ -441,16 +442,8 @@ class _VacationSitePageState extends State<VacationSitePage> {
                             runSpacing: 6,
                             children: [
                               _NavButton(
-                                label: tr(
-                                  'Ponts $selectedYear',
-                                  'Bridge ideas $selectedYear',
-                                ),
-                                onTap: () => Navigator.of(context).pushNamed(
-                                  AppRoutePath.contentPath(
-                                    ContentPageType.bridges,
-                                    selectedYear,
-                                  ),
-                                ),
+                                label: tr('Guides', 'Guides'),
+                                onTap: () => _scrollTo(_resourcesKey),
                               ),
                               _NavButton(
                                 label: tr('Jours fériés', 'Holidays'),
@@ -484,16 +477,8 @@ class _VacationSitePageState extends State<VacationSitePage> {
                         _buildBrand(theme),
                         const Spacer(),
                         _NavButton(
-                          label: tr(
-                            'Ponts $selectedYear',
-                            'Bridge ideas $selectedYear',
-                          ),
-                          onTap: () => Navigator.of(context).pushNamed(
-                            AppRoutePath.contentPath(
-                              ContentPageType.bridges,
-                              selectedYear,
-                            ),
-                          ),
+                          label: tr('Guides', 'Guides'),
+                          onTap: () => _scrollTo(_resourcesKey),
                         ),
                         _NavButton(
                           label: tr('Jours fériés', 'Holidays'),
@@ -2242,6 +2227,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
   Widget _buildResourcesSection(ThemeData theme) {
     return Padding(
+      key: _resourcesKey,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
       child: Center(
         child: ConstrainedBox(
@@ -2258,14 +2244,14 @@ class _VacationSitePageState extends State<VacationSitePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tr('Ressources utiles', 'Useful resources'),
+                  tr('Guides utiles', 'Useful guides'),
                   style: theme.textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   tr(
-                    'Trois pages pour préparer vos congés avant de lancer une simulation.',
-                    'Three pages to prepare your leave before launching a simulation.',
+                    'Quatre pages pour comprendre les ponts, préparer vos congés et ensuite valider vos idées dans le simulateur.',
+                    'Four pages to understand bridge opportunities, prepare your leave, and then validate your ideas in the planner.',
                   ),
                   style: theme.textTheme.bodyLarge,
                 ),
@@ -2276,48 +2262,62 @@ class _VacationSitePageState extends State<VacationSitePage> {
                     final cards = [
                       _ResourceCard(
                         title: tr(
-                          'Voir tous les ponts $selectedYear',
-                          'See all bridge ideas for $selectedYear',
+                          'Comment bien poser ses congés en 2026',
+                          'How to plan your leave well in 2026',
                         ),
                         description: tr(
-                          'Résumé des scénarios et des logiques de pont.',
-                          'A compact summary of bridge scenarios and patterns.',
+                          'Les meilleurs mois, quelques scénarios concrets, et quand utiliser le simulateur pour arbitrer.',
+                          'The best months, a few concrete scenarios, and when to use the planner to arbitrate.',
                         ),
                         openLabel: tr('Ouvrir', 'Open'),
                         onTap: () => Navigator.of(context).pushNamed(
-                          AppRoutePath.contentPath(
-                            ContentPageType.bridges,
-                            selectedYear,
+                          AppRoutePath.guidePath(GuidePageType.guideLeave2026),
+                        ),
+                      ),
+                      _ResourceCard(
+                        title: tr(
+                          'Vacances scolaires 2026 et ponts',
+                          'School holidays 2026 and bridge ideas',
+                        ),
+                        description: tr(
+                          'Une page spéciale familles avec toggle de zone A, B, C et repères utiles avant simulation.',
+                          'A dedicated family guide with a zone A, B, C toggle and useful markers before you simulate.',
+                        ),
+                        openLabel: tr('Ouvrir', 'Open'),
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutePath.guidePath(
+                            GuidePageType.schoolHolidays2026,
                           ),
                         ),
                       ),
                       _ResourceCard(
                         title: tr(
-                          'Jours fériés $selectedYear',
-                          'Public holidays in $selectedYear',
+                          'Jours fériés 2027 et ponts',
+                          'Public holidays 2027 and bridge ideas',
                         ),
                         description: tr(
-                          'Liste annuelle, mois par mois, avec sources officielles.',
-                          'Yearly list, month by month, with official references.',
-                        ),
-                        openLabel: tr('Ouvrir', 'Open'),
-                        onTap: _openHolidayPage,
-                      ),
-                      _ResourceCard(
-                        title: tr(
-                          'Vacances scolaires et ponts',
-                          'School holidays and bridges',
-                        ),
-                        description: tr(
-                          'Calendrier par zone A, B, C et impact sur les ponts.',
-                          'Zone A, B, C calendar and impact on bridge planning.',
+                          'Une vue en avance sur 2027 pour commencer à préparer les bons mois dès maintenant.',
+                          'An early look at 2027 so you can start planning the right months now.',
                         ),
                         openLabel: tr('Ouvrir', 'Open'),
                         onTap: () => Navigator.of(context).pushNamed(
-                          AppRoutePath.contentPath(
-                            ContentPageType.schoolHolidaysBridges,
-                            selectedYear,
+                          AppRoutePath.guidePath(
+                            GuidePageType.holidays2027,
                           ),
+                        ),
+                      ),
+                      _ResourceCard(
+                        title: tr(
+                          'FAQ ponts et jours fériés',
+                          'FAQ on bridges and public holidays',
+                        ),
+                        description: tr(
+                          'Les réponses courtes aux questions fréquentes, avec sources officielles quand il faut.',
+                          'Short answers to common questions, with official sources when needed.',
+                        ),
+                        openLabel: tr('Ouvrir', 'Open'),
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutePath.guidePath(GuidePageType.faq),
                         ),
                       ),
                     ];
