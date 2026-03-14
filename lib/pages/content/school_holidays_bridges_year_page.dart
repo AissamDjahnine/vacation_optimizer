@@ -98,6 +98,11 @@ class _SchoolHolidaysBridgesYearPageState
   }
 
   Widget _buildPeriodsPanel() {
+    final monthLabels = <String>{};
+    for (final period in periods) {
+      monthLabels.add(_monthSpanLabel(period));
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -250,7 +255,7 @@ class _SchoolHolidaysBridgesYearPageState
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    for (final period in periods)
+                    for (final label in monthLabels)
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -261,7 +266,7 @@ class _SchoolHolidaysBridgesYearPageState
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(
-                          _monthSpanLabel(period),
+                          label,
                           style: const TextStyle(
                             color: Color(0xFF7A3E96),
                             fontWeight: FontWeight.w700,

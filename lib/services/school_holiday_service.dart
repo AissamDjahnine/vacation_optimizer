@@ -23,7 +23,7 @@ class SchoolHolidayService {
     final decoded = json.decode(response.body) as Map<String, dynamic>;
     final results = (decoded['results'] as List<dynamic>? ?? const []);
 
-    return results.map((raw) {
+    final periods = results.map((raw) {
       final json = raw as Map<String, dynamic>;
       return SchoolHolidayPeriod(
         description: json['description'] as String? ?? 'Vacances scolaires',
@@ -32,7 +32,21 @@ class SchoolHolidayService {
         zone: json['zones'] as String? ?? 'Zone $zone',
         schoolYear: json['annee_scolaire'] as String? ?? '',
       );
-    }).toList()
+    }).toList();
+
+    final uniquePeriods = <String, SchoolHolidayPeriod>{};
+    for (final period in periods) {
+      final key = [
+        period.description.trim(),
+        period.startDate.toIso8601String(),
+        period.endDate.toIso8601String(),
+        period.zone.trim(),
+        period.schoolYear.trim(),
+      ].join('|');
+      uniquePeriods.putIfAbsent(key, () => period);
+    }
+
+    return uniquePeriods.values.toList()
       ..sort((a, b) => a.startDate.compareTo(b.startDate));
   }
 }
