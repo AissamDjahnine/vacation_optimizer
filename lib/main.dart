@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'app_language.dart';
 import 'app_routes.dart';
 import 'models/best_vacation_period.dart';
 import 'models/holiday.dart';
@@ -9,12 +10,7 @@ import 'services/holiday_service.dart';
 import 'services/school_holiday_service.dart';
 import 'utils/date_optimizer.dart';
 
-enum AppLanguage { fr, en }
 enum PlanningMode { singleBridge, multipleBridges }
-
-final ValueNotifier<AppLanguage> appLanguageNotifier = ValueNotifier(
-  AppLanguage.fr,
-);
 
 void main() {
   runApp(const VacationOptimizerApp());
