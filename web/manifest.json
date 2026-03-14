@@ -1,0 +1,9 @@
+{
+  "name": "Bridge Days",
+  "short_name": "Bridge Days",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f1e8",
+  "theme_color": "#17352d",
+  "description": "A web-first leave planner for bridging public holidays into longer breaks."
+}

@@ -1,16 +1,23 @@
-# vacation_optimizer
+# Bridge Days
 
-An app to optimize vacation days
+Bridge Days is a web-first Flutter app that helps you turn public holidays into longer breaks.
 
-## Getting Started
+Choose a year, month, country, and leave budget, and the app ranks the strongest holiday-bridging windows for that month.
 
-This project is a starting point for a Flutter application.
+## Run locally
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+flutter run -d chrome
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Build for web
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```sh
+flutter build web
+```
+
+## Project scope
+
+- Web-first Flutter UI
+- Live public-holiday lookup via the Nager API
+- Leave-window ranking based on total time off versus leave days used
