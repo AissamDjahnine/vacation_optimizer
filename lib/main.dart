@@ -268,6 +268,61 @@ class _VacationSitePageState extends State<VacationSitePage> {
   bool get isEnglish => appLanguageNotifier.value == AppLanguage.en;
   String tr(String fr, String en) => isEnglish ? en : fr;
   String get currentLocaleCode => isEnglish ? 'en' : 'fr';
+
+  List<_PlannerPreset> get plannerPresets => [
+        _PlannerPreset(
+          title: tr('5 jours en mai 2026', '5 days in May 2026'),
+          description: tr(
+            'Pour trouver un premier gros pont propre sans vider votre budget.',
+            'To find a first clean long bridge without using all your budget.',
+          ),
+          apply: () => _applyPlannerPreset(
+            year: 2026,
+            month: 5,
+            days: 5,
+            rttDays: 0,
+            mode: PlanningMode.singleBridge,
+            zone: 'A',
+            preference: SchoolHolidayPreference.neutral,
+            overlap: true,
+          ),
+        ),
+        _PlannerPreset(
+          title: tr('10 jours, plusieurs ponts', '10 days, multiple breaks'),
+          description: tr(
+            'Pour répartir votre budget sur plusieurs respirations utiles.',
+            'To spread your budget across several useful breaks.',
+          ),
+          apply: () => _applyPlannerPreset(
+            year: 2026,
+            month: 5,
+            days: 10,
+            rttDays: 1,
+            mode: PlanningMode.multipleBridges,
+            zone: 'A',
+            preference: SchoolHolidayPreference.neutral,
+            overlap: true,
+          ),
+        ),
+        _PlannerPreset(
+          title: tr('Famille, zone B', 'Family, zone B'),
+          description: tr(
+            'Pour tester un mois familial avec les vacances scolaires visibles.',
+            'To test a family-oriented month with school holidays in view.',
+          ),
+          apply: () => _applyPlannerPreset(
+            year: 2026,
+            month: 5,
+            days: 5,
+            rttDays: 0,
+            mode: PlanningMode.singleBridge,
+            zone: 'B',
+            preference: SchoolHolidayPreference.favor,
+            overlap: true,
+          ),
+        ),
+      ];
+
   String _monthName(int month) {
     const monthsFr = [
       'Janvier',
@@ -675,13 +730,15 @@ class _VacationSitePageState extends State<VacationSitePage> {
           constraints: const BoxConstraints(maxWidth: 680),
           child: Text(
             tr(
-              'Sélectionnez le mois et votre budget de congés. Le site classe ensuite les meilleurs ponts pour ce mois.',
-              'Choose a month and your leave budget. The site then ranks the best bridge ideas for that month.',
+              'Choisissez un mois, un budget, puis regardez quelles dates vous donnent le plus de jours de repos.',
+              'Choose a month and a budget, then see which dates give you the most days off.',
             ),
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyLarge,
           ),
         ),
+        const SizedBox(height: 18),
+        _buildPlannerPresets(),
         const SizedBox(height: 18),
         SegmentedButton<PlanningMode>(
           segments: [
@@ -705,6 +762,63 @@ class _VacationSitePageState extends State<VacationSitePage> {
         const SizedBox(height: 18),
         _buildSchoolHolidayControls(),
       ],
+    );
+  }
+
+  Widget _buildPlannerPresets() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 920),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            tr(
+              'Exemples prêts à tester',
+              'Ready-to-test examples',
+            ),
+            style: const TextStyle(
+              color: Color(0xFF123458),
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 10),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final stacked = constraints.maxWidth < 860;
+              final cards = [
+                for (final preset in plannerPresets)
+                  _PlannerPresetCard(
+                    title: preset.title,
+                    description: preset.description,
+                    onTap: preset.apply,
+                    actionLabel: tr('Tester', 'Try it'),
+                  ),
+              ];
+
+              if (stacked) {
+                return Column(
+                  children: [
+                    for (var index = 0; index < cards.length; index++) ...[
+                      cards[index],
+                      if (index < cards.length - 1) const SizedBox(height: 10),
+                    ],
+                  ],
+                );
+              }
+
+              return Row(
+                children: [
+                  for (var index = 0; index < cards.length; index++) ...[
+                    Expanded(child: cards[index]),
+                    if (index < cards.length - 1) const SizedBox(width: 10),
+                  ],
+                ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -2085,6 +2199,30 @@ class _VacationSitePageState extends State<VacationSitePage> {
     });
   }
 
+  void _applyPlannerPreset({
+    required int year,
+    required int month,
+    required int days,
+    required int rttDays,
+    required PlanningMode mode,
+    required String zone,
+    required SchoolHolidayPreference preference,
+    required bool overlap,
+  }) {
+    setState(() {
+      selectedYear = year;
+      selectedMonth = month;
+      vacationDays = days;
+      selectedRttDays = rttDays;
+      selectedPlanningMode = mode;
+      selectedSchoolZone = zone;
+      selectedSchoolHolidayPreference = preference;
+      allowSchoolHolidayOverlap = overlap;
+      errorMessage = null;
+    });
+    _optimizeVacation();
+  }
+
   List<BestVacationPeriod> _buildResultsForCurrentMode({
     required List<Holiday> holidays,
     required List<SchoolHolidayPeriod> schoolHolidays,
@@ -2369,6 +2507,77 @@ class _NavButton extends StatelessWidget {
         style: const TextStyle(
           color: Color(0xFF123458),
           fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+class _PlannerPreset {
+  const _PlannerPreset({
+    required this.title,
+    required this.description,
+    required this.apply,
+  });
+
+  final String title;
+  final String description;
+  final VoidCallback apply;
+}
+
+class _PlannerPresetCard extends StatelessWidget {
+  const _PlannerPresetCard({
+    required this.title,
+    required this.description,
+    required this.onTap,
+    required this.actionLabel,
+  });
+
+  final String title;
+  final String description;
+  final VoidCallback onTap;
+  final String actionLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FBFD),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFE2EAF3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF123458),
+                fontWeight: FontWeight.w800,
+                fontSize: 17,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: const TextStyle(
+                color: Color(0xFF49627C),
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              actionLabel,
+              style: const TextStyle(
+                color: Color(0xFFFF7A59),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
         ),
       ),
     );

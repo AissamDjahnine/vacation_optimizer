@@ -20,6 +20,9 @@ void main() {
     expect(find.text('Guides'), findsAtLeastNWidgets(1));
     expect(find.text('Vacances scolaires'), findsAtLeastNWidgets(1));
     expect(find.text('RTT mensuel'), findsOneWidget);
+    expect(find.text('Exemples prêts à tester'), findsOneWidget);
+    expect(find.text('5 jours en mai 2026'), findsOneWidget);
+    expect(find.text('Famille, zone B'), findsOneWidget);
     expect(find.text('Ponts recommandés'), findsAtLeastNWidgets(1));
     expect(find.text('Mois suivant'), findsAtLeastNWidgets(1));
     expect(find.text('Guides utiles'), findsOneWidget);
