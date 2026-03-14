@@ -229,9 +229,8 @@ class _VacationSitePageState extends State<VacationSitePage> {
   SchoolHolidayPreference selectedSchoolHolidayPreference =
       SchoolHolidayPreference.neutral;
   bool allowSchoolHolidayOverlap = false;
-  String outputMessage =
-      'Choisissez un mois et lancez la recherche pour voir les meilleurs ponts.';
-  String loadingMessage = 'Recherche en cours...';
+  String outputMessage = '';
+  String loadingMessage = '';
   String? errorMessage;
   List<BestVacationPeriod> optimizedPeriods = [];
   List<SchoolHolidayPeriod> schoolHolidayPeriods = [];
@@ -327,7 +326,16 @@ class _VacationSitePageState extends State<VacationSitePage> {
   void initState() {
     super.initState();
     _applyInitialConfig();
+    _refreshComputedCopy();
     _scrollController.addListener(_handleScroll);
+  }
+
+  @override
+  void didUpdateWidget(covariant VacationSitePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.language != widget.language) {
+      _refreshComputedCopy();
+    }
   }
 
   @override
@@ -348,7 +356,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
               backgroundColor: const Color(0xFF123458),
               foregroundColor: Colors.white,
               icon: const Icon(Icons.arrow_upward_rounded),
-              label: const Text('Aller en haut'),
+              label: Text(tr('Aller en haut', 'Back to top')),
             )
           : null,
       body: Container(
@@ -1107,7 +1115,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    'Ponts recommandés',
+                    tr('Ponts recommandés', 'Recommended bridges'),
                     style: theme.textTheme.headlineMedium,
                   ),
                   Container(
@@ -1139,7 +1147,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: Text(
-                        '${optimizedPeriods.length} options classees',
+                        tr(
+                          '${optimizedPeriods.length} options classées',
+                          '${optimizedPeriods.length} ranked options',
+                        ),
                         style: const TextStyle(
                           color: Color(0xFF1D7A4A),
                           fontWeight: FontWeight.w700,
@@ -1181,10 +1192,13 @@ class _VacationSitePageState extends State<VacationSitePage> {
             style: theme.textTheme.bodyLarge,
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Le score compare le nombre total de jours de repos aux jours de congé payé posés.',
+          Text(
+            tr(
+              'Le score compare le nombre total de jours de repos aux jours de congé payé posés.',
+              'The score compares total days off with paid leave used.',
+            ),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF60768D),
               fontWeight: FontWeight.w600,
             ),
@@ -1267,11 +1281,11 @@ class _VacationSitePageState extends State<VacationSitePage> {
         ),
         OutlinedButton(
           onPressed: isLoading ? null : _goToPreviousMonth,
-          child: const Text('Mois précédent'),
+          child: Text(tr('Mois précédent', 'Previous month')),
         ),
         OutlinedButton(
           onPressed: isLoading ? null : _goToNextMonth,
-          child: const Text('Mois suivant'),
+          child: Text(tr('Mois suivant', 'Next month')),
         ),
       ],
     );
@@ -1289,8 +1303,8 @@ class _VacationSitePageState extends State<VacationSitePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
-            'Aucun pont trouvé',
+          Text(
+            tr('Aucun pont trouvé', 'No bridge found'),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
@@ -1298,10 +1312,13 @@ class _VacationSitePageState extends State<VacationSitePage> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Essayez un autre mois ou augmentez le budget de congés. Certaines combinaisons sont simplement trop courtes pour former un bon pont.',
+          Text(
+            tr(
+              'Essayez un autre mois ou augmentez le budget de congés. Certaines combinaisons sont simplement trop courtes pour former un bon pont.',
+              'Try another month or increase the leave budget. Some combinations are simply too short to create a good bridge.',
+            ),
             textAlign: TextAlign.center,
-            style: TextStyle(color: Color(0xFF60768D), height: 1.6),
+            style: const TextStyle(color: Color(0xFF60768D), height: 1.6),
           ),
           const SizedBox(height: 16),
           Wrap(
@@ -1310,11 +1327,11 @@ class _VacationSitePageState extends State<VacationSitePage> {
             children: [
               OutlinedButton(
                 onPressed: _goToNextMonth,
-                child: const Text('Mois suivant'),
+                child: Text(tr('Mois suivant', 'Next month')),
               ),
               ElevatedButton(
                 onPressed: _increaseVacationDays,
-                child: const Text('+1 jour de congé'),
+                child: Text(tr('+1 jour de congé', '+1 leave day')),
               ),
             ],
           ),
@@ -1383,8 +1400,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
     int rank, {
     required bool isTopPick,
   }) {
-    final title =
-        '${period.totalDaysOff} jours de repos pour ${period.paidLeaveDaysUsed} jour${period.paidLeaveDaysUsed == 1 ? '' : 's'} de congé payé';
+    final title = tr(
+      '${period.totalDaysOff} jours de repos pour ${period.paidLeaveDaysUsed} jour${period.paidLeaveDaysUsed == 1 ? '' : 's'} de congé payé',
+      '${period.totalDaysOff} days off for ${period.paidLeaveDaysUsed} paid leave day${period.paidLeaveDaysUsed == 1 ? '' : 's'}',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1396,8 +1415,11 @@ class _VacationSitePageState extends State<VacationSitePage> {
               color: const Color(0xFFFFE6DB),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: const Text(
-              'Meilleur rendement pour ce mois',
+            child: Text(
+              tr(
+                'Meilleur rendement pour ce mois',
+                'Best value this month',
+              ),
               style: TextStyle(
                 color: Color(0xFF9D5437),
                 fontWeight: FontWeight.w800,
@@ -1428,20 +1450,22 @@ class _VacationSitePageState extends State<VacationSitePage> {
               ),
             ),
             _MetricPill(
-              label: 'Score',
+              label: tr('Score', 'Score'),
               value: period.worthScore.toStringAsFixed(2),
-              tooltip:
-                  'Score = nombre total de jours de repos / nombre de jours de congé payé utilisés. Plus le score est élevé, plus le pont est rentable.',
+              tooltip: tr(
+                'Score = nombre total de jours de repos / nombre de jours de congé payé utilisés. Plus le score est élevé, plus le pont est rentable.',
+                'Score = total days off / paid leave used. The higher the score, the more efficient the bridge.',
+              ),
               emphasis: true,
             ),
             _MetricPill(
-              label: 'Fériés',
+              label: tr('Fériés', 'Holidays'),
               value: '${period.includedHolidays.length}',
             ),
             _MetricPill(label: 'RTT', value: '${period.rttDaysUsed}'),
             if (period.schoolHolidayDates.isNotEmpty)
               _MetricPill(
-                label: 'Scolaire',
+                label: tr('Scolaire', 'School'),
                 value: '${period.schoolHolidayDates.length}',
               ),
           ],
@@ -1473,7 +1497,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
-              '${period.schoolHolidayDates.length} jour${period.schoolHolidayDates.length == 1 ? '' : 's'} pendant les vacances scolaires',
+              tr(
+                '${period.schoolHolidayDates.length} jour${period.schoolHolidayDates.length == 1 ? '' : 's'} pendant les vacances scolaires',
+                '${period.schoolHolidayDates.length} day${period.schoolHolidayDates.length == 1 ? '' : 's'} during school holidays',
+              ),
               style: const TextStyle(
                 color: Color(0xFF7A3E96),
                 fontWeight: FontWeight.w800,
@@ -1483,7 +1510,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
         ],
         const SizedBox(height: 14),
         Text(
-          'Jours fériés inclus : ${period.includedHolidays.map((holiday) => holiday.localName).join(', ')}',
+          tr(
+            'Jours fériés inclus : ${period.includedHolidays.map((holiday) => holiday.localName).join(', ')}',
+            'Included public holidays: ${period.includedHolidays.map((holiday) => holiday.localName).join(', ')}',
+          ),
           style: const TextStyle(color: Color(0xFF60768D), height: 1.55),
         ),
         const SizedBox(height: 18),
@@ -1492,9 +1522,9 @@ class _VacationSitePageState extends State<VacationSitePage> {
           runSpacing: 10,
           children: [
             _BookingChip(
-              label: 'Congé payé',
+              label: tr('Congé payé', 'Paid leave'),
               value: period.paidLeaveDates.isEmpty
-                  ? 'Aucun'
+                  ? tr('Aucun', 'None')
                   : period.paidLeaveDates.map(_shortDay).join(', '),
               background: const Color(0xFFFFEEE7),
               foreground: const Color(0xFFB44A28),
@@ -1502,7 +1532,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
             _BookingChip(
               label: 'RTT',
               value: period.rttDates.isEmpty
-                  ? 'Aucun'
+                  ? tr('Aucun', 'None')
                   : period.rttDates.map(_shortDay).join(', '),
               background: const Color(0xFFEEF1FF),
               foreground: const Color(0xFF4456B0),
@@ -1533,8 +1563,8 @@ class _VacationSitePageState extends State<VacationSitePage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Vue jour par jour',
+              Text(
+                tr('Vue jour par jour', 'Day by day'),
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   color: Color(0xFF123458),
@@ -1589,7 +1619,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                         const SizedBox(height: 6),
                         Text(
                           isSchoolHoliday
-                              ? '${style.label} • Scolaire'
+                              ? '${style.label} • ${tr('Scolaire', 'School')}'
                               : style.label,
                           style: TextStyle(
                             color: isSchoolHoliday
@@ -1619,8 +1649,8 @@ class _VacationSitePageState extends State<VacationSitePage> {
       (holiday) => holiday.date == normalized,
     );
     if (isHoliday) {
-      return const _DayVisualStyle(
-        label: 'Férié',
+      return _DayVisualStyle(
+        label: tr('Férié', 'Holiday'),
         background: Color(0xFFFDE4A8),
         foreground: Color(0xFF835A00),
       );
@@ -1635,23 +1665,23 @@ class _VacationSitePageState extends State<VacationSitePage> {
     }
 
     if (period.paidLeaveDates.contains(normalized)) {
-      return const _DayVisualStyle(
-        label: 'Congé payé',
+      return _DayVisualStyle(
+        label: tr('Congé payé', 'Paid leave'),
         background: Color(0xFFFFD9C9),
         foreground: Color(0xFFAF4826),
       );
     }
 
     if (period.weekendDates.contains(normalized)) {
-      return const _DayVisualStyle(
-        label: 'Week-end',
+      return _DayVisualStyle(
+        label: tr('Week-end', 'Weekend'),
         background: Color(0xFFD8EFE6),
         foreground: Color(0xFF216550),
       );
     }
 
-    return const _DayVisualStyle(
-      label: 'Libre',
+    return _DayVisualStyle(
+      label: tr('Libre', 'Free'),
       background: Color(0xFFF1F5F9),
       foreground: Color(0xFF4B6076),
     );
@@ -1669,14 +1699,14 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
               final columns = [
                 _FooterColumn(
-                  title: 'PRODUIT',
+                  title: tr('PRODUIT', 'PRODUCT'),
                   items: [
                     tr('Ponts par mois', 'Bridges by month'),
                     tr('Pages de contenu', 'Content pages'),
                   ],
                 ),
                 _FooterColumn(
-                  title: 'CONFIDENTIALITÉ',
+                  title: tr('CONFIDENTIALITÉ', 'PRIVACY'),
                   items: [
                     tr(
                       'Pas de compte ni base de données',
@@ -1685,7 +1715,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                   ],
                 ),
                 _FooterColumn(
-                  title: 'CONTACT',
+                  title: tr('CONTACT', 'CONTACT'),
                   items: const ['contact@pontsmalins.com'],
                 ),
               ];
@@ -1838,7 +1868,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
       errorMessage = null;
       loadingMessage = 'Recherche des jours fériés...';
       outputMessage =
-          'On vérifie les jours fériés et on calcule les meilleurs ponts du mois.';
+          tr(
+            'On vérifie les jours fériés et on calcule les meilleurs ponts du mois.',
+            'Checking public holidays and computing the best bridges for this month.',
+          );
     });
 
     try {
@@ -1848,7 +1881,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
             selectedSchoolZone,
           );
       if (mounted) {
-        setState(() => loadingMessage = 'Calcul des ponts...');
+        setState(() => loadingMessage = tr('Calcul des ponts...', 'Computing bridges...'));
       }
       final singleResults = _buildResultsForCurrentMode(
         holidays: holidays,
@@ -1873,13 +1906,21 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
         if (selectedResults.isEmpty) {
           optimizedPeriods.clear();
-          outputMessage =
-              'Aucun pont pertinent trouvé pour ${_monthName(selectedMonth)} $selectedYear avec ces réglages.';
+          outputMessage = tr(
+            'Aucun pont pertinent trouvé pour ${_monthName(selectedMonth)} $selectedYear avec ces réglages.',
+            'No relevant bridge found for ${_monthName(selectedMonth)} $selectedYear with these settings.',
+          );
         } else {
           optimizedPeriods = selectedResults.take(6).toList();
           outputMessage = selectedPlanningMode == PlanningMode.singleBridge
-              ? 'Meilleures idées de ponts pour ${_monthName(selectedMonth)} $selectedYear.'
-              : '${optimizedPeriods.length} pont${optimizedPeriods.length == 1 ? '' : 's'} retenu${optimizedPeriods.length == 1 ? '' : 's'} pour ${_monthName(selectedMonth)} $selectedYear.';
+              ? tr(
+                  'Meilleures idées de ponts pour ${_monthName(selectedMonth)} $selectedYear.',
+                  'Best bridge ideas for ${_monthName(selectedMonth)} $selectedYear.',
+                )
+              : tr(
+                  '${optimizedPeriods.length} pont${optimizedPeriods.length == 1 ? '' : 's'} retenu${optimizedPeriods.length == 1 ? '' : 's'} pour ${_monthName(selectedMonth)} $selectedYear.',
+                  '${optimizedPeriods.length} bridge${optimizedPeriods.length == 1 ? '' : 's'} selected for ${_monthName(selectedMonth)} $selectedYear.',
+                );
         }
       });
     } catch (_) {
@@ -1889,10 +1930,14 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
       setState(() {
         optimizedPeriods.clear();
-        errorMessage =
-            'Impossible de charger les jours fériés pour le moment. Vérifiez la connexion et recommencez.';
-        outputMessage =
-            'Le simulateur a besoin des jours fériés en direct avant de sortir des recommandations.';
+        errorMessage = tr(
+          'Impossible de charger les jours fériés pour le moment. Vérifiez la connexion et recommencez.',
+          'Unable to load public holidays right now. Check the connection and try again.',
+        );
+        outputMessage = tr(
+          'Le simulateur a besoin des jours fériés en direct avant de sortir des recommandations.',
+          'The planner needs live public holidays before it can return recommendations.',
+        );
       });
     } finally {
       if (mounted) {
@@ -1960,6 +2005,56 @@ class _VacationSitePageState extends State<VacationSitePage> {
         }
       });
     }
+  }
+
+  void _refreshComputedCopy() {
+    loadingMessage = tr('Recherche en cours...', 'Loading...');
+
+    if (!hasSearchedOnce) {
+      outputMessage = tr(
+        'Choisissez un mois et lancez la recherche pour voir les meilleurs ponts.',
+        'Choose a month and launch a search to see the best bridge ideas.',
+      );
+      return;
+    }
+
+    if (isLoading) {
+      outputMessage = tr(
+        'On vérifie les jours fériés et on calcule les meilleurs ponts du mois.',
+        'Checking public holidays and computing the best bridges for this month.',
+      );
+      return;
+    }
+
+    if (errorMessage != null) {
+      errorMessage = tr(
+        'Impossible de charger les jours fériés pour le moment. Vérifiez la connexion et recommencez.',
+        'Unable to load public holidays right now. Check the connection and try again.',
+      );
+      outputMessage = tr(
+        'Le simulateur a besoin des jours fériés en direct avant de sortir des recommandations.',
+        'The planner needs live public holidays before it can return recommendations.',
+      );
+      return;
+    }
+
+    if (optimizedPeriods.isEmpty) {
+      outputMessage = tr(
+        'Aucun pont pertinent trouvé pour ${_monthName(selectedMonth)} $selectedYear avec ces réglages.',
+        'No relevant bridge found for ${_monthName(selectedMonth)} $selectedYear with these settings.',
+      );
+      return;
+    }
+
+    outputMessage = selectedPlanningMode == PlanningMode.singleBridge
+        ? tr(
+            'Meilleures idées de ponts pour ${_monthName(selectedMonth)} $selectedYear.',
+            'Best bridge ideas for ${_monthName(selectedMonth)} $selectedYear.',
+          )
+        : tr(
+            '${optimizedPeriods.length} pont${optimizedPeriods.length == 1 ? '' : 's'} retenu${optimizedPeriods.length == 1 ? '' : 's'} pour ${_monthName(selectedMonth)} $selectedYear.',
+            '${optimizedPeriods.length} bridge${optimizedPeriods.length == 1 ? '' : 's'} selected for ${_monthName(selectedMonth)} $selectedYear.',
+          );
   }
 
   void _setSchoolHolidayPreference(SchoolHolidayPreference preference) {
@@ -2095,10 +2190,10 @@ class _VacationSitePageState extends State<VacationSitePage> {
 
   String _rttLabel(int days) {
     if (days == 0) {
-      return 'Sans RTT';
+      return tr('Sans RTT', 'No RTT');
     }
 
-    return '$days RTT par mois';
+    return tr('$days RTT par mois', '$days RTT per month');
   }
 
   void _openHolidayPage() {
@@ -2152,6 +2247,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                           'Résumé des scénarios et des logiques de pont.',
                           'A compact summary of bridge scenarios and patterns.',
                         ),
+                        openLabel: tr('Ouvrir', 'Open'),
                         onTap: () => Navigator.of(context).pushNamed(
                           AppRoutePath.contentPath(
                             ContentPageType.bridges,
@@ -2168,6 +2264,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                           'Liste annuelle, mois par mois, avec sources officielles.',
                           'Yearly list, month by month, with official references.',
                         ),
+                        openLabel: tr('Ouvrir', 'Open'),
                         onTap: _openHolidayPage,
                       ),
                       _ResourceCard(
@@ -2179,6 +2276,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
                           'Calendrier par zone A, B, C et impact sur les ponts.',
                           'Zone A, B, C calendar and impact on bridge planning.',
                         ),
+                        openLabel: tr('Ouvrir', 'Open'),
                         onTap: () => Navigator.of(context).pushNamed(
                           AppRoutePath.contentPath(
                             ContentPageType.schoolHolidaysBridges,
@@ -2341,10 +2439,11 @@ class _SmartChoiceChip extends StatelessWidget {
                 : const Color(0xFFE2EAF3),
           ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Wrap(
+          spacing: 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            if (leadingIcon != null) ...[
+            if (leadingIcon != null)
               Icon(
                 leadingIcon,
                 size: 16,
@@ -2354,8 +2453,6 @@ class _SmartChoiceChip extends StatelessWidget {
                     ? Colors.white
                     : const Color(0xFF60768D),
               ),
-              const SizedBox(width: 6),
-            ],
             Text(
               label,
               style: TextStyle(
@@ -2403,11 +2500,13 @@ class _ResourceCard extends StatelessWidget {
   const _ResourceCard({
     required this.title,
     required this.description,
+    required this.openLabel,
     required this.onTap,
   });
 
   final String title;
   final String description;
+  final String openLabel;
   final VoidCallback onTap;
 
   @override
@@ -2442,9 +2541,9 @@ class _ResourceCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Ouvrir',
-              style: TextStyle(
+            Text(
+              openLabel,
+              style: const TextStyle(
                 color: Color(0xFFFF7A59),
                 fontWeight: FontWeight.w800,
               ),
