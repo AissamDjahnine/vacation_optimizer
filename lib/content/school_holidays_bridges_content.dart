@@ -31,6 +31,12 @@ SchoolHolidaysBridgesPageContent buildSchoolHolidaysBridgesPageContent(int year)
           fr: 'Pourquoi la zone compte',
           en: 'Why the school zone matters',
         ),
+        accent: ContentSectionAccent.purple,
+        chips: [
+          LocalizedTextData(fr: 'Zone A', en: 'Zone A'),
+          LocalizedTextData(fr: 'Zone B', en: 'Zone B'),
+          LocalizedTextData(fr: 'Zone C', en: 'Zone C'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -49,12 +55,23 @@ SchoolHolidaysBridgesPageContent buildSchoolHolidaysBridgesPageContent(int year)
             en: 'The planner can then favor or avoid those periods.',
           ),
         ],
+        example: LocalizedTextData(
+          fr: 'Exemple : un même week-end prolongé peut tomber en plein congé scolaire pour la zone B et hors vacances pour la zone C.',
+          en: 'Example: the same long weekend can land inside school holidays for zone B and outside them for zone C.',
+        ),
       ),
       ContentSectionData(
         title: LocalizedTextData(
           fr: 'Comment utiliser cette page',
           en: 'How to use this page',
         ),
+        accent: ContentSectionAccent.blue,
+        chips: [
+          LocalizedTextData(fr: 'Neutre', en: 'Neutral'),
+          LocalizedTextData(fr: 'Favoriser', en: 'Favor'),
+          LocalizedTextData(fr: 'Éviter', en: 'Avoid'),
+          LocalizedTextData(fr: 'Chevauchement', en: 'Overlap'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -73,6 +90,10 @@ SchoolHolidaysBridgesPageContent buildSchoolHolidaysBridgesPageContent(int year)
             en: 'Compare “Favor”, “Avoid”, and “Neutral” modes in the planner.',
           ),
         ],
+        specialCase: LocalizedTextData(
+          fr: 'Cas pratique : “Favoriser” active le chevauchement, “Éviter” le coupe, et “Neutre” laisse voir les deux familles d’options.',
+          en: 'Practical case: “Favor” enables overlap, “Avoid” disables it, and “Neutral” lets you compare both families of options.',
+        ),
       ),
     ],
   );

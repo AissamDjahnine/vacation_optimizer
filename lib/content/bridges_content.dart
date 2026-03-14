@@ -45,6 +45,12 @@ BridgesPageContent buildBridgesPageContent(int year) {
           fr: 'Ce qu’il faut regarder',
           en: 'What to look for',
         ),
+        accent: ContentSectionAccent.orange,
+        chips: [
+          LocalizedTextData(fr: 'Jeudi ou vendredi', en: 'Thursday or Friday'),
+          LocalizedTextData(fr: 'Mai et novembre', en: 'May and November'),
+          LocalizedTextData(fr: 'Gros pont ou plusieurs ponts', en: 'Single or multiple breaks'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -67,12 +73,22 @@ BridgesPageContent buildBridgesPageContent(int year) {
             en: 'Compare one long continuous break with several shorter bridges in the same month.',
           ),
         ],
+        example: LocalizedTextData(
+          fr: 'Exemple : un vendredi férié suivi d’un lundi posé transforme quatre jours en vraie coupure lisible.',
+          en: 'Example: a Friday public holiday plus a booked Monday turns four days into a clean break.',
+        ),
       ),
       ContentSectionData(
         title: LocalizedTextData(
           fr: 'Comment utiliser le simulateur',
           en: 'How to use the planner',
         ),
+        accent: ContentSectionAccent.blue,
+        chips: [
+          LocalizedTextData(fr: 'Mode', en: 'Mode'),
+          LocalizedTextData(fr: 'RTT', en: 'RTT'),
+          LocalizedTextData(fr: 'Budget congés', en: 'Leave budget'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -95,12 +111,22 @@ BridgesPageContent buildBridgesPageContent(int year) {
             en: 'Switch between “Single break” and “Multiple breaks” to compare two strategies.',
           ),
         ],
+        specialCase: LocalizedTextData(
+          fr: 'Cas utile : si deux fériés du même mois sont espacés, le mode “Plusieurs ponts” peut être plus malin qu’un seul bloc.',
+          en: 'Useful case: if two public holidays in the same month are spaced apart, “Multiple breaks” can outperform one block.',
+        ),
       ),
       ContentSectionData(
         title: LocalizedTextData(
           fr: 'Lecture rapide des résultats',
           en: 'How to read the results',
         ),
+        accent: ContentSectionAccent.green,
+        chips: [
+          LocalizedTextData(fr: 'Score', en: 'Score'),
+          LocalizedTextData(fr: 'Vue jour par jour', en: 'Day by day'),
+          LocalizedTextData(fr: 'Congés + RTT', en: 'Leave + RTT'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -119,6 +145,10 @@ BridgesPageContent buildBridgesPageContent(int year) {
             en: 'Top cards are the most efficient options for that month.',
           ),
         ],
+        example: LocalizedTextData(
+          fr: 'Exemple : une carte “7 jours de repos pour 2 jours de congé” doit se lire comme une option prioritaire du mois.',
+          en: 'Example: a card reading “7 days off for 2 leave days” should be read as a top monthly option.',
+        ),
       ),
     ],
     scenarios: [

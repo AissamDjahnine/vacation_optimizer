@@ -31,6 +31,12 @@ HolidaysPageContent buildHolidaysPageContent(int year) {
           fr: 'Comment lire cette page',
           en: 'How to use this page',
         ),
+        accent: ContentSectionAccent.blue,
+        chips: [
+          LocalizedTextData(fr: 'Vue annuelle', en: 'Year view'),
+          LocalizedTextData(fr: 'Par mois', en: 'By month'),
+          LocalizedTextData(fr: 'Repérage rapide', en: 'Quick scan'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -49,12 +55,22 @@ HolidaysPageContent buildHolidaysPageContent(int year) {
             en: 'Then use the Bridges page or the planner to test the best options.',
           ),
         ],
+        example: LocalizedTextData(
+          fr: 'Exemple : un mois avec un jeudi férié mérite presque toujours un test rapide dans le simulateur.',
+          en: 'Example: a month with a Thursday public holiday almost always deserves a quick planner test.',
+        ),
       ),
       ContentSectionData(
         title: LocalizedTextData(
           fr: 'Ce qui compte pour les ponts',
           en: 'What matters for bridge planning',
         ),
+        accent: ContentSectionAccent.orange,
+        chips: [
+          LocalizedTextData(fr: 'Lundi et vendredi', en: 'Monday and Friday'),
+          LocalizedTextData(fr: 'Mardi et jeudi', en: 'Tuesday and Thursday'),
+          LocalizedTextData(fr: 'Week-end proche', en: 'Near a weekend'),
+        ],
         body: [
           LocalizedTextData(
             fr:
@@ -73,6 +89,10 @@ HolidaysPageContent buildHolidaysPageContent(int year) {
             en: 'Friday or Monday: very good for extending a weekend.',
           ),
         ],
+        specialCase: LocalizedTextData(
+          fr: 'Cas particulier : un férié le samedi reste utile pour le calendrier général, mais souvent moins rentable pour un pont.',
+          en: 'Special case: a Saturday holiday still matters for the yearly calendar, but is often less efficient for a bridge.',
+        ),
       ),
     ],
   );
