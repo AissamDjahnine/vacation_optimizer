@@ -7,6 +7,8 @@ import 'models/holiday.dart';
 import 'models/school_holiday_period.dart';
 import 'pages/content/bridges_year_page.dart';
 import 'pages/content/holidays_year_page.dart';
+import 'pages/content/school_holidays_bridges_year_page.dart';
+import 'planner_initial_config.dart';
 import 'services/holiday_service.dart';
 import 'services/school_holiday_service.dart';
 import 'utils/date_optimizer.dart';
@@ -25,9 +27,15 @@ class VacationOptimizerApp extends StatelessWidget {
     AppLanguage language,
   ) {
     final routePath = AppRoutePath.parse(settings.name);
+    final plannerConfig = settings.arguments is PlannerInitialConfig
+        ? settings.arguments! as PlannerInitialConfig
+        : null;
     Widget page;
     if (routePath.isHome) {
-      page = VacationSitePage(language: language);
+      page = VacationSitePage(
+        language: language,
+        initialConfig: plannerConfig,
+      );
     } else if (routePath.contentPageType == ContentPageType.bridges &&
         routePath.year != null) {
       page = BridgesYearPage(year: routePath.year!, language: language);
@@ -38,8 +46,19 @@ class VacationOptimizerApp extends StatelessWidget {
         initialYear: routePath.year!,
         language: language,
       );
+    } else if (routePath.contentPageType ==
+            ContentPageType.schoolHolidaysBridges &&
+        routePath.year != null) {
+      page = SchoolHolidaysBridgesYearPage(
+        availableYears: VacationSitePage.availableYears,
+        initialYear: routePath.year!,
+        language: language,
+      );
     } else {
-      page = VacationSitePage(language: language);
+      page = VacationSitePage(
+        language: language,
+        initialConfig: plannerConfig,
+      );
     }
 
     return MaterialPageRoute<void>(
@@ -179,9 +198,14 @@ class VacationOptimizerApp extends StatelessWidget {
 }
 
 class VacationSitePage extends StatefulWidget {
-  const VacationSitePage({super.key, required this.language});
+  const VacationSitePage({
+    super.key,
+    required this.language,
+    this.initialConfig,
+  });
 
   final AppLanguage language;
+  final PlannerInitialConfig? initialConfig;
   static final List<int> availableYears = List.generate(
     4,
     (index) => DateTime.now().year + index,
@@ -305,6 +329,7 @@ class _VacationSitePageState extends State<VacationSitePage> {
   @override
   void initState() {
     super.initState();
+    _applyInitialConfig();
     _scrollController.addListener(_handleScroll);
   }
 
@@ -1896,6 +1921,29 @@ class _VacationSitePageState extends State<VacationSitePage> {
         vacationDays = vacationDays + 1;
       }
     });
+  }
+
+  void _applyInitialConfig() {
+    final config = widget.initialConfig;
+    if (config == null) {
+      return;
+    }
+
+    if (config.year != null && availableYears.contains(config.year)) {
+      selectedYear = config.year!;
+    }
+    if (config.schoolZone != null &&
+        availableSchoolZones.contains(config.schoolZone)) {
+      selectedSchoolZone = config.schoolZone!;
+    }
+
+    if (config.scrollToPlanner) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _scrollTo(_plannerKey);
+        }
+      });
+    }
   }
 
   void _setSchoolHolidayPreference(SchoolHolidayPreference preference) {
