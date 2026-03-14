@@ -8,6 +8,10 @@ import 'models/school_holiday_period.dart';
 import 'pages/content/bridges_year_page.dart';
 import 'pages/content/holidays_year_page.dart';
 import 'pages/content/school_holidays_bridges_year_page.dart';
+import 'pages/guides/faq_bridges_holidays_page.dart';
+import 'pages/guides/guide_leave_2026_page.dart';
+import 'pages/guides/holidays_and_bridges_2027_page.dart';
+import 'pages/guides/school_holidays_family_2026_page.dart';
 import 'planner_initial_config.dart';
 import 'services/holiday_service.dart';
 import 'services/school_holiday_service.dart';
@@ -36,6 +40,21 @@ class VacationOptimizerApp extends StatelessWidget {
         language: language,
         initialConfig: plannerConfig,
       );
+    } else if (routePath.isGuide) {
+      switch (routePath.guidePageType!) {
+        case GuidePageType.guideLeave2026:
+          page = const GuideLeave2026Page();
+          break;
+        case GuidePageType.schoolHolidays2026:
+          page = const SchoolHolidaysFamily2026Page();
+          break;
+        case GuidePageType.holidays2027:
+          page = const HolidaysAndBridges2027Page();
+          break;
+        case GuidePageType.faq:
+          page = const FaqBridgesHolidaysPage();
+          break;
+      }
     } else if (routePath.contentPageType == ContentPageType.bridges &&
         routePath.year != null) {
       page = BridgesYearPage(year: routePath.year!, language: language);
@@ -65,6 +84,8 @@ class VacationOptimizerApp extends StatelessWidget {
       settings: RouteSettings(
         name: routePath.isHome
             ? AppRoutePath.homePath()
+            : routePath.isGuide
+            ? AppRoutePath.guidePath(routePath.guidePageType!)
             : AppRoutePath.contentPath(
                 routePath.contentPageType!,
                 routePath.year!,
