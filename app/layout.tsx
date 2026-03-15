@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/site-shell";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className="min-h-screen text-ink">
         <SiteShell>{children}</SiteShell>
+        <SpeedInsights />
       </body>
     </html>
   );
