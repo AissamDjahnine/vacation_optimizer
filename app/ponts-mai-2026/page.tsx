@@ -4,7 +4,7 @@ import { getHolidaysForYear } from "@/lib/page-data";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Ponts de mai 2026",
+  title: "Ponts de mai 2026 : les meilleurs cas à tester",
   description: "Les ponts de mai 2026 à ouvrir en premier : 1er mai, 8 mai, Ascension, et les meilleurs cas à tester selon votre budget.",
   path: "/ponts-mai-2026",
   enPath: "/en/ponts-mai-2026",

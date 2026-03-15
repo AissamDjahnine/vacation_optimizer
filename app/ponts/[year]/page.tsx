@@ -20,7 +20,7 @@ export async function generateMetadata({
     return buildNotFoundMetadata("fr");
   }
   return buildMetadata({
-    title: `Ponts ${year} en France`,
+    title: `Ponts ${year} en France : meilleurs mois à tester`,
     description: `Les meilleurs mois et les meilleurs ponts ${year} à tester en France avant de revenir au simulateur avec votre budget exact.`,
     path: `/ponts/${year}`,
     enPath: `/en/ponts/${year}`,

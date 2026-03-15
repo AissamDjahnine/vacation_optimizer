@@ -366,6 +366,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr_1fr_auto_1.25fr] xl:items-start">
                   <Field label={language === "en" ? "Year" : "Année"}>
                     <select
+                      aria-label={language === "en" ? "Select year" : "Choisir l’année"}
                       value={safeYear}
                       onChange={(event) =>
                         setState((current) => ({
@@ -384,6 +385,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   </Field>
                   <Field label={language === "en" ? "Month" : "Mois"}>
                     <select
+                      aria-label={language === "en" ? "Select month" : "Choisir le mois"}
                       value={safeMonth}
                       onChange={(event) =>
                         setState((current) => ({
@@ -402,6 +404,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   </Field>
                   <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
                     <select
+                      aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
                       value={safeMonthlyRtt}
                       onChange={(event) =>
                         setState((current) => ({
@@ -426,6 +429,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   </Field>
                   <Field label={language === "en" ? "School zone" : "Zone scolaire"}>
                     <div
+                      aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
+                      role="group"
                       className={`inline-flex rounded-full border border-ink bg-white p-1 ${
                         zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
                       }`}
@@ -442,7 +447,15 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                     </div>
                   </Field>
                   <Field label={language === "en" ? "School holidays" : "Vacances scolaires"}>
-                    <div className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1">
+                    <div
+                      aria-label={
+                        language === "en"
+                          ? "Choose school holiday preference"
+                          : "Choisir la préférence vacances scolaires"
+                      }
+                      role="group"
+                      className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1"
+                    >
                       {[
                         { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
                         { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
@@ -500,7 +513,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                         ? `day${safePaidLeaveBudget > 1 ? "s" : ""} available`
                         : `jour${safePaidLeaveBudget > 1 ? "s" : ""} disponible${safePaidLeaveBudget > 1 ? "s" : ""}`}
                     </p>
-                    <p className="mt-3 text-sm leading-7 text-ink/65">
+                    <p className="mt-3 text-sm leading-7 text-ink/78">
                       {language === "en"
                         ? "Maximum number of working days to book. RTT is used first when enabled."
                         : "Maximum de jours ouvrés à poser. Les RTT, si activés, sont utilisés avant."}
@@ -511,6 +524,9 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   </div>
                 </div>
                 <input
+                  aria-label={
+                    language === "en" ? "Paid leave budget slider" : "Curseur du budget de congés payés"
+                  }
                   type="range"
                   min={1}
                   max={20}
@@ -601,7 +617,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </div>
 
               <div className="space-y-4">
-                <p className="text-lg text-ink/72">
+                <p className="text-lg text-ink/78">
                   {computation?.exact
                     ? language === "en"
                       ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
@@ -618,7 +634,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                           language,
                         )}.`}
                 </p>
-                <p className="font-semibold text-ink/64">
+                <p className="font-semibold text-ink/74">
                   {language === "en"
                     ? `If you kept every displayed suggestion, the cumulative total would be ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
                     : `Si vous gardiez toutes les suggestions affichées, le total cumulé serait de ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
@@ -676,7 +692,7 @@ function Field({
 }) {
   return (
     <label className="flex min-w-0 flex-col gap-2">
-      <span className="text-sm font-bold text-ink/68">{label}</span>
+      <span className="text-sm font-bold text-ink/80">{label}</span>
       {children}
     </label>
   );
@@ -697,18 +713,22 @@ function ModeButton({
   label,
   className,
   disabled = false,
+  ariaLabel,
 }: {
   active: boolean;
   onClick: () => void;
   label: string;
   className?: string;
   disabled?: boolean;
+  ariaLabel?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel ?? label}
+      aria-pressed={active}
       className={`inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-center text-sm font-bold leading-tight transition ${
         disabled
           ? active
