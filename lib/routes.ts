@@ -13,7 +13,10 @@ export type GuidePageType =
   | "vacances-scolaires-2026-zone-c"
   | "jours-feries-2026-semaine"
   | "poser-5-jours-conges-2026"
-  | "poser-10-jours-conges-2026";
+  | "poser-10-jours-conges-2026"
+  | "mentions-legales"
+  | "confidentialite"
+  | "sources-officielles";
 
 export const routes = {
   home: "/",
@@ -34,4 +37,7 @@ export const routes = {
   weekdayHolidays2026: "/jours-feries-2026-semaine",
   leaveBudget5Guide2026: "/poser-5-jours-conges-2026",
   leaveBudget10Guide2026: "/poser-10-jours-conges-2026",
+  legal: "/mentions-legales",
+  privacy: "/confidentialite",
+  sources: "/sources-officielles",
 };

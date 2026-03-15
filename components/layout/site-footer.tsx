@@ -16,6 +16,11 @@ export function SiteFooter({ language }: SiteFooterProps) {
           privacy: "No account, no saved data.",
           contact: "contact@pontsmalins.com",
           guides: "Useful guides",
+          trust: "Trust and legal",
+          sources: "Official sources",
+          legal: "Legal notice",
+          privacyPage: "Privacy",
+          note: "Built to make French leave planning clearer, then let you verify the final case with the right source.",
           links: [
             { href: routes.leaveGuide2026, label: "Leave guide 2026" },
             { href: routes.schoolHolidaysFamily2026, label: "School holidays 2026" },
@@ -29,6 +34,11 @@ export function SiteFooter({ language }: SiteFooterProps) {
           privacy: "Pas de compte, pas de données enregistrées.",
           contact: "contact@pontsmalins.com",
           guides: "Guides utiles",
+          trust: "Confiance et cadre",
+          sources: "Sources officielles",
+          legal: "Mentions légales",
+          privacyPage: "Confidentialité",
+          note: "Conçu pour rendre la planification plus claire, puis vous laisser vérifier le cas final avec la bonne source.",
           links: [
             { href: routes.leaveGuide2026, label: "Guide congés 2026" },
             { href: routes.schoolHolidaysFamily2026, label: "Vacances scolaires 2026" },
@@ -40,10 +50,41 @@ export function SiteFooter({ language }: SiteFooterProps) {
 
   return (
     <footer className="mt-24 border-t border-white/40 bg-[#171f31] py-14 text-white">
-      <div className="container-shell grid gap-10 md:grid-cols-[1.4fr,1fr,1fr,1fr]">
+      <div className="container-shell space-y-10">
+        <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 md:grid-cols-3">
+          <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+              {language === "en" ? "Public data" : "Données publiques"}
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white/74">
+              {language === "en"
+                ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
+                : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
+            </p>
+          </div>
+          <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+              {language === "en" ? "No account" : "Sans compte"}
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white/74">{copy.privacy}</p>
+          </div>
+          <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+              {language === "en" ? "Calendar export" : "Export agenda"}
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white/74">
+              {language === "en"
+                ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
+                : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
         <div className="space-y-4">
           <h2 className="text-2xl font-black">{copy.title}</h2>
           <p className="max-w-sm text-sm leading-7 text-white/74">{copy.summary}</p>
+          <p className="max-w-sm text-sm leading-7 text-white/58">{copy.note}</p>
         </div>
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
@@ -69,11 +110,32 @@ export function SiteFooter({ language }: SiteFooterProps) {
           ))}
         </div>
         <div className="space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
+            {copy.trust}
+          </h3>
+          <Link
+            href={localized(routes.sources)}
+            className="block text-white/84 transition hover:text-white"
+          >
+            {copy.sources}
+          </Link>
+          <Link href={localized(routes.legal)} className="block text-white/84 transition hover:text-white">
+            {copy.legal}
+          </Link>
+          <Link
+            href={localized(routes.privacy)}
+            className="block text-white/84 transition hover:text-white"
+          >
+            {copy.privacyPage}
+          </Link>
+        </div>
+        <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">Contact</h3>
           <a href={`mailto:${copy.contact}`} className="text-white/84 transition hover:text-white">
             {copy.contact}
           </a>
         </div>
+      </div>
       </div>
     </footer>
   );

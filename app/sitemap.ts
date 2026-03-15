@@ -27,6 +27,9 @@ const pages = [
   routes.weekdayHolidays2026,
   routes.leaveBudget5Guide2026,
   routes.leaveBudget10Guide2026,
+  routes.legal,
+  routes.privacy,
+  routes.sources,
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
