@@ -6,7 +6,8 @@ import { GenericGuidePage } from "@/components/pages/generic-guide-page";
 import { Reveal } from "@/components/motion/reveal";
 import type { Holiday } from "@/lib/domain/types";
 import type { AppLanguage } from "@/lib/i18n";
-import { t } from "@/lib/i18n";
+import { prefixForLanguage, t } from "@/lib/i18n";
+import { routes } from "@/lib/routes";
 
 export function HolidaysAndBridges2027Page({
   language,
@@ -20,6 +21,7 @@ export function HolidaysAndBridges2027Page({
       language={language}
       badge={{ fr: "2027", en: "2027" }}
       content={holidaysAndBridges2027Content}
+      path={prefixForLanguage(routes.holidaysAndBridges2027, language)}
       extraBlocks={
         <>
           <AuthorityBlock block={holidaysAuthority2027Block} language={language} />

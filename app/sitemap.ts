@@ -19,6 +19,8 @@ const pages = [
   routes.faq,
   routes.ascension2026,
   routes.mayBridges2026,
+  routes.assumption2026,
+  routes.allSaints2026,
   routes.armistice2026,
   routes.yearEnd2026,
   routes.schoolHolidaysZone2026("A"),
@@ -30,12 +32,31 @@ const pages = [
   routes.sources,
 ];
 
+const lastModifiedByPath: Partial<Record<string, string>> = {
+  [routes.home]: "2026-03-15T18:00:00.000Z",
+  [routes.faq]: "2026-03-15T18:20:00.000Z",
+  [routes.leaveGuide2026]: "2026-03-15T18:40:00.000Z",
+  [routes.schoolHolidaysFamily2026]: "2026-03-15T18:30:00.000Z",
+  [routes.weekdayHolidays2026]: "2026-03-15T18:35:00.000Z",
+  [routes.schoolHolidaysZone2026("A")]: "2026-03-15T18:35:00.000Z",
+  [routes.schoolHolidaysZone2026("B")]: "2026-03-15T18:35:00.000Z",
+  [routes.schoolHolidaysZone2026("C")]: "2026-03-15T18:35:00.000Z",
+  [routes.leaveBudget5Guide2026]: "2026-03-15T18:45:00.000Z",
+  [routes.leaveBudget10Guide2026]: "2026-03-15T18:45:00.000Z",
+  [routes.ascension2026]: "2026-03-15T18:50:00.000Z",
+  [routes.mayBridges2026]: "2026-03-15T18:50:00.000Z",
+  [routes.assumption2026]: "2026-03-15T18:50:00.000Z",
+  [routes.allSaints2026]: "2026-03-15T18:50:00.000Z",
+  [routes.armistice2026]: "2026-03-15T18:50:00.000Z",
+  [routes.yearEnd2026]: "2026-03-15T18:50:00.000Z",
+};
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return pages.flatMap((path) => {
     const frUrl = `${baseUrl}${path}`;
     const enPath = `/en${path === "/" ? "" : path}`;
     const enUrl = `${baseUrl}${enPath}`;
-    const lastModified = path === routes.home ? new Date("2026-03-15T18:00:00.000Z") : new Date("2026-03-15T17:20:14.401Z");
+    const lastModified = new Date(lastModifiedByPath[path] ?? "2026-03-15T17:20:14.401Z");
 
     return [
     {

@@ -71,3 +71,36 @@ export function buildNotFoundMetadata(language: "fr" | "en" = "fr"): Metadata {
     },
   };
 }
+
+export function buildArticleSchema({
+  headline,
+  description,
+  path,
+  language,
+}: {
+  headline: string;
+  description: string;
+  path: string;
+  language: "fr" | "en";
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description,
+    inLanguage: language === "fr" ? "fr-FR" : "en-US",
+    mainEntityOfPage: `https://pontsmalins.com${path}`,
+    url: `https://pontsmalins.com${path}`,
+    image: ["https://pontsmalins.com/opengraph-image"],
+    author: {
+      "@type": "Organization",
+      name: "Ponts Malins",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Ponts Malins",
+    },
+    datePublished: "2026-03-15T17:20:14.401Z",
+    dateModified: "2026-03-15T18:45:00.000Z",
+  };
+}

@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "How to book 5 leave days in 2026",
-  description: "Concrete examples to turn 5 leave days in 2026 into real breaks, then validate them in the planner.",
+  description: "How to book 5 leave days in 2026, which bridge ideas to test first, and which months give the best time off.",
   path: "/poser-5-jours-conges-2026",
   enPath: "/en/poser-5-jours-conges-2026",
 });

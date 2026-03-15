@@ -3,6 +3,8 @@ import { GenericGuidePage } from "@/components/pages/generic-guide-page";
 import { Reveal } from "@/components/motion/reveal";
 import type { AppLanguage } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
+import { prefixForLanguage } from "@/lib/i18n";
+import { routes } from "@/lib/routes";
 
 export function LeaveGuide2026Page({ language }: { language: AppLanguage }) {
   return (
@@ -10,6 +12,7 @@ export function LeaveGuide2026Page({ language }: { language: AppLanguage }) {
       language={language}
       badge={{ fr: "Guide", en: "Guide" }}
       content={leaveGuide2026Content}
+      path={prefixForLanguage(routes.leaveGuide2026, language)}
       extraBlocks={
         <Reveal>
           <section className="editorial-panel">

@@ -5,6 +5,8 @@ import { GenericGuidePage } from "@/components/pages/generic-guide-page";
 import { Reveal } from "@/components/motion/reveal";
 import type { AppLanguage } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
+import { prefixForLanguage } from "@/lib/i18n";
+import { routes } from "@/lib/routes";
 
 export function FaqPage({ language }: { language: AppLanguage }) {
   return (
@@ -12,6 +14,7 @@ export function FaqPage({ language }: { language: AppLanguage }) {
       language={language}
       badge={{ fr: "FAQ", en: "FAQ" }}
       content={faqBridgesHolidaysContent}
+      path={prefixForLanguage(routes.faq, language)}
       extraBlocks={
         <div className="grid gap-6">
           <AuthorityBlock block={rulesAuthorityBlock} language={language} />

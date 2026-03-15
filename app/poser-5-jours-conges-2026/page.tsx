@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Comment poser 5 jours de congés en 2026",
-  description: "Des exemples concrets pour transformer 5 jours de congés en 2026 en vrais blocs de repos, puis les tester dans le simulateur.",
+  description: "Comment poser 5 jours de congés en 2026, quels ponts tester en premier et quels mois donnent le plus de repos.",
   path: "/poser-5-jours-conges-2026",
   enPath: "/en/poser-5-jours-conges-2026",
 });

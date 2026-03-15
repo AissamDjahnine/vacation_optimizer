@@ -5,7 +5,9 @@ import { GenericGuidePage } from "@/components/pages/generic-guide-page";
 import { ResultCard } from "@/components/planner/result-card";
 import { ZoneLookupPanel } from "@/components/planner/zone-lookup-panel";
 import {
+  allSaints2026Content,
   ascension2026Content,
+  assumption2026Content,
   armistice2026Content,
   buildLeaveBudgetGuide2026Content,
   buildSchoolZone2026Content,
@@ -45,6 +47,7 @@ export function Ascension2026Page({
       language={language}
       badge={{ fr: "Ascension", en: "Ascension" }}
       content={ascension2026Content}
+      path={prefixForLanguage(routes.ascension2026, language)}
       extraBlocks={
         <div className="grid gap-6">
           <AuthorityBlock block={schoolAuthority2026Block} language={language} />
@@ -95,6 +98,7 @@ export function MayBridges2026Page({
       language={language}
       badge={{ fr: "Mai 2026", en: "May 2026" }}
       content={mayBridges2026Content}
+      path={prefixForLanguage(routes.mayBridges2026, language)}
       extraBlocks={
         <section className="editorial-panel">
           <div className="space-y-3">
@@ -142,6 +146,7 @@ export function Armistice2026Page({
       language={language}
       badge={{ fr: "11 novembre", en: "11 November" }}
       content={armistice2026Content}
+      path={prefixForLanguage(routes.armistice2026, language)}
       extraBlocks={
         <section className="editorial-panel">
           <div className="space-y-3">
@@ -187,6 +192,7 @@ export function YearEnd2026Page({
       language={language}
       badge={{ fr: "Fin d’année 2026", en: "Late year 2026" }}
       content={yearEnd2026Content}
+      path={prefixForLanguage(routes.yearEnd2026, language)}
       extraBlocks={
         <section className="editorial-panel">
           <div className="space-y-3">
@@ -230,6 +236,7 @@ export function SchoolZone2026Page({
       language={language}
       badge={{ fr: `Zone ${zone}`, en: `Zone ${zone}` }}
       content={buildSchoolZone2026Content(zone)}
+      path={prefixForLanguage(routes.schoolHolidaysZone2026(zone), language)}
       extraBlocks={
         <div className="grid gap-6">
           <ZoneLookupPanel
@@ -290,6 +297,7 @@ export function WeekdayHolidays2026Page({
       language={language}
       badge={{ fr: "Semaine", en: "Weekdays" }}
       content={weekdayHolidays2026Content}
+      path={prefixForLanguage(routes.weekdayHolidays2026, language)}
       extraBlocks={
         <section className="editorial-panel">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -344,6 +352,10 @@ export function LeaveBudgetGuide2026Page({
       language={language}
       badge={{ fr: `${budget} jours`, en: `${budget} days` }}
       content={buildLeaveBudgetGuide2026Content(budget)}
+      path={prefixForLanguage(
+        budget === 5 ? routes.leaveBudget5Guide2026 : routes.leaveBudget10Guide2026,
+        language,
+      )}
       extraBlocks={
         <section className="editorial-panel">
           <div className="space-y-3">
@@ -361,6 +373,110 @@ export function LeaveBudgetGuide2026Page({
           </div>
           <div className="mt-6 space-y-6">
             {strongestMonths.map((period, index) => (
+              <ResultCard
+                key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                language={language}
+                period={period}
+                rank={index + 1}
+                highlighted={index === 0}
+              />
+            ))}
+          </div>
+        </section>
+      }
+    />
+  );
+}
+
+export function Assumption2026Page({
+  language,
+  holidays,
+}: {
+  language: AppLanguage;
+  holidays: Holiday[];
+}) {
+  const results = DateOptimizer.findFlexiblePeriods({
+    holidays,
+    vacationDaysToUse: 5,
+    availableRttDays: 0,
+    year: 2026,
+    month: 8,
+  })
+    .filter((period) =>
+      period.includedHolidays.some((holiday) => holiday.localName.toLowerCase().includes("assomption")),
+    )
+    .slice(0, 2);
+
+  return (
+    <GenericGuidePage
+      language={language}
+      badge={{ fr: "15 août", en: "15 August" }}
+      content={assumption2026Content}
+      path={prefixForLanguage(routes.assumption2026, language)}
+      extraBlocks={
+        <section className="editorial-panel">
+          <div className="space-y-3">
+            <p className="editorial-kicker">{language === "en" ? "Summer examples" : "Exemples d’été"}</p>
+            <h2 className="text-3xl font-black tracking-tight text-ink">
+              {language === "en"
+                ? "What the Assumption weekend can unlock"
+                : "Ce que le week-end du 15 août peut débloquer"}
+            </h2>
+          </div>
+          <div className="mt-6 space-y-6">
+            {results.map((period, index) => (
+              <ResultCard
+                key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                language={language}
+                period={period}
+                rank={index + 1}
+                highlighted={index === 0}
+              />
+            ))}
+          </div>
+        </section>
+      }
+    />
+  );
+}
+
+export function AllSaints2026Page({
+  language,
+  holidays,
+}: {
+  language: AppLanguage;
+  holidays: Holiday[];
+}) {
+  const results = DateOptimizer.findFlexiblePeriods({
+    holidays,
+    vacationDaysToUse: 5,
+    availableRttDays: 0,
+    year: 2026,
+    month: 11,
+  })
+    .filter((period) =>
+      period.includedHolidays.some((holiday) => holiday.localName.toLowerCase().includes("toussaint")),
+    )
+    .slice(0, 2);
+
+  return (
+    <GenericGuidePage
+      language={language}
+      badge={{ fr: "1er novembre", en: "1 November" }}
+      content={allSaints2026Content}
+      path={prefixForLanguage(routes.allSaints2026, language)}
+      extraBlocks={
+        <section className="editorial-panel">
+          <div className="space-y-3">
+            <p className="editorial-kicker">{language === "en" ? "Autumn timing" : "Timing d’automne"}</p>
+            <h2 className="text-3xl font-black tracking-tight text-ink">
+              {language === "en"
+                ? "Compare All Saints’ Day with the 11 November setup"
+                : "Comparer la Toussaint au cas du 11 novembre"}
+            </h2>
+          </div>
+          <div className="mt-6 space-y-6">
+            {results.map((period, index) => (
               <ResultCard
                 key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
                 language={language}

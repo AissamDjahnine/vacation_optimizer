@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "How to plan your leave well in 2026",
-  description: "A practical guide to plan leave in 2026, spot the strongest months and validate the best bridge ideas in Ponts Malins.",
+  description: "How to plan leave in 2026, which months to test first, and which French bridge ideas to compare for your leave budget.",
   path: "/guide-poser-conges-2026",
   enPath: "/en/guide-poser-conges-2026",
 });

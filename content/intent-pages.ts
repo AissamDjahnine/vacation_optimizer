@@ -77,9 +77,76 @@ export const mayBridges2026Content: GuideContent = {
   ],
   relatedLinks: [
     { href: routes.ascension2026, label: { fr: "Pont de l’Ascension 2026", en: "Ascension bridge 2026" } },
+    { href: routes.assumption2026, label: { fr: "Pont du 15 août 2026", en: "15 August 2026 bridge" } },
     { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
     { href: routes.leaveBudget5Guide2026, label: { fr: "Poser 5 jours en 2026", en: "Book 5 days in 2026" } },
     { href: routes.leaveBudget10Guide2026, label: { fr: "Poser 10 jours en 2026", en: "Book 10 days in 2026" } },
+  ],
+};
+
+export const assumption2026Content: GuideContent = {
+  title: {
+    fr: "Pont du 15 août 2026 : faut-il vraiment le tester ?",
+    en: "15 August 2026 bridge: is it really worth testing?",
+  },
+  subtitle: {
+    fr: "Le 15 août 2026 tombe un samedi. Cette page aide à voir si le week-end reste exploitable et quand il vaut mieux passer à d’autres mois.",
+    en: "15 August 2026 falls on a Saturday. This page helps you see whether the weekend is still usable and when another month is the better bet.",
+  },
+  sections: [
+    {
+      title: { fr: "Pourquoi ce cas est particulier", en: "Why this case is special" },
+      accent: "orange",
+      chips: [{ fr: "Été 2026", en: "Summer 2026" }, { fr: "Assomption", en: "Assumption" }],
+      body: [
+        {
+          fr: "Quand un jour férié tombe déjà dans le week-end, le gain potentiel devient plus faible. Cette page sert donc surtout à éviter de perdre du temps sur un faux bon plan.",
+          en: "When a public holiday already falls on a weekend, the upside becomes smaller. This page mainly helps you avoid wasting time on a false good idea.",
+        },
+      ],
+      specialCase: {
+        fr: "À éviter : traiter le 15 août comme un grand pont alors qu’il demande souvent plus de jours pour un rendement faible.",
+        en: "Avoid this trap: treating 15 August like a major bridge when it often needs more days for a weak payoff.",
+      },
+    },
+  ],
+  relatedLinks: [
+    { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
+    { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
+    { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
+  ],
+};
+
+export const allSaints2026Content: GuideContent = {
+  title: {
+    fr: "Pont du 1er novembre 2026 : la Toussaint vaut-elle le détour ?",
+    en: "1 November 2026 bridge: is All Saints’ Day worth a look?",
+  },
+  subtitle: {
+    fr: "La Toussaint 2026 tombe un dimanche. Cette page sert à comprendre vite pourquoi le 11 novembre est souvent un meilleur cas d’automne.",
+    en: "All Saints’ Day 2026 falls on a Sunday. This page helps you understand quickly why 11 November is often the better autumn case.",
+  },
+  sections: [
+    {
+      title: { fr: "Le bon arbitrage à faire", en: "The right comparison to make" },
+      accent: "green",
+      chips: [{ fr: "Toussaint", en: "All Saints" }, { fr: "Automne", en: "Autumn" }],
+      body: [
+        {
+          fr: "La Toussaint attire beaucoup de recherches, mais elle n’offre pas toujours le meilleur levier calendrier. L’intérêt de cette page est de comparer vite ce cas à un autre pont d’automne plus rentable.",
+          en: "All Saints’ Day attracts plenty of searches, but it does not always offer the best calendar leverage. The goal of this page is to compare it quickly with a stronger autumn bridge.",
+        },
+      ],
+      example: {
+        fr: "Exemple : ouvrez d’abord novembre 2026, puis comparez la Toussaint au 11 novembre avec le même budget.",
+        en: "Example: open November 2026 first, then compare All Saints’ Day with 11 November using the same budget.",
+      },
+    },
+  ],
+  relatedLinks: [
+    { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
+    { href: routes.weekdayHolidays2026, label: { fr: "Jours fériés 2026 en semaine", en: "Weekday public holidays in 2026" } },
+    { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
   ],
 };
 
@@ -209,6 +276,7 @@ export const weekdayHolidays2026Content: GuideContent = {
   relatedLinks: [
     { href: routes.holidaysYear(2026), label: { fr: "Tous les jours fériés 2026", en: "All public holidays 2026" } },
     { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.allSaints2026, label: { fr: "Pont du 1er novembre 2026", en: "1 November 2026 bridge" } },
   ],
 };
 

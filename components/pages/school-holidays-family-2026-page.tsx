@@ -18,6 +18,7 @@ export function SchoolHolidaysFamily2026Page({
       language={language}
       badge={{ fr: "Familles", en: "Families" }}
       content={schoolHolidaysFamily2026Content}
+      path={prefixForLanguage(routes.schoolHolidaysFamily2026, language)}
       extraBlocks={
         <Reveal>
           <section className="grid gap-6">

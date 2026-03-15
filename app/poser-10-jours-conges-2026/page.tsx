@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Comment poser 10 jours de congés en 2026",
-  description: "Des exemples concrets pour répartir 10 jours de congés en 2026 entre un gros pont et un second temps fort utile.",
+  description: "Comment poser 10 jours de congés en 2026, répartir votre budget entre plusieurs ponts et choisir les meilleurs mois.",
   path: "/poser-10-jours-conges-2026",
   enPath: "/en/poser-10-jours-conges-2026",
 });

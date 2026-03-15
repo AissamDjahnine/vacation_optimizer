@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Script from "next/script";
 import { ContentHero } from "@/components/content/content-hero";
 import { ContentSectionCard } from "@/components/content/content-section-card";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
@@ -8,20 +9,35 @@ import type { GuideContent } from "@/content/content-models";
 import type { AppLanguage } from "@/lib/i18n";
 import { prefixForLanguage, t } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
+import { buildArticleSchema } from "@/lib/seo";
 
 export function GenericGuidePage({
   language,
   badge,
   content,
+  path,
   extraBlocks,
 }: {
   language: AppLanguage;
   badge: { fr: string; en: string };
   content: GuideContent;
+  path: string;
   extraBlocks?: React.ReactNode;
 }) {
+  const articleSchema = buildArticleSchema({
+    headline: t(content.title, language),
+    description: t(content.subtitle, language),
+    path,
+    language,
+  });
+
   return (
     <PageShell aside={defaultPageAside(language)}>
+      <Script
+        id={`article-schema-${path}-${language}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <ContentHero badge={badge} title={content.title} subtitle={content.subtitle} language={language} />
       <Reveal>
         <section className="editorial-panel">
