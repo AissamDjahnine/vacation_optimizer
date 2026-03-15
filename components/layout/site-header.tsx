@@ -15,14 +15,14 @@ const navItems = {
   fr: [
     { href: routes.home, label: "Simulateur" },
     { href: routes.annualPlannerYear(2026), label: "Plan annuel" },
-    { href: routes.bridgesYear(2026), label: "Ponts 2026" },
+    { href: routes.bridgesYear(2026), label: "Ponts" },
     { href: routes.holidaysYear(2026), label: "Jours fériés" },
     { href: routes.schoolHolidaysBridgesYear(2026), label: "Vacances scolaires" },
   ],
   en: [
     { href: routes.home, label: "Planner" },
     { href: routes.annualPlannerYear(2026), label: "Year plan" },
-    { href: routes.bridgesYear(2026), label: "Bridges 2026" },
+    { href: routes.bridgesYear(2026), label: "Bridges" },
     { href: routes.holidaysYear(2026), label: "Public holidays" },
     { href: routes.schoolHolidaysBridgesYear(2026), label: "School holidays" },
   ],

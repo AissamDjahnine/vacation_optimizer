@@ -618,8 +618,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 </p>
                 <p className="font-semibold text-ink/64">
                   {language === "en"
-                    ? `Displayed suggestions use ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
-                    : `Les suggestions affichées utilisent ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
+                    ? `If you kept every displayed suggestion, the cumulative total would be ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
+                    : `Si vous gardiez toutes les suggestions affichées, le total cumulé serait de ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
                 </p>
               </div>
             </div>

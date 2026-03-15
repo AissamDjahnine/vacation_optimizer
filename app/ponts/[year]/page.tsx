@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { BridgesYearPage } from "@/components/pages/bridges-year-page";
 import { isPlannerYear, plannerYears } from "@/lib/constants";
 import { getHolidaysForYear } from "@/lib/page-data";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildNotFoundMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return plannerYears.map((year) => ({ year: String(year) }));
@@ -16,12 +16,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { year: yearParam } = await params;
   const year = Number.parseInt(yearParam, 10);
-  const safeYear = isPlannerYear(year) ? year : plannerYears[0];
+  if (!isPlannerYear(year)) {
+    return buildNotFoundMetadata("fr");
+  }
   return buildMetadata({
-    title: `Ponts ${safeYear} en France`,
-    description: `Les meilleurs mois et les meilleurs ponts ${safeYear} à tester en France avant de revenir au simulateur avec votre budget exact.`,
-    path: `/ponts/${safeYear}`,
-    enPath: `/en/ponts/${safeYear}`,
+    title: `Ponts ${year} en France`,
+    description: `Les meilleurs mois et les meilleurs ponts ${year} à tester en France avant de revenir au simulateur avec votre budget exact.`,
+    path: `/ponts/${year}`,
+    enPath: `/en/ponts/${year}`,
   });
 }
 

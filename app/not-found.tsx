@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/content/page-shell";
 import { routes } from "@/lib/routes";
+import { buildNotFoundMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildNotFoundMetadata("fr");
 
 export default function NotFoundPage() {
   return (

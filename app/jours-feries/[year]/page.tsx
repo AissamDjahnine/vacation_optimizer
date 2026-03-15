@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { HolidaysYearPage } from "@/components/pages/holidays-year-page";
 import { isPlannerYear, plannerYears } from "@/lib/constants";
 import { getHolidaysForYear } from "@/lib/page-data";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildNotFoundMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return plannerYears.map((year) => ({ year: String(year) }));
@@ -16,12 +16,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { year: yearParam } = await params;
   const year = Number.parseInt(yearParam, 10);
-  const safeYear = isPlannerYear(year) ? year : plannerYears[0];
+  if (!isPlannerYear(year)) {
+    return buildNotFoundMetadata("fr");
+  }
   return buildMetadata({
-    title: `Jours fériés ${safeYear} en France`,
-    description: `Toutes les dates officielles des jours fériés ${safeYear} en France, avec les repères qui valent un vrai test dans le simulateur.`,
-    path: `/jours-feries/${safeYear}`,
-    enPath: `/en/jours-feries/${safeYear}`,
+    title: `Jours fériés ${year} en France`,
+    description: `Toutes les dates officielles des jours fériés ${year} en France, avec les repères qui valent un vrai test dans le simulateur.`,
+    path: `/jours-feries/${year}`,
+    enPath: `/en/jours-feries/${year}`,
   });
 }
 

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { SchoolHolidaysBridgesYearPage } from "@/components/pages/school-holidays-bridges-year-page";
 import { isPlannerYear, plannerYears } from "@/lib/constants";
 import { getSchoolHolidaysByZone } from "@/lib/page-data";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildNotFoundMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return plannerYears.map((year) => ({ year: String(year) }));
@@ -16,12 +16,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { year: yearParam } = await params;
   const year = Number.parseInt(yearParam, 10);
-  const safeYear = isPlannerYear(year) ? year : plannerYears[0];
+  if (!isPlannerYear(year)) {
+    return buildNotFoundMetadata("fr");
+  }
   return buildMetadata({
-    title: `Vacances scolaires et ponts ${safeYear}`,
-    description: `Les périodes scolaires par zone, les repères familles et les meilleurs moments pour revenir au simulateur en ${safeYear}.`,
-    path: `/vacances-scolaires-ponts/${safeYear}`,
-    enPath: `/en/vacances-scolaires-ponts/${safeYear}`,
+    title: `Vacances scolaires et ponts ${year}`,
+    description: `Les périodes scolaires par zone, les repères familles et les meilleurs moments pour revenir au simulateur en ${year}.`,
+    path: `/vacances-scolaires-ponts/${year}`,
+    enPath: `/en/vacances-scolaires-ponts/${year}`,
   });
 }
 
