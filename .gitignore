@@ -1,36 +1,3 @@
-# Flutter / Dart / Pub
-.dart_tool/
-.packages
-.pub-cache/
-.pub/
-build/
-.flutter-plugins
-.flutter-plugins-dependencies
-.flutter-versions
-.metadata
-
-# Android / Gradle
-android/.gradle/
-android/app/debug
-android/app/profile
-android/app/release
-*.keystore
-
-# iOS / macOS
-ios/Flutter/.last_build_id
-ios/Pods/
-ios/.symlinks/
-ios/.dart_tool/
-macos/Flutter/ephemeral/
-macos/Pods/
-macos/.dart_tool/
-*.xcworkspace
-*.xcuserstate
-DerivedData/
-
-# Web
-web/generated_plugin_registrant.dart
-
 # IDEs
 .idea/
 *.iml
@@ -38,14 +5,17 @@ web/generated_plugin_registrant.dart
 *.iws
 .vscode/
 
+# Node / Next.js
+node_modules/
+.next/
+dist/
+coverage/
+out/
+
 # Misc
 .DS_Store
-*.class
 *.log
-*.pyc
 *.swp
-app.*.symbols
-app.*.map.json
 
 # Env / Secrets
 .env

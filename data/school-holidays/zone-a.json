@@ -1,0 +1,72 @@
+[
+  {
+    "description": "Vacances de la Toussaint",
+    "startDate": "2025-10-18T12:00:00+02:00",
+    "endDate": "2025-11-02T12:00:00+01:00",
+    "zone": "Zone A",
+    "schoolYear": "2025-2026"
+  },
+  {
+    "description": "Vacances de Noël",
+    "startDate": "2025-12-20T12:00:00+01:00",
+    "endDate": "2026-01-04T12:00:00+01:00",
+    "zone": "Zone A",
+    "schoolYear": "2025-2026"
+  },
+  {
+    "description": "Vacances d'Hiver",
+    "startDate": "2026-02-07T12:00:00+01:00",
+    "endDate": "2026-02-22T12:00:00+01:00",
+    "zone": "Zone A",
+    "schoolYear": "2025-2026"
+  },
+  {
+    "description": "Vacances de Printemps",
+    "startDate": "2026-04-04T12:00:00+02:00",
+    "endDate": "2026-04-19T12:00:00+02:00",
+    "zone": "Zone A",
+    "schoolYear": "2025-2026"
+  },
+  {
+    "description": "Vacances d'Été",
+    "startDate": "2026-07-04T12:00:00+02:00",
+    "endDate": "2026-08-31T12:00:00+02:00",
+    "zone": "Zone A",
+    "schoolYear": "2025-2026"
+  },
+  {
+    "description": "Vacances de la Toussaint",
+    "startDate": "2026-10-17T12:00:00+02:00",
+    "endDate": "2026-11-01T12:00:00+01:00",
+    "zone": "Zone A",
+    "schoolYear": "2026-2027"
+  },
+  {
+    "description": "Vacances de Noël",
+    "startDate": "2026-12-19T12:00:00+01:00",
+    "endDate": "2027-01-03T12:00:00+01:00",
+    "zone": "Zone A",
+    "schoolYear": "2026-2027"
+  },
+  {
+    "description": "Vacances d'Hiver",
+    "startDate": "2027-02-13T12:00:00+01:00",
+    "endDate": "2027-02-28T12:00:00+01:00",
+    "zone": "Zone A",
+    "schoolYear": "2026-2027"
+  },
+  {
+    "description": "Vacances de Printemps",
+    "startDate": "2027-04-10T12:00:00+02:00",
+    "endDate": "2027-04-25T12:00:00+02:00",
+    "zone": "Zone A",
+    "schoolYear": "2026-2027"
+  },
+  {
+    "description": "Vacances d'Été",
+    "startDate": "2027-07-03T12:00:00+02:00",
+    "endDate": "2027-08-31T12:00:00+02:00",
+    "zone": "Zone A",
+    "schoolYear": "2026-2027"
+  }
+]

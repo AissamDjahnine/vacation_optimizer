@@ -1,0 +1,13 @@
+[
+  { "date": "2027-01-01", "localName": "Jour de l'an" },
+  { "date": "2027-03-29", "localName": "Lundi de Pâques" },
+  { "date": "2027-05-01", "localName": "Fête du Travail" },
+  { "date": "2027-05-06", "localName": "Ascension" },
+  { "date": "2027-05-08", "localName": "Victoire 1945" },
+  { "date": "2027-05-17", "localName": "Lundi de Pentecôte" },
+  { "date": "2027-07-14", "localName": "Fête nationale" },
+  { "date": "2027-08-15", "localName": "Assomption" },
+  { "date": "2027-11-01", "localName": "Toussaint" },
+  { "date": "2027-11-11", "localName": "Armistice 1918" },
+  { "date": "2027-12-25", "localName": "Noël" }
+]

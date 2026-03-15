@@ -1,0 +1,186 @@
+import type { GuideContent } from "@/content/content-models";
+import { routes } from "@/lib/routes";
+
+export const ascension2026Content: GuideContent = {
+  title: {
+    fr: "Pont de l’Ascension 2026 : comment en profiter vraiment",
+    en: "Ascension bridge 2026: how to make the most of it",
+  },
+  subtitle: {
+    fr: "Le cas le plus scruté de l’année : ce qu’il faut regarder, ce qui change pour les familles et comment le tester proprement dans Ponts Malins.",
+    en: "The most watched case of the year: what to look at, what changes for families, and how to test it cleanly in Ponts Malins.",
+  },
+  sections: [
+    {
+      title: { fr: "Pourquoi l’Ascension 2026 compte autant", en: "Why Ascension 2026 matters so much" },
+      accent: "orange",
+      chips: [{ fr: "Mai 2026", en: "May 2026" }, { fr: "Familles", en: "Families" }, { fr: "Pont scolaire", en: "School bridge" }],
+      body: [
+        {
+          fr: "L’Ascension concentre souvent le cas le plus lisible de l’année. Elle tombe déjà à un moment naturellement favorable, puis le calendrier scolaire peut encore renforcer l’intérêt pour les familles.",
+          en: "Ascension often concentrates the clearest opportunity of the year. It already falls at a naturally useful moment, then the school calendar can strengthen its value for families.",
+        },
+      ],
+      example: {
+        fr: "Exemple : commencez par mai 2026 dans le simulateur, puis comparez le mode gros pont et le mode plusieurs ponts avec votre vrai budget.",
+        en: "Example: start with May 2026 in the planner, then compare long bridge and multiple bridge modes with your real budget.",
+      },
+      specialCase: {
+        fr: "À éviter : croire que le même raisonnement vaut pour tous sans regarder votre zone scolaire ou vos contraintes employeur.",
+        en: "Avoid this trap: assuming the same reasoning works for everyone without checking your school zone or work constraints.",
+      },
+    },
+    {
+      title: { fr: "Le bon usage de cette page", en: "The right use of this page" },
+      accent: "blue",
+      chips: [{ fr: "Données utiles", en: "Useful data" }, { fr: "Exemples", en: "Examples" }, { fr: "Simulateur", en: "Planner" }],
+      body: [
+        {
+          fr: "Cette page sert à cadrer le sujet et à savoir quoi tester. Le simulateur reste la bonne étape dès que vous voulez arbitrer entre plusieurs budgets ou entre un gros pont et plusieurs respirations.",
+          en: "This page helps frame the topic and decide what to test. The planner remains the right step as soon as you want to arbitrate between budgets or between one long bridge and several shorter breaks.",
+        },
+      ],
+    },
+  ],
+  relatedLinks: [
+    { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
+    { href: routes.schoolHolidaysFamily2026, label: { fr: "Vacances scolaires 2026 et ponts", en: "School holidays 2026 and bridges" } },
+    { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
+  ],
+};
+
+export const mayBridges2026Content: GuideContent = {
+  title: {
+    fr: "Ponts de mai 2026 : les meilleurs cas à ouvrir d’abord",
+    en: "May 2026 bridges: the first cases worth opening",
+  },
+  subtitle: {
+    fr: "Mai 2026 concentre plusieurs cas utiles. L’objectif n’est pas de tout tester au hasard, mais de savoir par où commencer selon votre budget.",
+    en: "May 2026 concentrates several useful cases. The goal is not to test everything randomly, but to know where to start depending on your budget.",
+  },
+  sections: [
+    {
+      title: { fr: "Les trois dates qui structurent le mois", en: "The three dates shaping the month" },
+      accent: "orange",
+      chips: [{ fr: "1er mai", en: "May 1st" }, { fr: "8 mai", en: "May 8th" }, { fr: "Ascension", en: "Ascension" }],
+      body: [
+        {
+          fr: "Le mois concentre trois points d’entrée naturels. Selon votre budget, vous pouvez chercher un seul gros bloc ou plusieurs ponts plus courts.",
+          en: "The month concentrates three natural entry points. Depending on your budget, you can look for one long block or several shorter bridge breaks.",
+        },
+      ],
+      example: {
+        fr: "Exemple : avec peu de jours, commencez par comparer 1er mai et 8 mai ; avec plus de marge, l’Ascension devient vite centrale.",
+        en: "Example: with few days, start by comparing May 1st and May 8th; with more flexibility, Ascension quickly becomes central.",
+      },
+    },
+  ],
+  relatedLinks: [
+    { href: routes.ascension2026, label: { fr: "Pont de l’Ascension 2026", en: "Ascension bridge 2026" } },
+    { href: routes.leaveBudget5Guide2026, label: { fr: "Poser 5 jours en 2026", en: "Book 5 days in 2026" } },
+    { href: routes.leaveBudget10Guide2026, label: { fr: "Poser 10 jours en 2026", en: "Book 10 days in 2026" } },
+  ],
+};
+
+export function buildSchoolZone2026Content(zone: "A" | "B" | "C"): GuideContent {
+  return {
+    title: {
+      fr: `Vacances scolaires 2026 zone ${zone}`,
+      en: `School holidays 2026 zone ${zone}`,
+    },
+    subtitle: {
+      fr: `Une page simple pour lire vite les périodes utiles de la zone ${zone}, puis voir quand un pont familial mérite un vrai test.`,
+      en: `A simple page to read the useful periods for zone ${zone} quickly, then see when a family bridge deserves a real test.`,
+    },
+    sections: [
+      {
+        title: { fr: `Comment lire la zone ${zone}`, en: `How to read zone ${zone}` },
+        accent: "purple",
+        chips: [{ fr: `Zone ${zone}`, en: `Zone ${zone}` }, { fr: "Famille", en: "Family" }],
+        body: [
+          {
+            fr: `Le bon réflexe est de partir de votre zone scolaire avant de juger un pont. Une même période peut être très utile pour la zone ${zone} et beaucoup moins pour une autre.`,
+            en: `The right reflex is to start from your school zone before judging a bridge. The same period can be very useful for zone ${zone} and much less so for another.`,
+          },
+        ],
+        specialCase: {
+          fr: "À éviter : lire une recommandation famille sans vérifier d’abord si elle correspond bien à votre zone.",
+          en: "Avoid this trap: reading a family recommendation without first checking whether it really matches your zone.",
+        },
+      },
+    ],
+    relatedLinks: [
+      { href: routes.schoolHolidaysFamily2026, label: { fr: "Guide familles 2026", en: "Family guide 2026" } },
+      { href: routes.schoolHolidaysBridgesYear(2026), label: { fr: "Calendrier scolaire 2026", en: "School calendar 2026" } },
+      { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
+    ],
+  };
+}
+
+export const weekdayHolidays2026Content: GuideContent = {
+  title: {
+    fr: "Jours fériés 2026 qui tombent en semaine",
+    en: "Public holidays 2026 that fall on weekdays",
+  },
+  subtitle: {
+    fr: "Tous les jours fériés ne se valent pas. Ceux qui tombent en semaine sont les premiers à regarder si vous cherchez un vrai pont.",
+    en: "Not all public holidays matter equally. Those falling on weekdays are the first ones to inspect if you are looking for a real bridge opportunity.",
+  },
+  sections: [
+    {
+      title: { fr: "Pourquoi ils comptent plus", en: "Why they matter more" },
+      accent: "green",
+      chips: [{ fr: "En semaine", en: "Weekday" }, { fr: "Pont utile", en: "Useful bridge" }],
+      body: [
+        {
+          fr: "Un jour férié placé en semaine peut prolonger un week-end ou ouvrir une vraie coupure. À l’inverse, un férié tombant le dimanche ne crée souvent rien à lui seul.",
+          en: "A weekday holiday can extend a weekend or open a real break. By contrast, a holiday falling on Sunday often creates nothing on its own.",
+        },
+      ],
+    },
+  ],
+  relatedLinks: [
+    { href: routes.holidaysYear(2026), label: { fr: "Tous les jours fériés 2026", en: "All public holidays 2026" } },
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+  ],
+};
+
+export function buildLeaveBudgetGuide2026Content(budget: 5 | 10): GuideContent {
+  const higherBudget = budget === 5 ? 10 : 15;
+  return {
+    title: {
+      fr: `Comment poser ${budget} jours de congés en 2026`,
+      en: `How to book ${budget} leave days in 2026`,
+    },
+    subtitle: {
+      fr: `Un guide simple pour transformer ${budget} jours en vraies respirations, sans partir d’un calendrier vide.`,
+      en: `A simple guide to turn ${budget} days into real breaks without starting from a blank calendar.`,
+    },
+    sections: [
+      {
+        title: { fr: "Par où commencer", en: "Where to start" },
+        accent: "orange",
+        chips: [{ fr: `${budget} jours`, en: `${budget} days` }, { fr: "Mai", en: "May" }, { fr: "Scénarios", en: "Scenarios" }],
+        body: [
+          {
+            fr: `Avec ${budget} jours, le bon réflexe est de tester d’abord les périodes denses comme mai, puis de voir si un second moment fort mérite encore un arbitrage.`,
+            en: `With ${budget} days, the right reflex is to test dense periods such as May first, then see whether a second strong moment is still worth arbitrating.`,
+          },
+        ],
+        example: {
+          fr: `Exemple : commencez par le mois de mai, puis vérifiez si un second bloc plus tard dans l’année est plus utile que de tout dépenser d’un coup.`,
+          en: `Example: start with May, then check whether a second block later in the year is more useful than spending everything at once.`,
+        },
+        specialCase: {
+          fr: `À éviter : copier un plan conçu pour ${higherBudget} jours alors que votre budget réel reste inférieur.`,
+          en: `Avoid this trap: copying a plan designed for ${higherBudget} days when your actual budget stays lower.`,
+        },
+      },
+    ],
+    relatedLinks: [
+      { href: routes.leaveGuide2026, label: { fr: "Guide congés 2026", en: "Leave guide 2026" } },
+      { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
+      { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
+    ],
+  };
+}

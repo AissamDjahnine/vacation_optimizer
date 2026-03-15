@@ -1,0 +1,13 @@
+[
+  { "date": "2029-01-01", "localName": "Jour de l'an" },
+  { "date": "2029-04-02", "localName": "Lundi de Pâques" },
+  { "date": "2029-05-01", "localName": "Fête du Travail" },
+  { "date": "2029-05-08", "localName": "Victoire 1945" },
+  { "date": "2029-05-10", "localName": "Ascension" },
+  { "date": "2029-05-21", "localName": "Lundi de Pentecôte" },
+  { "date": "2029-07-14", "localName": "Fête nationale" },
+  { "date": "2029-08-15", "localName": "Assomption" },
+  { "date": "2029-11-01", "localName": "Toussaint" },
+  { "date": "2029-11-11", "localName": "Armistice 1918" },
+  { "date": "2029-12-25", "localName": "Noël" }
+]

@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(255, 122, 89, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(24, 59, 103, 0.08), transparent 24%),
+    linear-gradient(180deg, #fffaf3 0%, #f8fbff 22%, #f8fbff 100%);
+}
+
+::selection {
+  background: rgba(255, 122, 89, 0.22);
+}
+
+.container-shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.glass-panel {
+  @apply border border-white/60 bg-white/75 shadow-soft backdrop-blur-xl;
+}
+
+.chip {
+  @apply inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-semibold text-ink;
+}
+
+.section-title {
+  @apply text-3xl font-black tracking-tight text-ink sm:text-4xl;
+}
+
+.section-subtitle {
+  @apply max-w-3xl text-base leading-7 text-slate-600 sm:text-lg;
+}
+
+.content-copy p {
+  @apply text-base leading-7 text-slate-600;
+}
+
+.content-copy ul {
+  @apply space-y-3 pl-5 text-slate-600;
+}
+
+.content-copy li {
+  @apply list-disc leading-7;
+}
+
+.editorial-panel {
+  @apply rounded-4xl border border-line bg-white p-7 shadow-card sm:p-9;
+}
+
+.editorial-panel-muted {
+  @apply rounded-4xl border border-line/80 bg-white/80 p-6 shadow-card;
+}
+
+.editorial-grid {
+  @apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
+}
+
+.editorial-kicker {
+  @apply text-sm font-bold uppercase tracking-[0.18em] text-slate-500;
+}
+
+.editorial-lead {
+  @apply max-w-3xl text-lg leading-8 text-slate-600;
+}
+
+.editorial-note {
+  @apply rounded-3xl border border-coral/15 bg-coral/5 px-5 py-4 text-sm font-medium leading-7 text-slate-700;
+}
+
+.editorial-example {
+  @apply rounded-3xl border border-sky-100 bg-sky-50/70 px-5 py-4 text-sm font-medium leading-7 text-slate-700;
+}
