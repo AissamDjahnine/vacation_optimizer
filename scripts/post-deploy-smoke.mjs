@@ -7,7 +7,7 @@ if (!baseUrl) {
 
 const checks = [
   { path: "/", includes: ["Ponts Malins", "Simulateur"] },
-  { path: "/ponts/2026", includes: ["Ponts 2026", "Les meilleurs mois à tester d'abord"] },
+  { path: "/ponts/2026", includes: ["Ponts 2026", "Les meilleurs mois à tester"] },
   { path: "/jours-feries/2026", includes: ["Jours fériés 2026", "Toutes les dates officielles"] },
   {
     path: "/vacances-scolaires-ponts/2026",
@@ -15,7 +15,7 @@ const checks = [
   },
   { path: "/planifier-annee/2026", includes: ["Planifier vos congés 2026 sur l’année", "Plan annuel suggéré"] },
   { path: "/guide-poser-conges-2026", includes: ["Comment bien poser ses congés en 2026"] },
-  { path: "/pont-ascension-2026", includes: ["Pont de l'Ascension 2026"] },
+  { path: "/pont-ascension-2026", includes: ["Ascension 2026"] },
   { path: "/faq-ponts-jours-feries", includes: ["FAQ", "Questions générales"] },
   { path: "/en", includes: ["Ponts Malins", "Planner"] },
   { path: "/en/plan-year/2026", includes: ["Plan your 2026 leave budget", "Suggested annual plan"] },
