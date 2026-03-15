@@ -4,7 +4,7 @@ import { SimpleEditorialPage } from "@/components/pages/simple-editorial-page";
 export const metadata: Metadata = {
   title: "Legal notice",
   description:
-    "Legal notice for Ponts Malins: editor, hosting and product information scope.",
+    "Legal notice for Ponts Malins: editor, contact and product information scope.",
   robots: {
     index: false,
     follow: false,
@@ -26,14 +26,8 @@ export default function LegalPage() {
         {
           title: "Publisher",
           body: [
-            "Ponts Malins is an editorial website and planning tool focused on French public holidays, bridges and school holidays. The reference contact for the project is contact@pontsmalins.com.",
+            "Ponts Malins is an editorial website and planning tool focused on French public holidays, bridges and school holidays. A reference contact is available through the address shown on the site.",
             "The site is built to help users compare leave scenarios. It does not replace official information, employer rules, collective agreements or public administration guidance.",
-          ],
-        },
-        {
-          title: "Hosting",
-          body: [
-            "The website is hosted on Vercel infrastructure. Public pages, static content and exports are served there as part of the normal service operation.",
           ],
         },
         {

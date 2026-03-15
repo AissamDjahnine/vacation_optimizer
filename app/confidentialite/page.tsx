@@ -32,14 +32,14 @@ export default function PrivacyPage() {
         {
           title: "Données de navigation",
           body: [
-            "Le site peut collecter des données techniques minimales liées à l'hébergement ou à la mesure de fréquentation. Elles servent à maintenir le service, vérifier qu'il fonctionne bien et améliorer les pages les plus utiles.",
+            "Le site peut collecter des données techniques minimales liées à la fréquentation et au bon fonctionnement du service. Elles servent à maintenir le service, vérifier qu'il fonctionne bien et améliorer les pages les plus utiles.",
             "Les réglages testés dans le simulateur ne sont pas stockés comme un espace personnel. Les exports de calendrier sont générés à la demande pour être récupérés immédiatement par l'utilisateur.",
           ],
         },
         {
-          title: "Avant l'ajout de publicités",
+          title: "Évolutions du service",
           body: [
-            "Si des emplacements publicitaires ou des outils d'analyse supplémentaires sont ajoutés plus tard, cette page devra être mise à jour pour expliquer clairement les services concernés, leur finalité et les éventuels choix proposés à l'utilisateur.",
+            "Si le périmètre du service évolue de façon significative, cette page sera mise à jour pour expliquer clairement les traitements concernés et leur finalité.",
           ],
         },
       ]}

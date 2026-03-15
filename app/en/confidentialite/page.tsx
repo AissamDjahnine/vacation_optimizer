@@ -32,14 +32,14 @@ export default function PrivacyPage() {
         {
           title: "Browsing data",
           body: [
-            "The site may collect minimal technical data linked to hosting or traffic measurement. That information is used to keep the service healthy and improve the pages that help users most.",
+            "The site may collect minimal technical data linked to traffic measurement and service health. That information is used to keep the service healthy and improve the pages that help users most.",
             "Planner settings are not stored as a personal workspace. Calendar exports are generated on demand so the user can retrieve them immediately.",
           ],
         },
         {
-          title: "Before ads are added",
+          title: "Service changes",
           body: [
-            "If advertising slots or extra analytics tools are added later, this page will need to be updated to explain clearly which services are involved, why they are used and what choices are available to the visitor.",
+            "If the service changes in a significant way, this page will be updated to explain clearly which data flows are involved and why.",
           ],
         },
       ]}

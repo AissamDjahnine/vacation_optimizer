@@ -26,14 +26,8 @@ export default function LegalPage() {
         {
           title: "Éditeur",
           body: [
-            "Ponts Malins est un site éditorial et un simulateur dédié à la planification des congés en France. Le contact de référence pour le projet est contact@pontsmalins.com.",
+            "Ponts Malins est un site éditorial et un simulateur dédié à la planification des congés en France. Un contact de référence est disponible à l’adresse indiquée sur le site.",
             "Le site vise à aider les utilisateurs à comparer des scénarios de ponts, de jours fériés et de vacances scolaires. Il ne remplace ni une source officielle, ni les règles propres à un employeur, une convention collective ou une administration.",
-          ],
-        },
-        {
-          title: "Hébergement",
-          body: [
-            "Le site est hébergé sur l'infrastructure Vercel. Les contenus publics, les pages statiques et les exports proposés par l'application y sont servis dans le cadre normal de l'utilisation du service.",
           ],
         },
         {
