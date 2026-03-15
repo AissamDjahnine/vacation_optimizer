@@ -40,6 +40,24 @@ const guides = [
       "The three dates that really shape May, with the first cases worth opening in the planner.",
   },
   {
+    href: routes.armistice2026,
+    frTitle: "Pont du 11 novembre 2026",
+    enTitle: "11 November 2026 bridge",
+    frBody:
+      "Un cas simple mais rentable pour l’automne, utile si vous cherchez un pont hors mai.",
+    enBody:
+      "A simple but profitable autumn case, useful if you want a bridge outside May.",
+  },
+  {
+    href: routes.yearEnd2026,
+    frTitle: "Pont de Noël et fin d’année 2026",
+    enTitle: "Christmas and late-year 2026 bridge",
+    frBody:
+      "Ce qu’il reste à jouer en fin d’année, avec les cas utiles autour de Noël et du Nouvel An.",
+    enBody:
+      "What is still worth testing late in the year, around Christmas and New Year.",
+  },
+  {
     href: routes.holidaysAndBridges2027,
     frTitle: "Jours fériés 2027 et ponts",
     enTitle: "Public holidays 2027 and bridges",
@@ -65,8 +83,8 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
         </h2>
         <p className="section-subtitle max-w-none">
           {language === "en"
-            ? "Six pages to understand bridge opportunities, prepare your leave, plan the full year and validate ideas in the planner."
-            : "Six pages pour comprendre les ponts, préparer vos congés, planifier l’année et ensuite valider vos idées dans le simulateur."}
+            ? "Eight pages to understand bridge opportunities, prepare your leave, plan the full year and validate ideas in the planner."
+            : "Huit pages pour comprendre les ponts, préparer vos congés, planifier l’année et ensuite valider vos idées dans le simulateur."}
         </p>
       </div>
       <div className="mt-8 grid gap-4 xl:grid-cols-3">

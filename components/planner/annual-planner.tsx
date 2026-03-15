@@ -102,7 +102,7 @@ export function AnnualPlanner({
           </p>
         </div>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-[0.85fr_1fr_0.9fr]">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-[0.85fr_1fr_0.9fr]">
           <Field label={language === "en" ? "Year" : "Année"}>
             <select
               value={state.year}
@@ -208,7 +208,7 @@ export function AnnualPlanner({
                 className="w-full"
               />
             </div>
-            <p className="text-sm leading-6 text-ink/62">
+            <p className="max-w-2xl text-sm leading-6 text-ink/62">
               {language === "en"
                 ? "Efficiency prioritizes the best ratio. Balanced spreads the effort. Family gives more weight to school-holiday overlap."
                 : "Rendement privilégie le meilleur ratio. Équilibré répartit l’effort. Famille donne plus de poids aux chevauchements scolaires."}
@@ -254,7 +254,7 @@ export function AnnualPlanner({
                 )
               }
               disabled={state.schoolHolidayPreference === "avoid"}
-              className={`inline-flex h-12 items-center justify-center rounded-full px-6 font-bold transition ${
+              className={`inline-flex h-12 w-full items-center justify-center rounded-full px-6 font-bold transition sm:w-auto ${
                 state.schoolHolidayPreference === "avoid"
                   ? "cursor-not-allowed border border-line bg-paper text-ink/40"
                   : "bg-ink text-white"
@@ -269,7 +269,7 @@ export function AnnualPlanner({
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           label={language === "en" ? "Segments retained" : "Ponts retenus"}
           value={String(plan.segments.length)}

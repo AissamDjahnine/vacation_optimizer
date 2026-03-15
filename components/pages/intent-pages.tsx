@@ -6,9 +6,11 @@ import { ResultCard } from "@/components/planner/result-card";
 import { ZoneLookupPanel } from "@/components/planner/zone-lookup-panel";
 import {
   ascension2026Content,
+  armistice2026Content,
   buildLeaveBudgetGuide2026Content,
   buildSchoolZone2026Content,
   mayBridges2026Content,
+  yearEnd2026Content,
   weekdayHolidays2026Content,
 } from "@/content/intent-pages";
 import { schoolAuthority2026Block } from "@/content/official-cases";
@@ -105,6 +107,96 @@ export function MayBridges2026Page({
           </div>
           <div className="mt-6 space-y-6">
             {mayResults.map((period, index) => (
+              <ResultCard
+                key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                language={language}
+                period={period}
+                rank={index + 1}
+                highlighted={index === 0}
+              />
+            ))}
+          </div>
+        </section>
+      }
+    />
+  );
+}
+
+export function Armistice2026Page({
+  language,
+  holidays,
+}: {
+  language: AppLanguage;
+  holidays: Holiday[];
+}) {
+  const results = DateOptimizer.findFlexiblePeriods({
+    holidays,
+    vacationDaysToUse: 5,
+    availableRttDays: 0,
+    year: 2026,
+    month: 11,
+  }).slice(0, 2);
+
+  return (
+    <GenericGuidePage
+      language={language}
+      badge={{ fr: "11 novembre", en: "11 November" }}
+      content={armistice2026Content}
+      extraBlocks={
+        <section className="editorial-panel">
+          <div className="space-y-3">
+            <p className="editorial-kicker">{language === "en" ? "Autumn examples" : "Exemples d’automne"}</p>
+            <h2 className="text-3xl font-black tracking-tight text-ink">
+              {language === "en" ? "Two November setups to compare" : "Deux configurations de novembre à comparer"}
+            </h2>
+          </div>
+          <div className="mt-6 space-y-6">
+            {results.map((period, index) => (
+              <ResultCard
+                key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                language={language}
+                period={period}
+                rank={index + 1}
+                highlighted={index === 0}
+              />
+            ))}
+          </div>
+        </section>
+      }
+    />
+  );
+}
+
+export function YearEnd2026Page({
+  language,
+  holidays,
+}: {
+  language: AppLanguage;
+  holidays: Holiday[];
+}) {
+  const decemberResults = DateOptimizer.findFlexiblePeriods({
+    holidays,
+    vacationDaysToUse: 5,
+    availableRttDays: 0,
+    year: 2026,
+    month: 12,
+  }).slice(0, 2);
+
+  return (
+    <GenericGuidePage
+      language={language}
+      badge={{ fr: "Fin d’année 2026", en: "Late year 2026" }}
+      content={yearEnd2026Content}
+      extraBlocks={
+        <section className="editorial-panel">
+          <div className="space-y-3">
+            <p className="editorial-kicker">{language === "en" ? "Late-year checks" : "Vérifications de fin d’année"}</p>
+            <h2 className="text-3xl font-black tracking-tight text-ink">
+              {language === "en" ? "What December still makes possible" : "Ce que décembre permet encore"}
+            </h2>
+          </div>
+          <div className="mt-6 space-y-6">
+            {decemberResults.map((period, index) => (
               <ResultCard
                 key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
                 language={language}

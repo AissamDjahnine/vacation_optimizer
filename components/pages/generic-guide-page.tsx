@@ -37,11 +37,11 @@ export function GenericGuidePage({
               </p>
             </div>
             <div className="rounded-4xl border border-line bg-paper p-6">
-              <p className="editorial-kicker">{language === "en" ? "Best use" : "Meilleur usage"}</p>
+              <p className="editorial-kicker">{language === "en" ? "Search intent" : "Intention de recherche"}</p>
               <p className="mt-4 text-base leading-7 text-ink/74">
                 {language === "en"
-                  ? "These pages help you narrow down ideas quickly. The planner remains the place where your budget, RTT and school-holiday settings actually decide."
-                  : "Ces pages servent à réduire les options rapidement. Le simulateur reste l’endroit où votre budget, vos RTT et vos réglages vacances scolaires décident vraiment."}
+                  ? "These pages are meant to answer one concrete planning question fast. The planner remains the place where your budget, RTT and school-holiday settings actually decide."
+                  : "Ces pages sont là pour répondre vite à une question concrète. Le simulateur reste l’endroit où votre budget, vos RTT et vos réglages vacances scolaires décident vraiment."}
               </p>
             </div>
           </div>

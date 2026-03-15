@@ -6,6 +6,8 @@ export type GuidePageType =
   | "faq-ponts-jours-feries"
   | "pont-ascension-2026"
   | "ponts-mai-2026"
+  | "pont-11-novembre-2026"
+  | "pont-noel-fin-annee-2026"
   | "vacances-scolaires-2026-zone-a"
   | "vacances-scolaires-2026-zone-b"
   | "vacances-scolaires-2026-zone-c"
@@ -25,6 +27,8 @@ export const routes = {
   faq: "/faq-ponts-jours-feries",
   ascension2026: "/pont-ascension-2026",
   mayBridges2026: "/ponts-mai-2026",
+  armistice2026: "/pont-11-novembre-2026",
+  yearEnd2026: "/pont-noel-fin-annee-2026",
   schoolHolidaysZone2026: (zone: "A" | "B" | "C") =>
     `/vacances-scolaires-2026-zone-${zone.toLowerCase()}`,
   weekdayHolidays2026: "/jours-feries-2026-semaine",

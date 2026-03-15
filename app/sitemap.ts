@@ -19,6 +19,8 @@ const pages = [
   routes.faq,
   routes.ascension2026,
   routes.mayBridges2026,
+  routes.armistice2026,
+  routes.yearEnd2026,
   routes.schoolHolidaysZone2026("A"),
   routes.schoolHolidaysZone2026("B"),
   routes.schoolHolidaysZone2026("C"),

@@ -77,8 +77,75 @@ export const mayBridges2026Content: GuideContent = {
   ],
   relatedLinks: [
     { href: routes.ascension2026, label: { fr: "Pont de l’Ascension 2026", en: "Ascension bridge 2026" } },
+    { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
     { href: routes.leaveBudget5Guide2026, label: { fr: "Poser 5 jours en 2026", en: "Book 5 days in 2026" } },
     { href: routes.leaveBudget10Guide2026, label: { fr: "Poser 10 jours en 2026", en: "Book 10 days in 2026" } },
+  ],
+};
+
+export const armistice2026Content: GuideContent = {
+  title: {
+    fr: "Pont du 11 novembre 2026 : le bon cas d’automne à tester",
+    en: "11 November 2026 bridge: the autumn case worth testing",
+  },
+  subtitle: {
+    fr: "Si vous cherchez un pont propre hors mai, le 11 novembre 2026 est souvent le premier cas à ouvrir.",
+    en: "If you want a clean bridge outside May, 11 November 2026 is often the first case to open.",
+  },
+  sections: [
+    {
+      title: { fr: "Pourquoi ce cas mérite sa propre page", en: "Why this case deserves its own page" },
+      accent: "green",
+      chips: [{ fr: "Novembre 2026", en: "November 2026" }, { fr: "Automne", en: "Autumn" }],
+      body: [
+        {
+          fr: "Le 11 novembre donne un point d’entrée simple à lire et souvent rentable. C’est utile si vous n’avez rien trouvé de convaincant au printemps ou si vous préférez répartir vos jours.",
+          en: "11 November offers a simple and often profitable entry point. It helps if spring was not convincing or if you prefer to spread your days off.",
+        },
+      ],
+      example: {
+        fr: "Exemple : testez novembre 2026 avec un petit budget pour comparer un week-end prolongé propre à une stratégie plus étalée sur l’année.",
+        en: "Example: test November 2026 with a small budget to compare one clean long weekend against a more spread annual strategy.",
+      },
+    },
+  ],
+  relatedLinks: [
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.yearEnd2026, label: { fr: "Noël et fin d’année 2026", en: "Christmas and late-year 2026" } },
+    { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
+  ],
+};
+
+export const yearEnd2026Content: GuideContent = {
+  title: {
+    fr: "Pont de Noël et fin d’année 2026 : ce qu’il reste à jouer",
+    en: "Christmas and late-year 2026 bridge: what is still worth testing",
+  },
+  subtitle: {
+    fr: "La fin d’année ne donne pas toujours le meilleur rendement, mais elle peut encore offrir une coupure propre selon votre budget réel.",
+    en: "Late year does not always produce the best return, but it can still offer a clean break depending on your real budget.",
+  },
+  sections: [
+    {
+      title: { fr: "Le bon angle à adopter", en: "The right angle" },
+      accent: "blue",
+      chips: [{ fr: "Noël", en: "Christmas" }, { fr: "Nouvel An", en: "New Year" }],
+      body: [
+        {
+          fr: "En fin d’année, l’intérêt dépend davantage de votre budget restant et des jours déjà posés. Cette page aide surtout à décider s’il faut encore tester décembre ou passer directement au plan annuel.",
+          en: "Late in the year, the value depends more on your remaining budget and the days you have already booked. This page mainly helps decide whether December is still worth testing or whether you should switch straight to the annual plan.",
+        },
+      ],
+      specialCase: {
+        fr: "À éviter : forcer un plan de fin d’année alors que les meilleurs blocs ont déjà été consommés plus tôt.",
+        en: "Avoid this trap: forcing a late-year plan when the strongest blocks have already been used earlier.",
+      },
+    },
+  ],
+  relatedLinks: [
+    { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
+    { href: routes.annualPlannerYear(2026), label: { fr: "Planifier toute l’année 2026", en: "Plan the full year 2026" } },
+    { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
   ],
 };
 
