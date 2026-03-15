@@ -20,7 +20,7 @@ export async function generateMetadata({
     return buildNotFoundMetadata("fr");
   }
   return buildMetadata({
-    title: `Jours fériés ${year} en France`,
+    title: `Jours fériés ${year} en France : calendrier complet`,
     description: `Toutes les dates officielles des jours fériés ${year} en France, avec les repères qui valent un vrai test dans le simulateur.`,
     path: `/jours-feries/${year}`,
     enPath: `/en/jours-feries/${year}`,

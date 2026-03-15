@@ -4,7 +4,7 @@ import { getHolidaysForYear } from "@/lib/page-data";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Pont de l’Ascension 2026",
+  title: "Pont de l’Ascension 2026 : dates et cas à tester",
   description: "Dates utiles, pont scolaire officiel et meilleurs cas à tester pour profiter du pont de l’Ascension 2026 en France.",
   path: "/pont-ascension-2026",
   enPath: "/en/pont-ascension-2026",

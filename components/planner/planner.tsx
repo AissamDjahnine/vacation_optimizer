@@ -277,12 +277,12 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     <div className="space-y-8">
       <Reveal>
         <section className="space-y-5 text-center">
-          <h1 className="text-5xl font-black tracking-tight text-ink sm:text-6xl">
+          <h2 className="text-5xl font-black tracking-tight text-ink sm:text-6xl">
             {language === "en"
               ? "French leave planner and bridge ideas"
               : "Simulateur de ponts et congés 2026"}
-          </h1>
-          <p className="mx-auto max-w-3xl text-lg leading-8 text-ink/70">
+          </h2>
+          <p className="mx-auto max-w-3xl text-lg leading-8 text-ink/80">
             {language === "en"
               ? "Pick a month, your leave budget, and compare the bridge ideas that give you the most days off."
               : "Choisissez un mois, un budget, puis regardez quelles dates vous donnent le plus de jours de repos."}
@@ -310,7 +310,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               <p className="text-2xl font-black tracking-tight text-ink">
                 {language === "en" ? preset.enTitle : preset.frTitle}
               </p>
-              <p className="mt-3 text-base leading-7 text-ink/72">
+              <p className="mt-3 text-base leading-7 text-ink/80">
                 {language === "en" ? preset.enBody : preset.frBody}
               </p>
               <span className="mt-5 inline-flex font-bold text-coral">
@@ -513,7 +513,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                         ? `day${safePaidLeaveBudget > 1 ? "s" : ""} available`
                         : `jour${safePaidLeaveBudget > 1 ? "s" : ""} disponible${safePaidLeaveBudget > 1 ? "s" : ""}`}
                     </p>
-                    <p className="mt-3 text-sm leading-7 text-ink/78">
+                    <p className="mt-3 text-sm leading-7 text-ink/82">
                       {language === "en"
                         ? "Maximum number of working days to book. RTT is used first when enabled."
                         : "Maximum de jours ouvrés à poser. Les RTT, si activés, sont utilisés avant."}
@@ -617,7 +617,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </div>
 
               <div className="space-y-4">
-                <p className="text-lg text-ink/78">
+                <p className="text-lg text-ink/82">
                   {computation?.exact
                     ? language === "en"
                       ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
@@ -634,7 +634,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                           language,
                         )}.`}
                 </p>
-                <p className="font-semibold text-ink/74">
+                <p className="font-semibold text-ink/80">
                   {language === "en"
                     ? `If you kept every displayed suggestion, the cumulative total would be ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
                     : `Si vous gardiez toutes les suggestions affichées, le total cumulé serait de ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
@@ -668,7 +668,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       ? "No useful bridge found for this month."
                       : "Aucun pont utile trouvé pour ce mois."}
                   </p>
-                  <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-ink/70">
+                  <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-ink/80">
                     {language === "en"
                       ? "Try another month or increase the budget. If your settings are strict, the planner can still surface close suggestions."
                       : "Essayez un autre mois ou augmentez le budget. Si vos réglages sont stricts, le simulateur peut encore faire remonter des suggestions proches."}
@@ -692,7 +692,7 @@ function Field({
 }) {
   return (
     <label className="flex min-w-0 flex-col gap-2">
-      <span className="text-sm font-bold text-ink/80">{label}</span>
+      <span className="text-sm font-bold text-ink/88">{label}</span>
       {children}
     </label>
   );
@@ -700,7 +700,7 @@ function Field({
 
 function LegendItem({ color, label }: { color: string; label: string }) {
   return (
-    <span className="inline-flex items-center gap-2 font-medium text-ink/88">
+    <span className="inline-flex items-center gap-2 font-medium text-ink">
       <span className={`h-2.5 w-2.5 rounded-full ${color}`} />
       {label}
     </span>
