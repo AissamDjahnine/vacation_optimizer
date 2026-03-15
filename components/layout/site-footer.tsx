@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ProtectedEmailLink } from "@/components/layout/protected-email-link";
 import { AppLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
@@ -14,7 +15,6 @@ export function SiteFooter({ language }: SiteFooterProps) {
           summary: "Bridge planning, public holidays and school holidays for France.",
           product: "Planner",
           privacy: "No account, no saved data.",
-          contact: "contact@pontsmalins.com",
           guides: "Useful guides",
           trust: "Trust and legal",
           sources: "Official sources",
@@ -32,7 +32,6 @@ export function SiteFooter({ language }: SiteFooterProps) {
           summary: "Ponts, jours fériés et vacances scolaires pour mieux poser vos congés en France.",
           product: "Simulateur",
           privacy: "Pas de compte, pas de données enregistrées.",
-          contact: "contact@pontsmalins.com",
           guides: "Guides utiles",
           trust: "Confiance et cadre",
           sources: "Sources officielles",
@@ -131,9 +130,11 @@ export function SiteFooter({ language }: SiteFooterProps) {
         </div>
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">Contact</h3>
-          <a href={`mailto:${copy.contact}`} className="text-white/84 transition hover:text-white">
-            {copy.contact}
-          </a>
+          <ProtectedEmailLink
+            user="contact"
+            domain="pontsmalins.com"
+            className="text-white/84 transition hover:text-white"
+          />
         </div>
       </div>
       </div>

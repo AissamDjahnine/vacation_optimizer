@@ -4,7 +4,7 @@ import { HomePage } from "@/components/pages/home-page";
 export const metadata: Metadata = {
   title: "Simulateur de ponts et congés 2026 | Ponts Malins",
   description:
-    "Simulez vos ponts 2026, comparez les meilleurs mois, trouvez votre zone scolaire et planifiez vos congés en France.",
+    "Simulez vos ponts 2026, comparez les meilleurs mois, trouvez votre zone scolaire et planifiez vos congés en France. Exportez ensuite votre plan.",
   alternates: {
     canonical: "/",
     languages: {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Simulateur de ponts et congés 2026 | Ponts Malins",
     description:
-      "Simulez vos ponts 2026, comparez les meilleurs mois et planifiez vos congés en France.",
+      "Simulez vos ponts 2026, comparez les meilleurs mois, trouvez votre zone scolaire et exportez votre plan.",
     url: "/",
     siteName: "Ponts Malins",
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Simulateur de ponts et congés 2026 | Ponts Malins",
     description:
-      "Simulez vos ponts 2026, comparez les meilleurs mois et planifiez vos congés en France.",
+      "Simulez vos ponts 2026, comparez les meilleurs mois, trouvez votre zone scolaire et exportez votre plan.",
     images: ["/opengraph-image"],
   },
 };

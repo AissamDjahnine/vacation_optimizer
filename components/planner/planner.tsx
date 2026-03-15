@@ -278,7 +278,9 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       <Reveal>
         <section className="space-y-5 text-center">
           <h1 className="text-5xl font-black tracking-tight text-ink sm:text-6xl">
-            {language === "en" ? "Planner" : "Simulateur"}
+            {language === "en"
+              ? "French leave planner and bridge ideas"
+              : "Simulateur de ponts et congés 2026"}
           </h1>
           <p className="mx-auto max-w-3xl text-lg leading-8 text-ink/70">
             {language === "en"

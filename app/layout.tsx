@@ -13,7 +13,12 @@ export const metadata: Metadata = {
     template: "%s | Ponts Malins",
   },
   description:
-    "Simulateur de ponts, jours fériés et vacances scolaires pour optimiser vos congés en France.",
+    "Simulateur de ponts, jours fériés et vacances scolaires pour optimiser vos congés en France et exporter votre plan.",
+  icons: {
+    icon: [{ url: "/icon", type: "image/png" }, { url: "/favicon.ico", type: "image/x-icon" }],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/apple-icon", type: "image/png" }],
+  },
   openGraph: {
     title: "Simulateur de ponts et congés 2026",
     description:
