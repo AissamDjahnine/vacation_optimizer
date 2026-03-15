@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/site-shell";
+
+const googleAnalyticsId = "G-D9TND19B0J";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pontsmalins.com"),
@@ -36,6 +39,18 @@ export default function RootLayout({
       <body className="min-h-screen text-ink">
         <SiteShell>{children}</SiteShell>
         <SpeedInsights />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}');
+          `}
+        </Script>
       </body>
     </html>
   );
