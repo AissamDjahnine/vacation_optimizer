@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Legal notice",
   description:
     "Legal notice for Ponts Malins: editor, hosting and product information scope.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function LegalPage() {

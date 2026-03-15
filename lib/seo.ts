@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+const defaultOpenGraphImage = "/opengraph-image";
+
 export function buildMetadata({
   title,
   description,
@@ -29,11 +31,13 @@ export function buildMetadata({
       url: path,
       siteName: "Ponts Malins",
       type: "article",
+      images: [defaultOpenGraphImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [defaultOpenGraphImage],
     },
   };
 }
@@ -57,11 +61,13 @@ export function buildNotFoundMetadata(language: "fr" | "en" = "fr"): Metadata {
       description,
       siteName: "Ponts Malins",
       type: "website",
+      images: [defaultOpenGraphImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [defaultOpenGraphImage],
     },
   };
 }

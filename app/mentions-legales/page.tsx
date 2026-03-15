@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Mentions légales",
   description:
     "Mentions légales de Ponts Malins : éditeur du site, contact et périmètre d'information.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function LegalPage() {

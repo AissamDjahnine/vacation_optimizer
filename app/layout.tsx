@@ -9,23 +9,25 @@ const googleAnalyticsId = "G-D9TND19B0J";
 export const metadata: Metadata = {
   metadataBase: new URL("https://pontsmalins.com"),
   title: {
-    default: "Ponts Malins",
+    default: "Simulateur de ponts et congés 2026",
     template: "%s | Ponts Malins",
   },
   description:
     "Simulateur de ponts, jours fériés et vacances scolaires pour optimiser vos congés en France.",
   openGraph: {
-    title: "Ponts Malins",
+    title: "Simulateur de ponts et congés 2026",
     description:
       "Trouvez les meilleurs ponts, comparez vos options et planifiez vos congés plus intelligemment.",
     type: "website",
     siteName: "Ponts Malins",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ponts Malins",
+    title: "Simulateur de ponts et congés 2026",
     description:
       "Trouvez les meilleurs ponts, comparez vos options et planifiez vos congés plus intelligemment.",
+    images: ["/opengraph-image"],
   },
 };
 

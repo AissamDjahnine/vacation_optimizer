@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Privacy",
   description:
     "Privacy page for Ponts Malins: lightweight usage, no account required and data scope for exports.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function PrivacyPage() {

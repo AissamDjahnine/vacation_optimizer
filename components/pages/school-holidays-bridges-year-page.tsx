@@ -209,6 +209,22 @@ export function SchoolHolidaysBridgesYearPage({
             label: { fr: `Simulateur – zone ${zone}`, en: `Planner – zone ${zone}` },
           },
           { href: routes.schoolHolidaysFamily2026, label: { fr: "Guide familles 2026", en: "Family guide 2026" } },
+          ...(year === 2026
+            ? ([
+                {
+                  href: routes.schoolHolidaysZone2026("A"),
+                  label: { fr: "Vacances scolaires 2026 zone A", en: "School holidays 2026 zone A" },
+                },
+                {
+                  href: routes.schoolHolidaysZone2026("B"),
+                  label: { fr: "Vacances scolaires 2026 zone B", en: "School holidays 2026 zone B" },
+                },
+                {
+                  href: routes.schoolHolidaysZone2026("C"),
+                  label: { fr: "Vacances scolaires 2026 zone C", en: "School holidays 2026 zone C" },
+                },
+              ] as const)
+            : []),
         ]}
       />
     </PageShell>

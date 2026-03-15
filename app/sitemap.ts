@@ -27,22 +27,37 @@ const pages = [
   routes.weekdayHolidays2026,
   routes.leaveBudget5Guide2026,
   routes.leaveBudget10Guide2026,
-  routes.legal,
-  routes.privacy,
   routes.sources,
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return pages.flatMap((path) => [
+  return pages.flatMap((path) => {
+    const frUrl = `${baseUrl}${path}`;
+    const enPath = `/en${path === "/" ? "" : path}`;
+    const enUrl = `${baseUrl}${enPath}`;
+    const lastModified = path === routes.home ? new Date("2026-03-15T18:00:00.000Z") : new Date("2026-03-15T17:20:14.401Z");
+
+    return [
     {
-      url: `${baseUrl}${path}`,
-      lastModified: new Date(),
+      url: frUrl,
+      lastModified,
       alternates: {
         languages: {
-          en: `${baseUrl}/en${path === "/" ? "" : path}`,
-          fr: `${baseUrl}${path}`,
+          en: enUrl,
+          fr: frUrl,
         },
       },
     },
-  ]);
+    {
+      url: enUrl,
+      lastModified,
+      alternates: {
+        languages: {
+          en: enUrl,
+          fr: frUrl,
+        },
+      },
+    },
+  ];
+  });
 }

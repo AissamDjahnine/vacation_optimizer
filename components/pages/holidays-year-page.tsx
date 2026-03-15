@@ -144,6 +144,17 @@ export function HolidaysYearPage({
         language={language}
         links={[
           { href: routes.bridgesYear(year), label: { fr: `Ponts ${year}`, en: `Bridge ideas ${year}` } },
+          ...(year === 2026
+            ? [
+                {
+                  href: routes.weekdayHolidays2026,
+                  label: {
+                    fr: "Jours fériés 2026 qui tombent en semaine",
+                    en: "Weekday public holidays in 2026",
+                  },
+                },
+              ]
+            : []),
           { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
         ]}
       />

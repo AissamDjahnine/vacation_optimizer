@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Confidentialité",
   description:
     "Politique de confidentialité de Ponts Malins : usage du site, données non enregistrées et périmètre des exports.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function PrivacyPage() {
