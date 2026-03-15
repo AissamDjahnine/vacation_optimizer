@@ -55,6 +55,10 @@ export function buildNotFoundMetadata(language: "fr" | "en" = "fr"): Metadata {
     robots: {
       index: false,
       follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
     },
     openGraph: {
       title,
@@ -95,6 +99,7 @@ export function buildArticleSchema({
     author: {
       "@type": "Organization",
       name: "Ponts Malins",
+      url: "https://pontsmalins.com",
     },
     publisher: {
       "@type": "Organization",
