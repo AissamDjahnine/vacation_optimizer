@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { HomePage } from "@/components/pages/home-page";
+import { buildWebApplicationSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "French leave planner and bridge ideas",
@@ -30,6 +32,24 @@ export const metadata: Metadata = {
   },
 };
 
+const schema = buildWebApplicationSchema({
+  name: "Ponts Malins",
+  description:
+    "Plan French public-holiday bridges, compare leave ideas, find the right school zone and build your 2026 leave plan.",
+  path: "/en",
+  language: "en",
+});
+
 export default function Page() {
-  return <HomePage language="en" />;
+  return (
+    <>
+      <Script
+        id="home-webapplication-schema-en"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <h1 className="sr-only">French leave planner and bridge ideas</h1>
+      <HomePage language="en" />
+    </>
+  );
 }

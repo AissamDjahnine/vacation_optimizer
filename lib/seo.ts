@@ -109,3 +109,32 @@ export function buildArticleSchema({
     dateModified: "2026-03-15T18:45:00.000Z",
   };
 }
+
+export function buildWebApplicationSchema({
+  name,
+  description,
+  path,
+  language,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  language: "fr" | "en";
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name,
+    description,
+    url: `https://pontsmalins.com${path}`,
+    applicationCategory: "TravelApplication",
+    operatingSystem: "Web",
+    inLanguage: language === "fr" ? "fr-FR" : "en-US",
+    image: "https://pontsmalins.com/opengraph-image",
+    publisher: {
+      "@type": "Organization",
+      name: "Ponts Malins",
+      url: "https://pontsmalins.com",
+    },
+  };
+}
