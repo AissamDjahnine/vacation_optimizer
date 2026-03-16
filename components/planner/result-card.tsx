@@ -37,19 +37,6 @@ export function ResultCard({
     language === "en"
       ? "Score compares total days off to the paid leave days you actually need to book."
       : "Le score compare le total de jours de repos aux jours de congé payé réellement posés.";
-  const detailLine = [
-    language === "en"
-      ? `${period.paidLeaveDaysUsed} leave day${period.paidLeaveDaysUsed > 1 ? "s" : ""} to book`
-      : `${period.paidLeaveDaysUsed} jour${period.paidLeaveDaysUsed > 1 ? "s" : ""} à poser`,
-    period.rttDaysUsed > 0 ? `${period.rttDaysUsed} RTT` : null,
-    period.includedHolidays.length > 0
-      ? language === "en"
-        ? `${period.includedHolidays.length} public holiday${period.includedHolidays.length > 1 ? "s" : ""}`
-        : `${period.includedHolidays.length} férié${period.includedHolidays.length > 1 ? "s" : ""}`
-      : null,
-  ]
-    .filter(Boolean)
-    .join(" • ");
   return (
     <article
       className={`rounded-[2rem] border p-5 shadow-card transition duration-200 hover:-translate-y-0.5 sm:p-6 ${
@@ -76,15 +63,12 @@ export function ResultCard({
               <button
                 type="button"
                 aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-white text-xs font-bold text-ink/80 transition hover:border-coral hover:text-coral"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint px-3 text-xs font-bold text-mint-strong transition hover:border-mint-strong/35 hover:bg-mint/80"
               >
-                i
+                Score: {period.worthScore.toFixed(2)}
               </button>
               <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-3 w-64 -translate-x-1/2 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
                 {scoreTooltip}
-                <div className="mt-1 font-semibold text-ink/74">
-                  Score: {period.worthScore.toFixed(2)}
-                </div>
               </div>
             </div>
           </div>
@@ -113,7 +97,6 @@ export function ResultCard({
                 </span>
               ) : null}
             </div>
-            <p className="text-sm font-medium text-ink/68">{detailLine}</p>
           </div>
 
           <div className="mt-auto border-t border-line/70 pt-4">
@@ -121,10 +104,12 @@ export function ResultCard({
               <IcsExportButton
                 bundle={calendarBundle}
                 label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
+                className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
               />
               <GoogleCalendarButton
                 href={googleCalendarUrl}
                 label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
+                className="h-11 border-ink/10 bg-ink px-4 text-sm text-white shadow-sm hover:border-ink hover:bg-ink/92 hover:text-white"
               />
             </div>
           </div>

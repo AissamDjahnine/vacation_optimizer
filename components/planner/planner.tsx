@@ -675,14 +675,14 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                     color="bg-violet-400"
                     label={language === "en" ? "School holidays" : "Vacances scolaires"}
                   />
-                  <div className="group relative inline-flex items-center">
-                    <button
-                      type="button"
-                      aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-white text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-                    >
-                      ?
-                    </button>
+                <div className="group relative inline-flex items-center">
+                  <button
+                    type="button"
+                    aria-label={language === "en" ? "Score explanation" : "Explication du score"}
+                    className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint px-3 text-sm font-bold text-mint-strong transition hover:border-mint-strong/35 hover:bg-mint/80"
+                  >
+                    Score ?
+                  </button>
                     <div className="pointer-events-none absolute bottom-full right-0 z-20 mb-3 w-64 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
                       {language === "en"
                         ? "Score compares the total days off to the paid leave days you actually book."
