@@ -77,7 +77,7 @@ export function BridgesYearPage({
             <h2 className="text-3xl font-black tracking-tight text-ink sm:text-4xl">
               {language === "en"
                 ? "You do not need to inspect every month"
-                : "Vous n’avez pas besoin d’inspecter tous les mois"}
+                : "Inutile de vérifier tous les mois un par un"}
             </h2>
             <p className="editorial-lead">
               {language === "en"
@@ -170,11 +170,11 @@ export function BridgesYearPage({
             </h2>
             <span className="chip">{monthlyHighlights.length}</span>
           </div>
-          <p className="text-base leading-7 text-ink/72">
-            {language === "en"
-              ? "Each card below is one strong candidate found with a five-day budget. Use this list as a shortlist before switching to your exact constraints."
-              : "Chaque carte ci-dessous est un bon candidat trouvé avec un budget de cinq jours. Utilisez cette liste comme une short-list avant de passer à vos contraintes exactes."}
-          </p>
+            <p className="text-base leading-7 text-ink/72">
+              {language === "en"
+                ? "Each card below is one strong candidate found with a five-day budget. Use this list as a shortlist before switching to your exact constraints."
+              : "Chaque carte ci-dessous est un bon candidat trouvé avec un budget de cinq jours. Utilisez cette liste comme une sélection avant de passer à vos contraintes exactes."}
+            </p>
         </section>
       </Reveal>
 

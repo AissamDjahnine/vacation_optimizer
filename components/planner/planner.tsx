@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ZoneLookupPanel } from "@/components/planner/zone-lookup-panel";
@@ -54,6 +54,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const [schoolHolidayPeriods, setSchoolHolidayPeriods] = useState<SchoolHolidayPeriod[]>([]);
   const [loading, setLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
+  const [visibleResultCount, setVisibleResultCount] = useState(5);
+  const resultsRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const nextConfig = plannerConfigFromUrlSearchParams(searchParams);
@@ -241,6 +243,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
   const applyPreset = (presetState: Partial<PlannerState>) => {
     setState((current) => ({ ...current, ...presetState }));
+    setVisibleResultCount(5);
+    setHasSearchedOnce(true);
   };
 
   const updateSchoolPreference = (preference: SchoolHolidayPreference) => {
@@ -252,7 +256,23 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
   const submit = () => {
     setHasSearchedOnce(true);
+    setVisibleResultCount(5);
   };
+
+  useEffect(() => {
+    if (!hasSearchedOnce || !computation || loading) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [computation, hasSearchedOnce, loading]);
+
+  const visiblePeriods = computation ? computation.periods.slice(0, visibleResultCount) : [];
+  const hasHiddenPeriods = computation ? computation.periods.length > visibleResultCount : false;
 
   const shiftMonth = (direction: -1 | 1) => {
     setState((current) => {
@@ -305,7 +325,12 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               key={preset.frTitle}
               type="button"
               onClick={() => applyPreset(preset.state)}
-              className="rounded-4xl border border-line bg-white p-6 text-left shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
+              aria-label={
+                language === "en"
+                  ? `Test preset: ${preset.enTitle}`
+                  : `Tester le scénario : ${preset.frTitle}`
+              }
+              className="cursor-pointer rounded-4xl border border-line bg-white p-6 text-left shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
             >
               <p className="text-2xl font-black tracking-tight text-ink">
                 {language === "en" ? preset.enTitle : preset.frTitle}
@@ -352,7 +377,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   }
                   title={
                     language === "en"
-                      ? "Do not know your zone yet?"
+                      ? "Don't know your zone yet?"
                       : "Vous ne connaissez pas encore votre zone ?"
                   }
                   subtitle={
@@ -427,7 +452,11 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       ))}
                     </select>
                   </Field>
-                  <Field label={language === "en" ? "School zone" : "Zone scolaire"}>
+                  <Field
+                    label={
+                      language === "en" ? "French school zone (A, B or C)" : "Zone scolaire"
+                    }
+                  >
                     <div
                       aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
                       role="group"
@@ -581,7 +610,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       </Reveal>
 
       {hasSearchedOnce ? (
-        <section className="glass-panel rounded-[2.25rem] p-6 sm:p-8">
+        <section ref={resultsRef} className="glass-panel rounded-[2.25rem] p-6 sm:p-8">
             <div className="space-y-4">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-4">
@@ -649,7 +678,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   <SkeletonCard />
                 </>
               ) : computation && computation.periods.length > 0 ? (
-                computation.periods.map((period, index) => (
+                visiblePeriods.map((period, index) => (
                   <div
                     key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}-${index}`}
                   >
@@ -676,6 +705,22 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 </div>
               )}
             </div>
+
+            {hasHiddenPeriods ? (
+              <div className="mt-8 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisibleResultCount((current) =>
+                      Math.min(current + 5, computation?.periods.length ?? current),
+                    )
+                  }
+                  className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                >
+                  {language === "en" ? "Show 5 more" : "Voir 5 de plus"}
+                </button>
+              </div>
+            ) : null}
           </section>
       ) : null}
 

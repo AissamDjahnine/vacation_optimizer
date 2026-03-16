@@ -98,7 +98,7 @@ export function AnnualPlanner({
           <p className="editorial-lead">
             {language === "en"
               ? "Instead of testing one month after another, build a full-year shortlist and keep your budget under control."
-              : "Au lieu de tester un mois après l’autre, construisez une short-list annuelle et gardez votre budget sous contrôle."}
+              : "Au lieu de tester un mois après l’autre, construisez une sélection annuelle et gardez votre budget sous contrôle."}
           </p>
         </div>
 
@@ -299,8 +299,8 @@ export function AnnualPlanner({
             </h2>
             <p className="mt-3 max-w-3xl text-base leading-7 text-ink/72">
               {language === "en"
-                ? "This first version remains greedy and practical: it keeps the best non-overlapping periods while preserving your budget."
-                : "Cette première version reste gloutonne et pragmatique : elle garde les meilleures périodes sans chevauchement tout en préservant votre budget."}
+                ? "This first version keeps the strongest non-overlapping periods while preserving your budget."
+                : "Cette sélection est optimisée pour le rendement et reste dans votre budget."}
             </p>
           </div>
           {plan.segments.length > 0 ? (

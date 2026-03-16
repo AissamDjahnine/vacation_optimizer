@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AppLanguage } from "@/lib/i18n";
+import { AppLanguage, prefixForLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 const copy = {
@@ -20,7 +20,7 @@ const copy = {
       },
       {
         title: "Sortie exploitable",
-        body: "Chaque suggestion peut être exportée au format .ics ou envoyée vers Google Calendar quand elle vaut vraiment le détour.",
+        body: "Chaque suggestion peut être exportée au format .ics ou envoyée vers Google Calendar quand elle vaut le coup d’être conservée.",
         href: routes.annualPlannerYear(2026),
         cta: "Tester le plan annuel",
       },
@@ -52,7 +52,6 @@ const copy = {
 } as const;
 
 export function HomeTrustStrip({ language }: { language: AppLanguage }) {
-  const localized = (href: string) => (language === "en" ? `/en${href === "/" ? "" : href}` : href);
   const section = copy[language];
 
   return (
@@ -71,7 +70,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
             <h3 className="text-lg font-bold text-ink">{item.title}</h3>
             <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
             <Link
-              href={localized(item.href)}
+              href={prefixForLanguage(item.href, language)}
               className="mt-4 inline-flex text-sm font-bold text-ink transition hover:text-coral"
             >
               {item.cta}

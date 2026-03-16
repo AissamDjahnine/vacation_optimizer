@@ -28,6 +28,7 @@ export function ZoneLookupPanel({
 }) {
   const [query, setQuery] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
+  const [emptyError, setEmptyError] = useState(false);
 
   const result = useMemo(
     () => lookupSchoolZone(submittedQuery, language),
@@ -40,6 +41,12 @@ export function ZoneLookupPanel({
       return;
     }
     const nextQuery = query.trim();
+    if (!nextQuery) {
+      setSubmittedQuery("");
+      setEmptyError(true);
+      return;
+    }
+    setEmptyError(false);
     setSubmittedQuery(nextQuery);
     const nextResult = lookupSchoolZone(nextQuery, language);
     if (nextResult.matched && nextResult.zone && onZoneResolved) {
@@ -76,8 +83,15 @@ export function ZoneLookupPanel({
       <form className="mt-5 flex flex-col gap-3 sm:flex-row" onSubmit={handleSubmit}>
         <input
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            if (emptyError) {
+              setEmptyError(false);
+            }
+          }}
           disabled={disabled}
+          aria-invalid={emptyError}
+          aria-describedby={emptyError ? "zone-lookup-error" : undefined}
           placeholder={
             language === "en"
               ? "Example: Paris, 75, Lyon, Versailles"
@@ -93,6 +107,14 @@ export function ZoneLookupPanel({
           {language === "en" ? "Find zone" : "Trouver la zone"}
         </button>
       </form>
+
+      {emptyError ? (
+        <p id="zone-lookup-error" className="mt-3 text-sm font-medium text-rose-700">
+          {language === "en"
+            ? "Please enter a department, city or academy."
+            : "Veuillez saisir un département, une ville ou une académie."}
+        </p>
+      ) : null}
 
       {disabled ? (
         <p className="mt-4 text-sm leading-6 text-ink/58">

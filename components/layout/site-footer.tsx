@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ProtectedEmailLink } from "@/components/layout/protected-email-link";
-import { AppLanguage } from "@/lib/i18n";
+import { AppLanguage, prefixForLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 type SiteFooterProps = {
@@ -45,8 +45,6 @@ export function SiteFooter({ language }: SiteFooterProps) {
           ],
         };
 
-  const localized = (href: string) => (language === "en" ? `/en${href === "/" ? "" : href}` : href);
-
   return (
     <footer className="mt-24 border-t border-white/40 bg-[#171f31] py-14 text-white">
       <div className="container-shell space-y-10">
@@ -87,9 +85,9 @@ export function SiteFooter({ language }: SiteFooterProps) {
         </div>
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
-            Produit
+            {language === "en" ? "Product" : "Produit"}
           </h3>
-          <Link href={localized(routes.home)} className="block text-white/84 transition hover:text-white">
+          <Link href={prefixForLanguage(routes.home, language)} className="block text-white/84 transition hover:text-white">
             {copy.product}
           </Link>
           <p className="text-white/64">{copy.privacy}</p>
@@ -101,7 +99,7 @@ export function SiteFooter({ language }: SiteFooterProps) {
           {copy.links.map((link) => (
             <Link
               key={link.href}
-              href={localized(link.href)}
+              href={prefixForLanguage(link.href, language)}
               className="block text-white/84 transition hover:text-white"
             >
               {link.label}
@@ -113,16 +111,16 @@ export function SiteFooter({ language }: SiteFooterProps) {
             {copy.trust}
           </h3>
           <Link
-            href={localized(routes.sources)}
+            href={prefixForLanguage(routes.sources, language)}
             className="block text-white/84 transition hover:text-white"
           >
             {copy.sources}
           </Link>
-          <Link href={localized(routes.legal)} className="block text-white/84 transition hover:text-white">
+          <Link href={prefixForLanguage(routes.legal, language)} className="block text-white/84 transition hover:text-white">
             {copy.legal}
           </Link>
           <Link
-            href={localized(routes.privacy)}
+            href={prefixForLanguage(routes.privacy, language)}
             className="block text-white/84 transition hover:text-white"
           >
             {copy.privacyPage}

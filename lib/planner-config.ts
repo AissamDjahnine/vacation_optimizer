@@ -68,7 +68,7 @@ export const plannerPresets: Array<{
   {
     frTitle: "5 jours en mai 2026",
     enTitle: "5 days in May 2026",
-    frBody: "Pour trouver un premier gros pont propre sans vider votre budget.",
+    frBody: "Pour profiter d’un long week-end sans toucher à tout votre budget.",
     enBody: "To find a first clean long bridge without draining your budget.",
     state: { year: 2026, month: 5, paidLeaveBudget: 5, mode: "single" },
   },
