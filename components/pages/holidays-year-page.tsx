@@ -53,7 +53,7 @@ export function HolidaysYearPage({
             <h2 className="text-3xl font-black tracking-tight text-ink sm:text-4xl">
               {language === "en"
                 ? "The useful question is not “how many holidays” but “which ones help”"
-                : "La vraie question n’est pas “combien de jours fériés” mais “lesquels aident vraiment”"}
+                : "La vraie question n’est pas “combien de jours fériés” mais “lesquels aident vraiment”."}
             </h2>
             <p className="editorial-lead">
               {language === "en"

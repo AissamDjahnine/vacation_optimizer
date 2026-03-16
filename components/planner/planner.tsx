@@ -73,7 +73,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       : defaultPlannerState.month;
   const safePaidLeaveBudget =
     Number.isFinite(state.paidLeaveBudget) && state.paidLeaveBudget >= 1
-      ? state.paidLeaveBudget
+      ? Math.min(state.paidLeaveBudget, 20)
       : defaultPlannerState.paidLeaveBudget;
   const safeMonthlyRtt =
     Number.isFinite(state.monthlyRtt) && state.monthlyRtt >= 0 && state.monthlyRtt <= 3
@@ -259,6 +259,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     setVisibleResultCount(5);
   };
 
+  const plannerIntroId = "planner-intro";
+
   useEffect(() => {
     if (!hasSearchedOnce || !computation || loading) {
       return;
@@ -302,7 +304,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               ? "French leave planner and bridge ideas"
               : "Simulateur de ponts et congés 2026"}
           </h2>
-          <p className="mx-auto max-w-3xl text-lg leading-8 text-ink/80">
+          <p id={plannerIntroId} className="mx-auto max-w-3xl max-w-[44rem] text-lg leading-8 text-ink/80">
             {language === "en"
               ? "Pick a month, your leave budget, and compare the bridge ideas that give you the most days off."
               : "Choisissez un mois, un budget, puis regardez quelles dates vous donnent le plus de jours de repos."}
@@ -552,6 +554,27 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                     {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
                   </div>
                 </div>
+                <div className="mt-5 flex justify-end">
+                  <label className="flex items-center gap-3 text-sm font-semibold text-ink/82">
+                    <span>{language === "en" ? "Direct input" : "Saisie directe"}</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={20}
+                      value={safePaidLeaveBudget}
+                      onChange={(event) =>
+                        setState((current) => ({
+                          ...current,
+                          paidLeaveBudget: Math.max(
+                            1,
+                            Math.min(20, Number.parseInt(event.target.value || "1", 10)),
+                          ),
+                        }))
+                      }
+                      className="h-11 w-24 rounded-2xl border border-line bg-paper px-3 text-center font-bold text-ink"
+                    />
+                  </label>
+                </div>
                 <input
                   aria-label={
                     language === "en" ? "Paid leave budget slider" : "Curseur du budget de congés payés"
@@ -578,31 +601,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 >
                   {language === "en" ? "Calculate my best bridges" : "Calculer mes meilleurs ponts"}
                 </button>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-end gap-4 text-sm text-ink">
-                <LegendItem color="bg-sand" label={language === "en" ? "Public holiday" : "Férié"} />
-                <LegendItem color="bg-mint" label={language === "en" ? "Weekend" : "Week-end"} />
-                <LegendItem color="bg-lavender" label="RTT" />
-                <LegendItem color="bg-peach" label={language === "en" ? "Paid leave" : "Congé payé"} />
-                <LegendItem
-                  color="bg-violet-400"
-                  label={language === "en" ? "School holidays" : "Vacances scolaires"}
-                />
-                <div className="group relative inline-flex items-center">
-                  <button
-                    type="button"
-                    aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-white text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-                  >
-                    ?
-                  </button>
-                  <div className="pointer-events-none absolute bottom-full right-0 z-20 mb-3 w-64 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-                    {language === "en"
-                      ? "Score compares the total days off to the paid leave days you actually book."
-                      : "Le score compare le nombre total de jours de repos aux jours de congé payé réellement posés."}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -668,6 +666,30 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                     ? `If you kept every displayed suggestion, the cumulative total would be ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
                     : `Si vous gardiez toutes les suggestions affichées, le total cumulé serait de ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
                 </p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-ink">
+                  <LegendItem color="bg-sand" label={language === "en" ? "Public holiday" : "Férié"} />
+                  <LegendItem color="bg-mint" label={language === "en" ? "Weekend" : "Week-end"} />
+                  <LegendItem color="bg-lavender" label="RTT" />
+                  <LegendItem color="bg-peach" label={language === "en" ? "Paid leave" : "Congé payé"} />
+                  <LegendItem
+                    color="bg-violet-400"
+                    label={language === "en" ? "School holidays" : "Vacances scolaires"}
+                  />
+                  <div className="group relative inline-flex items-center">
+                    <button
+                      type="button"
+                      aria-label={language === "en" ? "Score explanation" : "Explication du score"}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-white text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+                    >
+                      ?
+                    </button>
+                    <div className="pointer-events-none absolute bottom-full right-0 z-20 mb-3 w-64 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+                      {language === "en"
+                        ? "Score compares the total days off to the paid leave days you actually book."
+                        : "Le score compare le nombre total de jours de repos aux jours de congé payé réellement posés."}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -721,6 +743,28 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 </button>
               </div>
             ) : null}
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+              >
+                {language === "en" ? "Back to top" : "Retour en haut"}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  document.getElementById(plannerIntroId)?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  })
+                }
+                className="rounded-full border border-line bg-paper px-6 py-3 font-bold text-ink transition hover:border-coral hover:text-coral"
+              >
+                {language === "en" ? "Edit this simulation" : "Modifier la simulation"}
+              </button>
+            </div>
           </section>
       ) : null}
 
