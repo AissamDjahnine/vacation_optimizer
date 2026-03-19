@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import Link from "next/link";
 import Script from "next/script";
 import { ContentHero } from "@/components/content/content-hero";
@@ -35,6 +36,10 @@ function stateName(state: GermanStateCode, locale: GermanyLocale) {
 
 function cycleYear(year: number) {
   return year === 2026 ? 2027 : 2026;
+}
+
+function germanyHomeLabel(locale: GermanyLocale) {
+  return locale === "en" ? "Germany" : "Deutschland";
 }
 
 function OfficialSourcesBlock({
@@ -164,6 +169,14 @@ export function GermanyHomePage({ locale = "de" }: { locale?: GermanyLocale }) {
 
   return (
     <PageShell>
+      <Breadcrumbs
+        items={[
+          {
+            name: germanyHomeLabel(locale),
+            url: localizePath(deRoutes.home, locale),
+          },
+        ]}
+      />
       <GermanyArticleSchema
         headline={
           locale === "en"
@@ -341,6 +354,18 @@ export function GermanyGuidePage({
 }) {
   return (
     <PageShell>
+      <Breadcrumbs
+        items={[
+          {
+            name: germanyHomeLabel(locale),
+            url: localizePath(deRoutes.home, locale),
+          },
+          {
+            name: title,
+            url: localizePath(path, locale),
+          },
+        ]}
+      />
       <GermanyArticleSchema headline={title} description={description} path={path} locale={locale} />
       <ContentHero
         badge={{
@@ -455,6 +480,18 @@ export function GermanyCountryYearPage({
 
   return (
     <PageShell>
+      <Breadcrumbs
+        items={[
+          {
+            name: germanyHomeLabel(locale),
+            url: localizePath(deRoutes.home, locale),
+          },
+          {
+            name: titleMap[kind],
+            url: localizePath(pathMap[kind], locale),
+          },
+        ]}
+      />
       <GermanyArticleSchema headline={titleMap[kind]} description={summary} path={pathMap[kind]} locale={locale} />
       <ContentHero
         badge={{
@@ -535,6 +572,22 @@ export function GermanyStateHolidaysPage({
 
   return (
     <PageShell>
+      <Breadcrumbs
+        items={[
+          {
+            name: germanyHomeLabel(locale),
+            url: localizePath(deRoutes.home, locale),
+          },
+          {
+            name: locale === "en" ? `Public holidays Germany ${year}` : `Feiertage Deutschland ${year}`,
+            url: localizePath(deRoutes.countryHolidaysYear(year), locale),
+          },
+          {
+            name: locale === "en" ? `Public holidays ${displayState} ${year}` : `Feiertage ${displayState} ${year}`,
+            url: localizePath(path, locale),
+          },
+        ]}
+      />
       <GermanyArticleSchema
         headline={locale === "en" ? `Public holidays ${displayState} ${year}` : `Feiertage ${displayState} ${year}`}
         description={
@@ -667,6 +720,22 @@ export function GermanyStateBridgesPage({
 
   return (
     <PageShell>
+      <Breadcrumbs
+        items={[
+          {
+            name: germanyHomeLabel(locale),
+            url: localizePath(deRoutes.home, locale),
+          },
+          {
+            name: locale === "en" ? `Bridge days Germany ${year}` : `Brückentage Deutschland ${year}`,
+            url: localizePath(deRoutes.countryBridgesYear(year), locale),
+          },
+          {
+            name: locale === "en" ? `Bridge days ${displayState} ${year}` : `Brückentage ${displayState} ${year}`,
+            url: localizePath(deRoutes.stateBridgesYear(year, state), locale),
+          },
+        ]}
+      />
       <GermanyArticleSchema
         headline={locale === "en" ? `Bridge days ${displayState} ${year}` : `Brückentage ${displayState} ${year}`}
         description={
@@ -802,6 +871,22 @@ export function GermanyStateSchoolHolidaysPage({
 
   return (
     <PageShell>
+      <Breadcrumbs
+        items={[
+          {
+            name: germanyHomeLabel(locale),
+            url: localizePath(deRoutes.home, locale),
+          },
+          {
+            name: locale === "en" ? `School holidays Germany ${year}` : `Schulferien Deutschland ${year}`,
+            url: localizePath(deRoutes.countrySchoolHolidaysYear(year), locale),
+          },
+          {
+            name: locale === "en" ? `School holidays ${displayState} ${year}` : `Schulferien ${displayState} ${year}`,
+            url: localizePath(deRoutes.stateSchoolHolidaysYear(year, state), locale),
+          },
+        ]}
+      />
       <GermanyArticleSchema
         headline={locale === "en" ? `School holidays ${displayState} ${year}` : `Schulferien ${displayState} ${year}`}
         description={

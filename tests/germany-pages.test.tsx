@@ -101,15 +101,15 @@ describe("Germany product", () => {
     const schoolPeriods = getGermanSchoolHolidaysForState(2026, "by");
 
     const { rerender } = render(<GermanyStateHolidaysPage state="by" year={2026} holidays={holidays} />);
-    expect(screen.getByText(/Feiertage Bayern 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Feiertage Bayern 2026/ })).toBeInTheDocument();
     expect(screen.getByText(/Heilige Drei Könige/)).toBeInTheDocument();
 
     rerender(<GermanyStateBridgesPage state="by" year={2026} opportunities={opportunities} />);
-    expect(screen.getByText(/Brückentage Bayern 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Brückentage Bayern 2026/ })).toBeInTheDocument();
     expect(screen.getByText(/Die stärksten Brückentage zuerst/)).toBeInTheDocument();
 
     rerender(<GermanyStateSchoolHolidaysPage state="by" year={2026} periods={schoolPeriods} />);
-    expect(screen.getByText(/Schulferien Bayern 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Schulferien Bayern 2026/ })).toBeInTheDocument();
     expect(screen.getByText(/Sommerferien/)).toBeInTheDocument();
   });
 
@@ -121,18 +121,18 @@ describe("Germany product", () => {
     const { rerender } = render(
       <GermanyStateHolidaysPage state="by" year={2026} holidays={holidays} locale="en" />,
     );
-    expect(screen.getByText(/Public holidays Bavaria 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Public holidays Bavaria 2026/ })).toBeInTheDocument();
 
     rerender(
       <GermanyStateBridgesPage state="by" year={2026} opportunities={opportunities} locale="en" />,
     );
-    expect(screen.getByText(/Bridge days Bavaria 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Bridge days Bavaria 2026/ })).toBeInTheDocument();
     expect(screen.getByText(/Strongest bridge opportunities first/)).toBeInTheDocument();
 
     rerender(
       <GermanyStateSchoolHolidaysPage state="by" year={2026} periods={schoolPeriods} locale="en" />,
     );
-    expect(screen.getByText(/School holidays Bavaria 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /School holidays Bavaria 2026/ })).toBeInTheDocument();
   });
 
   test("renders Germany shell navigation without French on the Germany host", () => {
