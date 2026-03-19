@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
 import { AuthorityBlock } from "@/components/content/authority-block";
+import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { ContentHero } from "@/components/content/content-hero";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
 import { RelatedLinks } from "@/components/content/related-links";
@@ -13,6 +14,7 @@ import { ZoneLookupPanel } from "@/components/planner/zone-lookup-panel";
 import { schoolAuthority2026Block } from "@/content/official-cases";
 import type { SchoolHolidayPeriod } from "@/lib/domain/types";
 import type { AppLanguage } from "@/lib/i18n";
+import { prefixForLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 function supportedNeighborYears(year: number) {
@@ -40,6 +42,21 @@ export function SchoolHolidaysBridgesYearPage({
 
   return (
     <PageShell aside={defaultPageAside(language)}>
+      <Breadcrumbs
+        items={[
+          {
+            name: language === "en" ? "Home" : "Accueil",
+            url: prefixForLanguage(routes.home, language),
+          },
+          {
+            name:
+              language === "en"
+                ? `School holidays and bridges ${year}`
+                : `Vacances scolaires et ponts ${year}`,
+            url: prefixForLanguage(routes.schoolHolidaysBridgesYear(year), language),
+          },
+        ]}
+      />
       <ContentHero
         badge={{ fr: "Vacances scolaires", en: "School holidays" }}
         title={{

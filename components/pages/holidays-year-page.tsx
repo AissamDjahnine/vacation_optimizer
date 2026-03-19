@@ -1,4 +1,5 @@
 import { AuthorityBlock } from "@/components/content/authority-block";
+import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { HolidayTable } from "@/components/content/holiday-table";
 import { rulesAuthorityBlock } from "@/content/official-cases";
 import { ContentHero } from "@/components/content/content-hero";
@@ -8,6 +9,7 @@ import { Reveal } from "@/components/motion/reveal";
 import type { Holiday } from "@/lib/domain/types";
 import { formatFullDate, formatMonthYear } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
+import { prefixForLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 function supportedNeighborYears(year: number) {
@@ -35,6 +37,18 @@ export function HolidaysYearPage({
 
   return (
     <PageShell aside={defaultPageAside(language)}>
+      <Breadcrumbs
+        items={[
+          {
+            name: language === "en" ? "Home" : "Accueil",
+            url: prefixForLanguage(routes.home, language),
+          },
+          {
+            name: language === "en" ? `Public holidays ${year}` : `Jours fériés ${year}`,
+            url: prefixForLanguage(routes.holidaysYear(year), language),
+          },
+        ]}
+      />
       <ContentHero
         badge={{ fr: "Calendrier", en: "Calendar" }}
         title={{

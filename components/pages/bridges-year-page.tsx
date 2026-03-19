@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { ContentHero } from "@/components/content/content-hero";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
 import { RelatedLinks } from "@/components/content/related-links";
@@ -7,7 +8,7 @@ import { DateOptimizer } from "@/lib/domain/date-optimizer";
 import type { BestVacationPeriod, Holiday } from "@/lib/domain/types";
 import { formatMonthYear } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
-import { t } from "@/lib/i18n";
+import { prefixForLanguage, t } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 function supportedNeighborYears(year: number) {
@@ -60,6 +61,18 @@ export function BridgesYearPage({
 
   return (
     <PageShell aside={defaultPageAside(language)}>
+      <Breadcrumbs
+        items={[
+          {
+            name: language === "en" ? "Home" : "Accueil",
+            url: prefixForLanguage(routes.home, language),
+          },
+          {
+            name: language === "en" ? `Bridge ideas ${year}` : `Ponts ${year}`,
+            url: prefixForLanguage(routes.bridgesYear(year), language),
+          },
+        ]}
+      />
       <ContentHero
         badge={{ fr: "Ponts", en: "Bridges" }}
         title={{
