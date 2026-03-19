@@ -28,6 +28,7 @@ import { routes } from "@/lib/routes";
 import { Reveal } from "@/components/motion/reveal";
 import { ResultCard } from "@/components/planner/result-card";
 import { SkeletonCard } from "@/components/planner/skeleton-card";
+import { trackEvent } from "@/lib/analytics";
 
 const holidayCache = new Map<number, Holiday[]>();
 const schoolHolidayCache = new Map<"A" | "B" | "C", SchoolHolidayPeriod[]>();
@@ -56,6 +57,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const [visibleResultCount, setVisibleResultCount] = useState(5);
   const [showMobileAdvancedSettings, setShowMobileAdvancedSettings] = useState(false);
   const resultsRef = useRef<HTMLElement | null>(null);
+  const lastTrackedResultsKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     const nextConfig = plannerConfigFromUrlSearchParams(searchParams);
@@ -249,6 +251,17 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   };
 
   const submit = () => {
+    trackEvent("planner_start", {
+      language,
+      year: safeYear,
+      month: safeMonth,
+      mode: state.mode,
+      paid_leave_budget: safePaidLeaveBudget,
+      monthly_rtt: safeMonthlyRtt,
+      school_zone: state.schoolZone,
+      school_holiday_preference: state.schoolHolidayPreference,
+      allow_school_holiday_overlap: state.allowSchoolHolidayOverlap,
+    });
     setHasSearchedOnce(true);
     setVisibleResultCount(5);
   };
@@ -261,11 +274,71 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     }
 
     const frame = window.requestAnimationFrame(() => {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const resultsElement = resultsRef.current;
+      if (resultsElement && typeof resultsElement.scrollIntoView === "function") {
+        resultsElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
 
     return () => window.cancelAnimationFrame(frame);
   }, [computation, hasSearchedOnce, loading]);
+
+  useEffect(() => {
+    if (!hasSearchedOnce || !computation || loading) {
+      return;
+    }
+
+    const topResult = computation.periods[0];
+    const resultsKey = [
+      safeYear,
+      safeMonth,
+      state.mode,
+      safePaidLeaveBudget,
+      safeMonthlyRtt,
+      state.schoolZone,
+      state.schoolHolidayPreference,
+      state.allowSchoolHolidayOverlap,
+      computation.exact ? "exact" : "fallback",
+      computation.periods.length,
+      topResult?.startDate.toISOString() ?? "none",
+      topResult?.endDate.toISOString() ?? "none",
+    ].join("|");
+
+    if (lastTrackedResultsKeyRef.current === resultsKey) {
+      return;
+    }
+
+    lastTrackedResultsKeyRef.current = resultsKey;
+    trackEvent("planner_result_view", {
+      language,
+      year: safeYear,
+      month: safeMonth,
+      mode: state.mode,
+      paid_leave_budget: safePaidLeaveBudget,
+      monthly_rtt: safeMonthlyRtt,
+      school_zone: state.schoolZone,
+      school_holiday_preference: state.schoolHolidayPreference,
+      allow_school_holiday_overlap: state.allowSchoolHolidayOverlap,
+      result_count: computation.periods.length,
+      result_kind: computation.exact ? "exact" : "fallback",
+      used_budget: computation.usedBudget,
+      top_days_off: topResult?.totalDaysOff ?? 0,
+      top_paid_leave_days_used: topResult?.paidLeaveDaysUsed ?? 0,
+    });
+  }, [
+    computation,
+    hasSearchedOnce,
+    language,
+    loading,
+    safeMonth,
+    safeMonthlyRtt,
+    safePaidLeaveBudget,
+    safeYear,
+    state.allowSchoolHolidayOverlap,
+    state.mode,
+    state.schoolHolidayPreference,
+    state.schoolZone,
+  ]);
 
   const visiblePeriods = computation ? computation.periods.slice(0, visibleResultCount) : [];
   const hasHiddenPeriods = computation ? computation.periods.length > visibleResultCount : false;
@@ -318,6 +391,13 @@ export function Planner({ language, initialConfig }: PlannerProps) {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href={prefixForLanguage(routes.annualPlannerYear(safeYear), language)}
+              onClick={() =>
+                trackEvent("annual_plan_click", {
+                  language,
+                  source: "planner_hero",
+                  year: safeYear,
+                })
+              }
               className="rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
             >
               {language === "en" ? "Plan the full year" : "Planifier toute l’année"}

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { AppLanguage, prefixForLanguage } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 import { routes } from "@/lib/routes";
 
 const copy = {
@@ -72,6 +75,13 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
             <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
             <Link
               href={prefixForLanguage(item.href, language)}
+              onClick={() =>
+                trackEvent(item.href === routes.annualPlannerYear(2026) ? "annual_plan_click" : "guide_click", {
+                  language,
+                  source: "home_trust_strip",
+                  destination: item.href,
+                })
+              }
               className="mt-4 inline-flex text-sm font-bold text-ink transition hover:text-coral"
             >
               {item.cta}
@@ -82,6 +92,13 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
       <div className="flex justify-start">
         <Link
           href={prefixForLanguage(routes.annualPlannerYear(2026), language)}
+          onClick={() =>
+            trackEvent("annual_plan_click", {
+              language,
+              source: "home_trust_strip_cta",
+              year: 2026,
+            })
+          }
           className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
         >
           {language === "en" ? "Open the annual plan" : "Ouvrir le plan annuel"}

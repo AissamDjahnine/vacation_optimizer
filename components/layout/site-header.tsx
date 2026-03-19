@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/components/cn";
 import { LanguageSwitch } from "@/components/layout/language-switch";
+import { trackEvent } from "@/lib/analytics";
 import type { GermanyLocale } from "@/lib/domain/types";
 import { withGermanyLocale } from "@/lib/germany/i18n";
 import { deRoutes, toGermanyExternalPath } from "@/lib/germany/routes";
@@ -99,6 +100,15 @@ export function SiteHeader({ language, host, germanyHost = false, germanyLocale 
                       : localizedPath(item.href)
                 }
                 {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+                onClick={() => {
+                  if (item.href.includes("de.pontsmalins.com")) {
+                    trackEvent("germany_entry_click", {
+                      language,
+                      source: "site_header",
+                      destination: item.href,
+                    });
+                  }
+                }}
                 className={cn(
                   "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
                   active

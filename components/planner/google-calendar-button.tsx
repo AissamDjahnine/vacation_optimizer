@@ -1,19 +1,28 @@
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/components/cn";
 
 export function GoogleCalendarButton({
   href,
   label,
   className,
+  analyticsContext,
 }: {
   href: string;
   label: string;
   className?: string;
+  analyticsContext?: string;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
+      onClick={() =>
+        trackEvent("outbound_calendar_export", {
+          export_type: "google_calendar",
+          context: analyticsContext ?? "planner_result",
+        })
+      }
       className={cn(
         "inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-5 text-sm font-bold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-coral hover:text-coral",
         className,

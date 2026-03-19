@@ -105,11 +105,13 @@ export function ResultCard({
               <IcsExportButton
                 bundle={calendarBundle}
                 label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
+                analyticsContext="planner_result"
                 className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
               />
               <GoogleCalendarButton
                 href={googleCalendarUrl}
                 label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
+                analyticsContext="planner_result"
                 className="h-11 border-ink/10 bg-ink px-4 text-sm text-white shadow-sm hover:border-ink hover:bg-ink/92 hover:text-white"
               />
             </div>

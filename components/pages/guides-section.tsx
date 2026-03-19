@@ -1,3 +1,6 @@
+"use client";
+
+import { trackEvent } from "@/lib/analytics";
 import type { AppLanguage } from "@/lib/i18n";
 import { prefixForLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
@@ -94,6 +97,13 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
           <a
             key={guide.href}
             href={prefixForLanguage(guide.href, language)}
+            onClick={() =>
+              trackEvent(guide.href === routes.annualPlannerYear(2026) ? "annual_plan_click" : "guide_click", {
+                language,
+                source: "guides_section",
+                destination: guide.href,
+              })
+            }
             className="flex h-full flex-col rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
           >
             <p className="text-2xl font-black tracking-tight text-ink">
@@ -111,6 +121,13 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
       <div className="mt-6 flex justify-start">
         <a
           href={prefixForLanguage(routes.faq, language)}
+          onClick={() =>
+            trackEvent("guide_click", {
+              language,
+              source: "guides_section_footer",
+              destination: routes.faq,
+            })
+          }
           className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
         >
           {language === "en" ? "Open the FAQ and more guides" : "Ouvrir la FAQ et plus de guides"}

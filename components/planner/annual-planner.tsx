@@ -310,6 +310,7 @@ export function AnnualPlanner({
                 language,
                 year: state.year,
               })}
+              analyticsContext="annual_planner"
               label={
                 language === "en"
                   ? "Export annual plan (.ics)"

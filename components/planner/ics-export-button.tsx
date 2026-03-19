@@ -3,20 +3,27 @@
 import { useState } from "react";
 import { cn } from "@/components/cn";
 import { downloadCalendarBundle } from "@/lib/calendar-export";
+import { trackEvent } from "@/lib/analytics";
 import type { CalendarExportBundle } from "@/lib/domain/types";
 
 export function IcsExportButton({
   bundle,
   label,
   className,
+  analyticsContext,
 }: {
   bundle: CalendarExportBundle;
   label: string;
   className?: string;
+  analyticsContext?: string;
 }) {
   const [done, setDone] = useState(false);
 
   const handleClick = () => {
+    trackEvent("outbound_calendar_export", {
+      export_type: "ics",
+      context: analyticsContext ?? "planner_result",
+    });
     downloadCalendarBundle(bundle);
     setDone(true);
     window.setTimeout(() => setDone(false), 1800);
