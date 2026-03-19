@@ -75,6 +75,8 @@ const guides = [
 ];
 
 export function GuidesSection({ language }: { language: AppLanguage }) {
+  const featuredGuides = guides.slice(0, 4);
+
   return (
     <section className="rounded-[2.1rem] border border-line bg-white p-6 shadow-card sm:p-8">
       <div className="space-y-3">
@@ -83,12 +85,12 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
         </h2>
         <p className="section-subtitle max-w-none">
           {language === "en"
-            ? "Eight pages to understand bridge opportunities, prepare your leave, plan the full year and validate ideas in the planner."
-            : "Huit pages pour comprendre les ponts, préparer vos congés, planifier l’année et ensuite valider vos idées dans le simulateur."}
+            ? "Start with these four pages, then open the wider guide hub only if you need more context."
+            : "Commencez par ces quatre pages, puis ouvrez le hub complet seulement si vous avez besoin de plus de contexte."}
         </p>
       </div>
       <div className="mt-8 grid gap-4 xl:grid-cols-3">
-        {guides.map((guide) => (
+        {featuredGuides.map((guide) => (
           <a
             key={guide.href}
             href={prefixForLanguage(guide.href, language)}
@@ -105,6 +107,14 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
             </span>
           </a>
         ))}
+      </div>
+      <div className="mt-6 flex justify-start">
+        <a
+          href={prefixForLanguage(routes.faq, language)}
+          className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+        >
+          {language === "en" ? "Open the FAQ and more guides" : "Ouvrir la FAQ et plus de guides"}
+        </a>
       </div>
     </section>
   );

@@ -53,9 +53,10 @@ const copy = {
 
 export function HomeTrustStrip({ language }: { language: AppLanguage }) {
   const section = language === "en" ? copy.en : copy.fr;
+  const featuredItems = section.items.slice(0, 2);
 
   return (
-    <section className="editorial-panel space-y-6">
+    <section className="editorial-panel space-y-5">
       <div className="space-y-2">
         <p className="editorial-kicker">
           {language === "en" ? "Before you go further" : "Avant d’aller plus loin"}
@@ -64,8 +65,8 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
           {section.title}
         </h2>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
-        {section.items.map((item) => (
+      <div className="grid gap-4 md:grid-cols-2">
+        {featuredItems.map((item) => (
           <article key={item.title} className="rounded-3xl border border-line bg-slate-50/70 p-5">
             <h3 className="text-lg font-bold text-ink">{item.title}</h3>
             <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
@@ -77,6 +78,14 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
             </Link>
           </article>
         ))}
+      </div>
+      <div className="flex justify-start">
+        <Link
+          href={prefixForLanguage(routes.annualPlannerYear(2026), language)}
+          className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+        >
+          {language === "en" ? "Open the annual plan" : "Ouvrir le plan annuel"}
+        </Link>
       </div>
     </section>
   );

@@ -38,6 +38,7 @@ export function BridgesYearPage({
   }).filter((period): period is BestVacationPeriod => period !== null);
 
   const topPeriods = monthlyHighlights.slice(0, 3);
+  const secondaryPeriods = monthlyHighlights.slice(3);
   const seasonalExamples = [
     { month: 5, label: { fr: "Printemps", en: "Spring" } },
     { month: 7, label: { fr: "Été", en: "Summer" } },
@@ -197,7 +198,7 @@ export function BridgesYearPage({
       </Reveal>
 
       <div className="space-y-6">
-        {monthlyHighlights.map((period, index) => (
+        {topPeriods.map((period, index) => (
           <ResultCard
             key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
             language={language}
@@ -206,6 +207,44 @@ export function BridgesYearPage({
             highlighted={index === 0}
           />
         ))}
+
+        {secondaryPeriods.length > 0 ? (
+          <details className="editorial-panel group">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+              <div className="space-y-2">
+                <p className="editorial-kicker">
+                  {language === "en" ? "More candidates" : "Autres candidats"}
+                </p>
+                <h2 className="text-2xl font-black tracking-tight text-ink">
+                  {language === "en"
+                    ? "Open the remaining months only if you want a longer shortlist"
+                    : "Ouvrez les autres mois seulement si vous voulez une liste plus longue"}
+                </h2>
+                <p className="text-sm leading-7 text-ink/70">
+                  {language === "en"
+                    ? "The first three cards usually cover the strongest bridge ideas. The rest are useful when your constraints remove the top options."
+                    : "Les trois premières cartes couvrent souvent les meilleurs ponts. Le reste devient utile si vos contraintes éliminent les premiers choix."}
+                </p>
+              </div>
+              <span className="chip shrink-0 group-open:bg-coral group-open:text-white">
+                {language === "en"
+                  ? `Show ${secondaryPeriods.length} more`
+                  : `Afficher ${secondaryPeriods.length} mois de plus`}
+              </span>
+            </summary>
+
+            <div className="mt-6 space-y-6">
+              {secondaryPeriods.map((period, index) => (
+                <ResultCard
+                  key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                  language={language}
+                  period={period}
+                  rank={topPeriods.length + index + 1}
+                />
+              ))}
+            </div>
+          </details>
+        ) : null}
       </div>
 
       <RelatedLinks

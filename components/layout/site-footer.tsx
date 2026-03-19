@@ -10,12 +10,14 @@ type SiteFooterProps = {
   language: AppLanguage;
   germanyHost?: boolean;
   germanyLocale?: GermanyLocale;
+  showTrustStrip?: boolean;
 };
 
 export function SiteFooter({
   language,
   germanyHost = false,
   germanyLocale = "de",
+  showTrustStrip = true,
 }: SiteFooterProps) {
   const germanyPath = (path: string) => withGermanyLocale(toGermanyExternalPath(path), germanyLocale);
   const copy =
@@ -96,52 +98,54 @@ export function SiteFooter({
   return (
     <footer className="mt-24 border-t border-white/40 bg-[#171f31] py-14 text-white">
       <div className="container-shell space-y-10">
-        <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 md:grid-cols-3">
-          <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {germanyHost
-                ? germanyLocale === "en"
-                  ? "Public data"
-                  : "Öffentliche Daten"
-                : language === "en"
-                  ? "Public data"
-                  : "Données publiques"}
-            </p>
-            <p className="mt-3 text-sm leading-7 text-white/74">
-              {germanyHost
-                ? germanyLocale === "en"
-                  ? "Public-holiday and school-holiday references are surfaced with clear official sourcing."
-                  : "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
-                : language === "de"
-                ? "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
-                : language === "en"
-                ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
-                : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
-            </p>
+        {showTrustStrip ? (
+          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 md:grid-cols-3">
+            <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+                {germanyHost
+                  ? germanyLocale === "en"
+                    ? "Public data"
+                    : "Öffentliche Daten"
+                  : language === "en"
+                    ? "Public data"
+                    : "Données publiques"}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-white/74">
+                {germanyHost
+                  ? germanyLocale === "en"
+                    ? "Public-holiday and school-holiday references are surfaced with clear official sourcing."
+                    : "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
+                  : language === "de"
+                  ? "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
+                  : language === "en"
+                  ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
+                  : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
+              </p>
+            </div>
+            <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+                {germanyHost ? (germanyLocale === "en" ? "No account" : "Ohne Konto") : language === "en" ? "No account" : "Sans compte"}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-white/74">{copy.privacy}</p>
+            </div>
+            <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+                {germanyHost ? (germanyLocale === "en" ? "Editorial framing" : "Offizielle Einordnung") : language === "en" ? "Calendar export" : "Export agenda"}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-white/74">
+                {germanyHost
+                  ? germanyLocale === "en"
+                    ? "The Germany pages are intentionally editorial first: context and official sources first, then the right next pages for each state."
+                    : "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
+                  : language === "de"
+                  ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
+                  : language === "en"
+                  ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
+                  : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
+              </p>
+            </div>
           </div>
-          <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {germanyHost ? (germanyLocale === "en" ? "No account" : "Ohne Konto") : language === "en" ? "No account" : "Sans compte"}
-            </p>
-            <p className="mt-3 text-sm leading-7 text-white/74">{copy.privacy}</p>
-          </div>
-          <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {germanyHost ? (germanyLocale === "en" ? "Editorial framing" : "Offizielle Einordnung") : language === "en" ? "Calendar export" : "Export agenda"}
-            </p>
-            <p className="mt-3 text-sm leading-7 text-white/74">
-              {germanyHost
-                ? germanyLocale === "en"
-                  ? "The Germany pages are intentionally editorial first: context and official sources first, then the right next pages for each state."
-                  : "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
-                : language === "de"
-                ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
-                : language === "en"
-                ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
-                : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
-            </p>
-          </div>
-        </div>
+        ) : null}
 
         <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
         <div className="space-y-4">

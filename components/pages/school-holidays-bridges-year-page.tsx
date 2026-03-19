@@ -33,12 +33,15 @@ export function SchoolHolidaysBridgesYearPage({
   periodsByZone: Record<"A" | "B" | "C", SchoolHolidayPeriod[]>;
 }) {
   const [zone, setZone] = useState<"A" | "B" | "C">(initialZone);
+  const [showAllPeriods, setShowAllPeriods] = useState(false);
   const periodsByZoneForYear = useMemo(
     () => normalizePeriodsByZone(periodsByZone, year),
     [periodsByZone, year],
   );
   const periods = periodsByZoneForYear[zone] ?? [];
   const zoneSummary = periodsByZoneForYear[zone];
+  const visiblePeriods = showAllPeriods ? periods : periods.slice(0, 3);
+  const hiddenPeriodsCount = Math.max(periods.length - visiblePeriods.length, 0);
 
   return (
     <PageShell aside={defaultPageAside(language)}>
@@ -86,7 +89,35 @@ export function SchoolHolidaysBridgesYearPage({
         actionLabel={language === "en" ? "Open the planner with this zone" : "Ouvrir le simulateur avec cette zone"}
       />
 
-      {year === 2026 ? <AuthorityBlock block={schoolAuthority2026Block} language={language} /> : null}
+      {year === 2026 ? (
+        <Reveal>
+          <details className="editorial-panel group">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+              <div className="space-y-2">
+                <p className="editorial-kicker">
+                  {language === "en" ? "Official reference" : "Repère officiel"}
+                </p>
+                <h2 className="text-2xl font-black tracking-tight text-ink">
+                  {language === "en"
+                    ? "Important official school-break case for families"
+                    : "Cas officiel important à garder pour les familles"}
+                </h2>
+                <p className="text-sm leading-7 text-ink/70">
+                  {language === "en"
+                    ? "Open this only if you need the exact official wording around the 2026 Ascension bridge."
+                    : "Ouvrez ce bloc seulement si vous avez besoin du libellé officiel exact autour du pont scolaire de l’Ascension 2026."}
+                </p>
+              </div>
+              <span className="chip shrink-0 group-open:bg-coral group-open:text-white">
+                {language === "en" ? "Show source" : "Voir la source"}
+              </span>
+            </summary>
+            <div className="mt-6">
+              <AuthorityBlock block={schoolAuthority2026Block} language={language} />
+            </div>
+          </details>
+        </Reveal>
+      ) : null}
 
       <Reveal>
         <section className="editorial-panel space-y-6">
@@ -153,6 +184,11 @@ export function SchoolHolidaysBridgesYearPage({
               );
             })}
           </div>
+          <p className="editorial-note">
+            {language === "en"
+              ? "Start by picking the right zone. The detailed period cards stay below only for the selected zone, which keeps the page shorter."
+              : "Commencez par choisir la bonne zone. Les cartes détaillées ci-dessous restent limitées à la zone sélectionnée, ce qui raccourcit la page."}
+          </p>
         </section>
       </Reveal>
 
@@ -210,15 +246,45 @@ export function SchoolHolidaysBridgesYearPage({
       </Reveal>
 
       {periods.length > 0 ? (
-        <div className="grid gap-4">
-          {periods.map((period) => (
-            <SchoolPeriodCard
-              key={`${period.description}-${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
-              period={period}
-              language={language}
-            />
-          ))}
-        </div>
+        <section className="space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="space-y-1">
+              <p className="editorial-kicker">
+                {language === "en" ? "Detailed periods" : "Périodes détaillées"}
+              </p>
+              <h2 className="text-2xl font-black tracking-tight text-ink">
+                {language === "en"
+                  ? `Full dates for zone ${zone}`
+                  : `Dates complètes pour la zone ${zone}`}
+              </h2>
+            </div>
+            {hiddenPeriodsCount > 0 ? (
+              <button
+                type="button"
+                onClick={() => setShowAllPeriods((current) => !current)}
+                className="chip border-line bg-white text-ink hover:border-coral hover:text-coral"
+              >
+                {showAllPeriods
+                  ? language === "en"
+                    ? "Show fewer periods"
+                    : "Afficher moins de périodes"
+                  : language === "en"
+                    ? `Show ${hiddenPeriodsCount} more`
+                    : `Afficher ${hiddenPeriodsCount} période${hiddenPeriodsCount > 1 ? "s" : ""} de plus`}
+              </button>
+            ) : null}
+          </div>
+
+          <div className="grid gap-4">
+            {visiblePeriods.map((period) => (
+              <SchoolPeriodCard
+                key={`${period.description}-${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                period={period}
+                language={language}
+              />
+            ))}
+          </div>
+        </section>
       ) : null}
 
       <RelatedLinks

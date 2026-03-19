@@ -20,6 +20,8 @@ export function SiteShell({
   const germanyHost = isGermanHost(initialHost);
   const germanyLocale = germanyHost ? resolveGermanyLocale(pathname) : null;
   const language: AppLanguage = initialLanguage ?? resolveLanguage(pathname, initialHost);
+  const visibleSegments = pathname.split("/").filter(Boolean);
+  const showTrustStrip = visibleSegments.length <= 1;
 
   return (
     <>
@@ -35,6 +37,7 @@ export function SiteShell({
         language={language}
         germanyHost={germanyHost}
         germanyLocale={germanyLocale ?? undefined}
+        showTrustStrip={showTrustStrip}
       />
     </>
   );
