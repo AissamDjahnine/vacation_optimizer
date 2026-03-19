@@ -121,5 +121,8 @@ export const leaveGuide2026Content: GuideContent & {
   relatedLinks: [
     { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
     { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.schoolHolidaysBridgesYear(2026), label: { fr: "Vacances scolaires et ponts 2026", en: "School holidays and bridges 2026" } },
+    { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
+    { href: routes.annualPlannerYear(2026), label: { fr: "Planifier toute l’année 2026", en: "Plan the full year 2026" } },
   ],
 };

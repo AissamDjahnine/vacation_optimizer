@@ -45,6 +45,8 @@ export const ascension2026Content: GuideContent = {
   relatedLinks: [
     { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
     { href: routes.schoolHolidaysFamily2026, label: { fr: "Vacances scolaires 2026 et ponts", en: "School holidays 2026 and bridges" } },
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
     { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
   ],
 };
@@ -77,6 +79,8 @@ export const mayBridges2026Content: GuideContent = {
   ],
   relatedLinks: [
     { href: routes.ascension2026, label: { fr: "Pont de l’Ascension 2026", en: "Ascension bridge 2026" } },
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
     { href: routes.assumption2026, label: { fr: "Pont du 15 août 2026", en: "15 August 2026 bridge" } },
     { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
     { href: routes.leaveBudget5Guide2026, label: { fr: "Poser 5 jours en 2026", en: "Book 5 days in 2026" } },
@@ -113,6 +117,8 @@ export const assumption2026Content: GuideContent = {
   relatedLinks: [
     { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
     { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.schoolHolidaysBridgesYear(2026), label: { fr: "Vacances scolaires et ponts 2026", en: "School holidays and bridges 2026" } },
     { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
   ],
 };
@@ -146,6 +152,8 @@ export const allSaints2026Content: GuideContent = {
   relatedLinks: [
     { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
     { href: routes.weekdayHolidays2026, label: { fr: "Jours fériés 2026 en semaine", en: "Weekday public holidays in 2026" } },
+    { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
     { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
   ],
 };
@@ -178,7 +186,9 @@ export const armistice2026Content: GuideContent = {
   ],
   relatedLinks: [
     { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
     { href: routes.yearEnd2026, label: { fr: "Noël et fin d’année 2026", en: "Christmas and late-year 2026" } },
+    { href: routes.weekdayHolidays2026, label: { fr: "Jours fériés 2026 en semaine", en: "Weekday public holidays in 2026" } },
     { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
   ],
 };
@@ -212,6 +222,8 @@ export const yearEnd2026Content: GuideContent = {
   relatedLinks: [
     { href: routes.armistice2026, label: { fr: "Pont du 11 novembre 2026", en: "11 November 2026 bridge" } },
     { href: routes.annualPlannerYear(2026), label: { fr: "Planifier toute l’année 2026", en: "Plan the full year 2026" } },
+    { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
     { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
   ],
 };
@@ -246,6 +258,8 @@ export function buildSchoolZone2026Content(zone: "A" | "B" | "C"): GuideContent 
     relatedLinks: [
       { href: routes.schoolHolidaysFamily2026, label: { fr: "Guide familles 2026", en: "Family guide 2026" } },
       { href: routes.schoolHolidaysBridgesYear(2026), label: { fr: "Calendrier scolaire 2026", en: "School calendar 2026" } },
+      { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+      { href: routes.holidaysYear(2026), label: { fr: "Jours fériés 2026", en: "Public holidays 2026" } },
       { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
     ],
   };
@@ -276,6 +290,7 @@ export const weekdayHolidays2026Content: GuideContent = {
   relatedLinks: [
     { href: routes.holidaysYear(2026), label: { fr: "Tous les jours fériés 2026", en: "All public holidays 2026" } },
     { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+    { href: routes.schoolHolidaysBridgesYear(2026), label: { fr: "Vacances scolaires et ponts 2026", en: "School holidays and bridges 2026" } },
     { href: routes.allSaints2026, label: { fr: "Pont du 1er novembre 2026", en: "1 November 2026 bridge" } },
   ],
 };
@@ -315,6 +330,8 @@ export function buildLeaveBudgetGuide2026Content(budget: 5 | 10): GuideContent {
     relatedLinks: [
       { href: routes.leaveGuide2026, label: { fr: "Guide congés 2026", en: "Leave guide 2026" } },
       { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May 2026 bridges" } },
+      { href: routes.bridgesYear(2026), label: { fr: "Ponts 2026", en: "Bridge ideas 2026" } },
+      { href: routes.annualPlannerYear(2026), label: { fr: "Planifier toute l’année 2026", en: "Plan the full year 2026" } },
       { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
     ],
   };
