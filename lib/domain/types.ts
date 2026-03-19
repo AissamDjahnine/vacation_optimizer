@@ -60,6 +60,8 @@ export type GermanEditorialPage = {
   highlights: string[];
 };
 
+export type GermanyLocale = "de" | "en";
+
 export type SchoolHolidayPreference = "neutral" | "favor" | "avoid";
 export type PlanningMode = "single" | "distributed";
 export type PlannerScope = "monthly" | "yearly";

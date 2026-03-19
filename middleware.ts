@@ -29,7 +29,14 @@ export function middleware(request: NextRequest) {
   }
 
   const rewriteUrl = request.nextUrl.clone();
-  rewriteUrl.pathname = pathname === "/" ? "/de" : `/de${pathname}`;
+  rewriteUrl.pathname =
+    pathname === "/"
+      ? "/de"
+      : pathname === "/en"
+        ? "/de/en"
+        : pathname.startsWith("/en/")
+          ? `/de${pathname}`
+          : `/de${pathname}`;
   return NextResponse.rewrite(rewriteUrl);
 }
 

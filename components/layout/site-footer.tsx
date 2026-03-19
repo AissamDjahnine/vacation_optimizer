@@ -1,16 +1,43 @@
 import Link from "next/link";
 import { ProtectedEmailLink } from "@/components/layout/protected-email-link";
+import type { GermanyLocale } from "@/lib/domain/types";
+import { withGermanyLocale } from "@/lib/germany/i18n";
 import { AppLanguage, prefixForLanguage } from "@/lib/i18n";
-import { deRoutes } from "@/lib/germany/routes";
+import { deRoutes, toGermanyExternalPath } from "@/lib/germany/routes";
 import { routes } from "@/lib/routes";
 
 type SiteFooterProps = {
   language: AppLanguage;
+  germanyHost?: boolean;
+  germanyLocale?: GermanyLocale;
 };
 
-export function SiteFooter({ language }: SiteFooterProps) {
+export function SiteFooter({
+  language,
+  germanyHost = false,
+  germanyLocale = "de",
+}: SiteFooterProps) {
+  const germanyPath = (path: string) => withGermanyLocale(toGermanyExternalPath(path), germanyLocale);
   const copy =
-    language === "de"
+    germanyHost && germanyLocale === "en"
+      ? {
+          title: "Ponts Malins Germany",
+          summary: "Bridge days, public holidays and school holidays in Germany with visible official sources.",
+          product: "Germany home",
+          privacy: "No account and no stored personal planning data.",
+          guides: "Useful entries",
+          trust: "Sources and legal",
+          sources: "Official sources",
+          legal: "Legal notice",
+          privacyPage: "Privacy",
+          note: "Built for clean state-by-state orientation, with direct links to KMK and state portals.",
+          links: [
+            { href: deRoutes.countryBridgesYear(2026), label: "Bridge days Germany 2026" },
+            { href: deRoutes.countryHolidaysYear(2026), label: "Public holidays Germany 2026" },
+            { href: deRoutes.countrySchoolHolidaysYear(2026), label: "School holidays Germany 2026" },
+          ],
+        }
+      : germanyHost
       ? {
           title: "Ponts Malins Deutschland",
           summary: "Brückentage, Feiertage und Schulferien für Deutschland mit Fokus auf offizielle Quellen.",
@@ -70,10 +97,20 @@ export function SiteFooter({ language }: SiteFooterProps) {
         <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 md:grid-cols-3">
           <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {language === "de" ? "Öffentliche Daten" : language === "en" ? "Public data" : "Données publiques"}
+              {germanyHost
+                ? germanyLocale === "en"
+                  ? "Public data"
+                  : "Öffentliche Daten"
+                : language === "en"
+                  ? "Public data"
+                  : "Données publiques"}
             </p>
             <p className="mt-3 text-sm leading-7 text-white/74">
-              {language === "de"
+              {germanyHost
+                ? germanyLocale === "en"
+                  ? "Public-holiday and school-holiday references are surfaced with clear official sourcing."
+                  : "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
+                : language === "de"
                 ? "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
                 : language === "en"
                 ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
@@ -82,16 +119,20 @@ export function SiteFooter({ language }: SiteFooterProps) {
           </div>
           <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {language === "de" ? "Ohne Konto" : language === "en" ? "No account" : "Sans compte"}
+              {germanyHost ? (germanyLocale === "en" ? "No account" : "Ohne Konto") : language === "en" ? "No account" : "Sans compte"}
             </p>
             <p className="mt-3 text-sm leading-7 text-white/74">{copy.privacy}</p>
           </div>
           <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {language === "de" ? "Offizielle Einordnung" : language === "en" ? "Calendar export" : "Export agenda"}
+              {germanyHost ? (germanyLocale === "en" ? "Editorial framing" : "Offizielle Einordnung") : language === "en" ? "Calendar export" : "Export agenda"}
             </p>
             <p className="mt-3 text-sm leading-7 text-white/74">
-              {language === "de"
+              {germanyHost
+                ? germanyLocale === "en"
+                  ? "The Germany pages are intentionally editorial first: context and official sources first, then the right next pages for each state."
+                  : "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
+                : language === "de"
                 ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
                 : language === "en"
                 ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
@@ -108,9 +149,9 @@ export function SiteFooter({ language }: SiteFooterProps) {
         </div>
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
-            {language === "de" ? "Produkt" : language === "en" ? "Product" : "Produit"}
+            {germanyHost ? (germanyLocale === "en" ? "Product" : "Produkt") : language === "en" ? "Product" : "Produit"}
           </h3>
-          <Link href={prefixForLanguage(routes.home, language)} className="block text-white/84 transition hover:text-white">
+          <Link href={germanyHost ? germanyPath(deRoutes.home) : prefixForLanguage(routes.home, language)} className="block text-white/84 transition hover:text-white">
             {copy.product}
           </Link>
           <p className="text-white/64">{copy.privacy}</p>
@@ -122,7 +163,7 @@ export function SiteFooter({ language }: SiteFooterProps) {
           {copy.links.map((link) => (
             <Link
               key={link.href}
-              href={prefixForLanguage(link.href, language)}
+              href={germanyHost ? germanyPath(link.href) : prefixForLanguage(link.href, language)}
               className="block text-white/84 transition hover:text-white"
             >
               {link.label}
@@ -134,16 +175,16 @@ export function SiteFooter({ language }: SiteFooterProps) {
             {copy.trust}
           </h3>
           <Link
-            href={language === "de" ? deRoutes.sources : prefixForLanguage(routes.sources, language)}
+            href={germanyHost ? germanyPath(deRoutes.sources) : prefixForLanguage(routes.sources, language)}
             className="block text-white/84 transition hover:text-white"
           >
             {copy.sources}
           </Link>
-          <Link href={language === "de" ? deRoutes.legal : prefixForLanguage(routes.legal, language)} className="block text-white/84 transition hover:text-white">
+          <Link href={germanyHost ? germanyPath(deRoutes.legal) : prefixForLanguage(routes.legal, language)} className="block text-white/84 transition hover:text-white">
             {copy.legal}
           </Link>
           <Link
-            href={language === "de" ? deRoutes.privacy : prefixForLanguage(routes.privacy, language)}
+            href={germanyHost ? germanyPath(deRoutes.privacy) : prefixForLanguage(routes.privacy, language)}
             className="block text-white/84 transition hover:text-white"
           >
             {copy.privacyPage}
