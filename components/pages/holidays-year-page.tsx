@@ -10,6 +10,10 @@ import { formatFullDate, formatMonthYear } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
+function supportedNeighborYears(year: number) {
+  return [year - 1, year + 1].filter((candidate) => candidate >= 2026 && candidate <= 2029);
+}
+
 export function HolidaysYearPage({
   language,
   year,
@@ -144,6 +148,11 @@ export function HolidaysYearPage({
         language={language}
         links={[
           { href: routes.bridgesYear(year), label: { fr: `Ponts ${year}`, en: `Bridge ideas ${year}` } },
+          { href: routes.schoolHolidaysBridgesYear(year), label: { fr: `Vacances scolaires et ponts ${year}`, en: `School holidays and bridges ${year}` } },
+          ...supportedNeighborYears(year).map((neighborYear) => ({
+            href: routes.holidaysYear(neighborYear),
+            label: { fr: `Jours fériés ${neighborYear}`, en: `Public holidays ${neighborYear}` },
+          })),
           ...(year === 2026
             ? [
                 {
@@ -151,6 +160,13 @@ export function HolidaysYearPage({
                   label: {
                     fr: "Jours fériés 2026 qui tombent en semaine",
                     en: "Weekday public holidays in 2026",
+                  },
+                },
+                {
+                  href: routes.leaveGuide2026,
+                  label: {
+                    fr: "Guide congés 2026",
+                    en: "Leave guide 2026",
                   },
                 },
               ]

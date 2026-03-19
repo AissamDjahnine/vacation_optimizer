@@ -15,6 +15,10 @@ import type { SchoolHolidayPeriod } from "@/lib/domain/types";
 import type { AppLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
+function supportedNeighborYears(year: number) {
+  return [year - 1, year + 1].filter((candidate) => candidate >= 2026 && candidate <= 2029);
+}
+
 export function SchoolHolidaysBridgesYearPage({
   language,
   year,
@@ -208,6 +212,21 @@ export function SchoolHolidaysBridgesYearPage({
             href: `${routes.home}?zone=${zone}`,
             label: { fr: `Simulateur – zone ${zone}`, en: `Planner – zone ${zone}` },
           },
+          {
+            href: routes.bridgesYear(year),
+            label: { fr: `Ponts ${year}`, en: `Bridge ideas ${year}` },
+          },
+          {
+            href: routes.holidaysYear(year),
+            label: { fr: `Jours fériés ${year}`, en: `Public holidays ${year}` },
+          },
+          ...supportedNeighborYears(year).map((neighborYear) => ({
+            href: routes.schoolHolidaysBridgesYear(neighborYear),
+            label: {
+              fr: `Vacances scolaires et ponts ${neighborYear}`,
+              en: `School holidays and bridges ${neighborYear}`,
+            },
+          })),
           { href: routes.schoolHolidaysFamily2026, label: { fr: "Guide familles 2026", en: "Family guide 2026" } },
           ...(year === 2026
             ? ([

@@ -10,6 +10,10 @@ import type { AppLanguage } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
+function supportedNeighborYears(year: number) {
+  return [year - 1, year + 1].filter((candidate) => candidate >= 2026 && candidate <= 2029);
+}
+
 export function BridgesYearPage({
   language,
   year,
@@ -196,6 +200,20 @@ export function BridgesYearPage({
         language={language}
         links={[
           { href: routes.holidaysYear(year), label: { fr: `Jours fériés ${year}`, en: `Public holidays ${year}` } },
+          { href: routes.schoolHolidaysBridgesYear(year), label: { fr: `Vacances scolaires et ponts ${year}`, en: `School holidays and bridges ${year}` } },
+          ...supportedNeighborYears(year).map((neighborYear) => ({
+            href: routes.bridgesYear(neighborYear),
+            label: { fr: `Ponts ${neighborYear}`, en: `Bridge ideas ${neighborYear}` },
+          })),
+          ...(year === 2026
+            ? [
+                { href: routes.mayBridges2026, label: { fr: "Ponts de mai 2026", en: "May bridges 2026" } },
+                { href: routes.ascension2026, label: { fr: "Pont de l’Ascension 2026", en: "Ascension bridge 2026" } },
+                { href: routes.leaveGuide2026, label: { fr: "Guide congés 2026", en: "Leave guide 2026" } },
+              ]
+            : [
+                { href: routes.holidaysAndBridges2027, label: { fr: "Jours fériés et ponts 2027", en: "Public holidays and bridges 2027" } },
+              ]),
           { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
         ]}
       />
