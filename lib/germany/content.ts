@@ -1,4 +1,4 @@
-import type { GermanEditorialPage, GermanOfficialSource, GermanStateCode } from "@/lib/domain/types";
+import type { GermanEditorialPage, GermanOfficialSource, GermanStateCode, GermanyLocale } from "@/lib/domain/types";
 import { germanStateMap } from "@/lib/germany/states";
 
 export const germanNationalSources: GermanOfficialSource[] = [
@@ -58,8 +58,55 @@ export const germanGuidePages: Record<string, GermanEditorialPage & { sources: G
   },
 };
 
-export function getStatePageHighlights(state: GermanStateCode) {
+export const germanGuidePagesEn: Record<string, GermanEditorialPage & { sources: GermanOfficialSource[] }> = {
+  "was-ist-ein-brueckentag": {
+    title: "What is a bridge day?",
+    description: "How bridge days work in Germany, why they are not a single national product and which holidays matter first.",
+    intro:
+      "In Germany, a bridge day is a widely used planning idea, not a centralized official system. The concrete opportunity depends on the holiday, the weekday and the state.",
+    highlights: [
+      "The strongest classic case is a Thursday holiday with Friday sitting between the holiday and the weekend.",
+      "Tuesday and Wednesday cases also matter, but they usually require more real leave days.",
+      "The state always matters first, because not all public holidays apply nationwide.",
+    ],
+    sources: germanNationalSources,
+  },
+  "feiertage-nach-bundesland": {
+    title: "Public holidays by state explained",
+    description: "Which holidays apply nationwide, which exist only in some states and why Germany needs state-level product pages.",
+    intro:
+      "Germany handles public holidays federally. That is exactly why a strong product should not stop at one list: it needs state-specific answers with visible official context.",
+    highlights: [
+      "New Year's Day, Good Friday, Easter Monday, Labour Day, Ascension Day, Whit Monday, German Unity Day and Christmas apply everywhere.",
+      "Corpus Christi, All Saints' Day, Reformation Day and the Day of Repentance and Prayer change the calendar sharply from one state to another.",
+      "Regional exceptions inside a state are flagged in v1, but not expanded into a separate sub-state model.",
+    ],
+    sources: germanNationalSources,
+  },
+  "schulferien-deutschland": {
+    title: "School holidays in Germany explained",
+    description: "Why German school holidays are coordinated through the KMK but still need to be read state by state.",
+    intro:
+      "The Standing Conference of the Ministers of Education coordinates the overview, but the actual school-holiday dates are reported and published by the states. For families, that means: state first.",
+    highlights: [
+      "Summer holidays are coordinated long in advance, while the other holiday periods remain state-managed.",
+      "For families, bridge-day value often appears where school holidays and public holidays align cleanly.",
+      "The Germany pages therefore use state-specific holiday windows throughout, backed by visible KMK sourcing.",
+    ],
+    sources: germanNationalSources,
+  },
+};
+
+export function getStatePageHighlights(state: GermanStateCode, locale: GermanyLocale = "de") {
   const stateMeta = germanStateMap[state];
+
+  if (locale === "en") {
+    return [
+      `${stateMeta.englishName} has its own holiday mix and therefore different bridge-day favorites than the national average.`,
+      stateMeta.englishNuance,
+      "The right reading order is always the same: check public holidays, place school holidays beside them, then prioritize the obvious bridge opportunities.",
+    ];
+  }
 
   return [
     `${stateMeta.name} hat einen eigenen Feiertagsmix und deshalb andere Brückentag-Favoriten als der Bundesschnitt.`,
