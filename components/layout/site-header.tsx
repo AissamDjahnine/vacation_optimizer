@@ -24,6 +24,7 @@ const navItems = {
     { href: routes.bridgesYear(2026), label: "Ponts" },
     { href: routes.holidaysYear(2026), label: "Jours fériés" },
     { href: routes.schoolHolidaysBridgesYear(2026), label: "Vacances scolaires" },
+    { href: "https://de.pontsmalins.com/", label: "Allemagne" },
   ],
   en: [
     { href: routes.home, label: "Planner" },
@@ -31,6 +32,7 @@ const navItems = {
     { href: routes.bridgesYear(2026), label: "Bridges" },
     { href: routes.holidaysYear(2026), label: "Public holidays" },
     { href: routes.schoolHolidaysBridgesYear(2026), label: "School holidays" },
+    { href: "https://de.pontsmalins.com/en", label: "Germany" },
   ],
   de: [
     { href: "/de", label: "Deutschland" },
@@ -81,13 +83,22 @@ export function SiteHeader({ language, host, germanyHost = false, germanyLocale 
 
         <nav className="hidden items-center gap-2 lg:flex">
           {displayedNavItems.map((item) => {
+            const external = item.href.startsWith("https://");
             const active =
+              !external &&
               stripTrailingSlash(pathname) ===
               stripTrailingSlash(germanyHost ? localizedGermanyPath(item.href) : localizedPath(item.href));
             return (
               <Link
                 key={item.href}
-                href={germanyHost ? localizedGermanyPath(item.href) : localizedPath(item.href)}
+                href={
+                  external
+                    ? item.href
+                    : germanyHost
+                      ? localizedGermanyPath(item.href)
+                      : localizedPath(item.href)
+                }
+                {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
                 className={cn(
                   "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
                   active

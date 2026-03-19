@@ -60,6 +60,7 @@ export function SiteFooter({
           title: "Ponts Malins",
           summary: "Bridge planning, public holidays and school holidays for France.",
           product: "Planner",
+          international: "Germany in English",
           privacy: "No account, no saved data.",
           guides: "Useful guides",
           trust: "Trust and legal",
@@ -77,6 +78,7 @@ export function SiteFooter({
           title: "Ponts Malins",
           summary: "Ponts, jours fériés et vacances scolaires pour mieux poser vos congés en France.",
           product: "Simulateur",
+          international: "Allemagne",
           privacy: "Pas de compte, pas de données enregistrées.",
           guides: "Guides utiles",
           trust: "Confiance et cadre",
@@ -154,6 +156,16 @@ export function SiteFooter({
           <Link href={germanyHost ? germanyPath(deRoutes.home) : prefixForLanguage(routes.home, language)} className="block text-white/84 transition hover:text-white">
             {copy.product}
           </Link>
+          {!germanyHost ? (
+            <Link
+              href={language === "en" ? "https://de.pontsmalins.com/en" : "https://de.pontsmalins.com/"}
+              target="_blank"
+              rel="noreferrer"
+              className="block text-white/84 transition hover:text-white"
+            >
+              {copy.international}
+            </Link>
+          ) : null}
           <p className="text-white/64">{copy.privacy}</p>
         </div>
         <div className="space-y-4">
