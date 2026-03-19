@@ -1,3 +1,5 @@
+"use client";
+
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/components/cn";
 
