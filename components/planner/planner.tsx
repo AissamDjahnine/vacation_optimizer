@@ -321,34 +321,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       </Reveal>
 
       <Reveal>
-        <section className="grid gap-4 lg:grid-cols-3">
-          {plannerPresets.map((preset) => (
-            <button
-              key={preset.frTitle}
-              type="button"
-              onClick={() => applyPreset(preset.state)}
-              aria-label={
-                language === "en"
-                  ? `Test preset: ${preset.enTitle}`
-                  : `Tester le scénario : ${preset.frTitle}`
-              }
-              className="cursor-pointer rounded-4xl border border-line bg-white p-6 text-left shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
-            >
-              <p className="text-2xl font-black tracking-tight text-ink">
-                {language === "en" ? preset.enTitle : preset.frTitle}
-              </p>
-              <p className="mt-3 text-base leading-7 text-ink/80">
-                {language === "en" ? preset.enBody : preset.frBody}
-              </p>
-              <span className="mt-5 inline-flex font-bold text-coral">
-                {language === "en" ? "Test" : "Tester"}
-              </span>
-            </button>
-          ))}
-        </section>
-      </Reveal>
-
-      <Reveal>
         <section className="glass-panel rounded-[2.2rem] p-5 sm:p-8">
           <div className="grid gap-6 xl:grid-cols-[1fr_auto]">
             <div className="space-y-6">
