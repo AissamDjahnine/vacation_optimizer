@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "Why 11 November 2026 is a useful autumn bridge, which setups to test, and when to switch back to the planner.",
   path: "/pont-11-novembre-2026",
   enPath: "/en/pont-11-novembre-2026",
+  locale: "en",
 });
 
 export default async function Page() {

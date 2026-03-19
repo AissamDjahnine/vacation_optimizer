@@ -23,6 +23,7 @@ export async function generateMetadata({
     description: `Build a yearly leave and bridge plan for ${year}, spread your budget, and export the best breaks.`,
     path: `/planifier-annee/${year}`,
     enPath: `/en/plan-year/${year}`,
+    locale: "en",
   });
 }
 

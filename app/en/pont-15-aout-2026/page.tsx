@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "Is the 15 August 2026 bridge worth testing, what payoff to expect, and when a stronger month is the better option.",
   path: "/pont-15-aout-2026",
   enPath: "/en/pont-15-aout-2026",
+  locale: "en",
 });
 
 export default async function Page() {

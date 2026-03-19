@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "How to book 10 leave days in 2026, split your budget across multiple bridges, and pick the strongest months.",
   path: "/poser-10-jours-conges-2026",
   enPath: "/en/poser-10-jours-conges-2026",
+  locale: "en",
 });
 
 export default async function Page() {

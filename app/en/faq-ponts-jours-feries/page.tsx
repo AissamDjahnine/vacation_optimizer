@@ -10,6 +10,7 @@ export const metadata: Metadata = buildMetadata({
   description: "Frequently asked questions about bridge days, public holidays, employer rules, public/private sector differences and what to verify before booking leave.",
   path: "/faq-ponts-jours-feries",
   enPath: "/en/faq-ponts-jours-feries",
+  locale: "en",
 });
 
 export default function Page() {

@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "Prepare 2027 early with the public holiday list, the first useful markers and bridge ideas to validate in Ponts Malins.",
   path: "/jours-feries-2027-ponts",
   enPath: "/en/jours-feries-2027-ponts",
+  locale: "en",
 });
 
 export default async function Page() {

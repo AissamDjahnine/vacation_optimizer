@@ -24,6 +24,7 @@ export async function generateMetadata({
     description: `All official public holidays in France for ${year}, with the markers that deserve a real check in the planner.`,
     path: `/jours-feries/${year}`,
     enPath: `/en/jours-feries/${year}`,
+    locale: "en",
   });
 }
 

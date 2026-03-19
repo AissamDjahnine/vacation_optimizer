@@ -7,17 +7,21 @@ export function buildMetadata({
   description,
   path,
   enPath,
+  locale = "fr",
 }: {
   title: string;
   description: string;
   path: string;
   enPath?: string;
+  locale?: "fr" | "en";
 }): Metadata {
+  const canonicalPath = locale === "en" && enPath ? enPath : path;
+
   return {
     title,
     description,
     alternates: {
-      canonical: path,
+      canonical: canonicalPath,
       languages: enPath
         ? {
             "fr-FR": path,
@@ -28,7 +32,7 @@ export function buildMetadata({
     openGraph: {
       title,
       description,
-      url: path,
+      url: canonicalPath,
       siteName: "Ponts Malins",
       type: "article",
       images: [defaultOpenGraphImage],

@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "What is still worth testing around Christmas and New Year 2026, and when to switch back to the planner.",
   path: "/pont-noel-fin-annee-2026",
   enPath: "/en/pont-noel-fin-annee-2026",
+  locale: "en",
 });
 
 export default async function Page() {

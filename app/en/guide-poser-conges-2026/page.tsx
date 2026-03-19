@@ -7,6 +7,7 @@ export const metadata: Metadata = buildMetadata({
   description: "How to plan leave in 2026, which months to test first, and which French bridge ideas to compare for your leave budget.",
   path: "/guide-poser-conges-2026",
   enPath: "/en/guide-poser-conges-2026",
+  locale: "en",
 });
 
 export default function Page() {

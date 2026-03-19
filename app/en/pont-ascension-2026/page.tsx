@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "Useful dates, official school bridge days and the best cases to test around Ascension 2026 in France.",
   path: "/pont-ascension-2026",
   enPath: "/en/pont-ascension-2026",
+  locale: "en",
 });
 
 export default async function Page() {

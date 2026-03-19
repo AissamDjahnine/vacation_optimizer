@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "The May 2026 bridge opportunities worth opening first: May 1st, May 8th, Ascension, and the strongest budget-based cases.",
   path: "/ponts-mai-2026",
   enPath: "/en/ponts-mai-2026",
+  locale: "en",
 });
 
 export default async function Page() {

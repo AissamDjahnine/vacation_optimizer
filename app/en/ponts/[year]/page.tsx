@@ -24,6 +24,7 @@ export async function generateMetadata({
     description: `The best months and bridge opportunities in France for ${year}, before switching back to the planner with your exact budget.`,
     path: `/ponts/${year}`,
     enPath: `/en/ponts/${year}`,
+    locale: "en",
   });
 }
 

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { prefixForLanguage } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 const baseUrl = "https://pontsmalins.com";
@@ -51,34 +52,80 @@ const lastModifiedByPath: Partial<Record<string, string>> = {
   [routes.yearEnd2026]: "2026-03-15T18:50:00.000Z",
 };
 
+function getPriority(path: string): number {
+  if (
+    path === routes.home ||
+    path.startsWith("/planifier-annee/") ||
+    path.startsWith("/ponts/") ||
+    path.startsWith("/jours-feries/") ||
+    path.startsWith("/vacances-scolaires-ponts/")
+  ) {
+    return 0.9;
+  }
+
+  if (
+    path === routes.leaveGuide2026 ||
+    path === routes.schoolHolidaysFamily2026 ||
+    path === routes.holidaysAndBridges2027 ||
+    path === routes.faq
+  ) {
+    return 0.8;
+  }
+
+  return 0.7;
+}
+
+function getChangeFrequency(path: string): MetadataRoute.Sitemap[number]["changeFrequency"] {
+  if (path === routes.home) {
+    return "weekly";
+  }
+
+  if (
+    path.startsWith("/planifier-annee/") ||
+    path.startsWith("/ponts/") ||
+    path.startsWith("/jours-feries/") ||
+    path.startsWith("/vacances-scolaires-ponts/")
+  ) {
+    return "monthly";
+  }
+
+  return "yearly";
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return pages.flatMap((path) => {
     const frUrl = `${baseUrl}${path}`;
-    const enPath = `/en${path === "/" ? "" : path}`;
+    const enPath = prefixForLanguage(path, "en");
     const enUrl = `${baseUrl}${enPath}`;
     const lastModified = new Date(lastModifiedByPath[path] ?? "2026-03-15T17:20:14.401Z");
+    const priority = getPriority(path);
+    const changeFrequency = getChangeFrequency(path);
 
     return [
-    {
-      url: frUrl,
-      lastModified,
-      alternates: {
-        languages: {
-          en: enUrl,
-          fr: frUrl,
+      {
+        url: frUrl,
+        lastModified,
+        changeFrequency,
+        priority,
+        alternates: {
+          languages: {
+            en: enUrl,
+            fr: frUrl,
+          },
         },
       },
-    },
-    {
-      url: enUrl,
-      lastModified,
-      alternates: {
-        languages: {
-          en: enUrl,
-          fr: frUrl,
+      {
+        url: enUrl,
+        lastModified,
+        changeFrequency,
+        priority,
+        alternates: {
+          languages: {
+            en: enUrl,
+            fr: frUrl,
+          },
         },
       },
-    },
-  ];
+    ];
   });
 }

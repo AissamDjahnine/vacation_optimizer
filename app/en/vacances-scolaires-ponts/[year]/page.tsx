@@ -24,6 +24,7 @@ export async function generateMetadata({
     description: `School periods by zone, family markers and the right time to switch back to the planner in ${year}.`,
     path: `/vacances-scolaires-ponts/${year}`,
     enPath: `/en/vacances-scolaires-ponts/${year}`,
+    locale: "en",
   });
 }
 

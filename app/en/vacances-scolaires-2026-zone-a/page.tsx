@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   description: "All the useful school periods for zone A in 2026, with a family and bridge-planning angle.",
   path: "/vacances-scolaires-2026-zone-a",
   enPath: "/en/vacances-scolaires-2026-zone-a",
+  locale: "en",
 });
 
 export default async function Page() {
