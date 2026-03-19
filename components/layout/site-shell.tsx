@@ -21,7 +21,9 @@ export function SiteShell({
   const germanyLocale = germanyHost ? resolveGermanyLocale(pathname) : null;
   const language: AppLanguage = initialLanguage ?? resolveLanguage(pathname, initialHost);
   const visibleSegments = pathname.split("/").filter(Boolean);
-  const showTrustStrip = visibleSegments.length <= 1;
+  const isLocalizedHome =
+    pathname === "/" || pathname === "/en" || pathname === "/de" || pathname === "/de/en";
+  const showTrustStrip = !isLocalizedHome && visibleSegments.length <= 1;
 
   return (
     <>

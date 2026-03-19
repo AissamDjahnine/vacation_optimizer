@@ -21,7 +21,6 @@ import {
   applySchoolHolidayPreference,
   defaultPlannerState,
   hydratePlannerState,
-  plannerPresets,
   type PlannerInitialConfig,
 } from "@/lib/planner-config";
 import { plannerConfigFromUrlSearchParams } from "@/lib/search-params";
@@ -55,6 +54,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const [loading, setLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
   const [visibleResultCount, setVisibleResultCount] = useState(5);
+  const [showMobileAdvancedSettings, setShowMobileAdvancedSettings] = useState(false);
   const resultsRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -241,12 +241,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     state.schoolHolidayPreference,
   ]);
 
-  const applyPreset = (presetState: Partial<PlannerState>) => {
-    setState((current) => ({ ...current, ...presetState }));
-    setVisibleResultCount(5);
-    setHasSearchedOnce(true);
-  };
-
   const updateSchoolPreference = (preference: SchoolHolidayPreference) => {
     setState((current) => ({
       ...current,
@@ -275,6 +269,18 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
   const visiblePeriods = computation ? computation.periods.slice(0, visibleResultCount) : [];
   const hasHiddenPeriods = computation ? computation.periods.length > visibleResultCount : false;
+  const selectedSchoolHolidayPreferenceLabel =
+    state.schoolHolidayPreference === "favor"
+      ? language === "en"
+        ? "Favor"
+        : "Favoriser"
+      : state.schoolHolidayPreference === "avoid"
+        ? language === "en"
+          ? "Avoid"
+          : "Éviter"
+        : language === "en"
+          ? "Neutral"
+          : "Neutre";
 
   const shiftMonth = (direction: -1 | 1) => {
     setState((current) => {
@@ -340,29 +346,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </div>
 
               <div className="rounded-4xl border border-line bg-white p-5">
-                <ZoneLookupPanel
-                  language={language}
-                  disabled={zoneSelectionLocked}
-                  onZoneResolved={(zone) =>
-                    setState((current) => ({
-                      ...current,
-                      schoolZone: zone,
-                    }))
-                  }
-                  title={
-                    language === "en"
-                      ? "Don't know your zone yet?"
-                      : "Vous ne connaissez pas encore votre zone ?"
-                  }
-                  subtitle={
-                    language === "en"
-                      ? "A department code, department name, or academy is enough. The planner will keep the manual A/B/C toggle afterwards."
-                      : "Un numéro de département, un nom de département ou une académie suffit. Le simulateur garde ensuite le réglage manuel A/B/C."
-                  }
-                  className="mb-5 bg-paper shadow-none"
-                />
-
-                <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr_1fr_auto_1.25fr] xl:items-start">
+                <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr_1fr] xl:items-start">
                   <Field label={language === "en" ? "Year" : "Année"}>
                     <select
                       aria-label={language === "en" ? "Select year" : "Choisir l’année"}
@@ -401,82 +385,132 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       ))}
                     </select>
                   </Field>
-                  <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
-                    <select
-                      aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
-                      value={safeMonthlyRtt}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          monthlyRtt: Number(event.target.value),
-                        }))
-                      }
-                      className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                    >
-                      {[0, 1, 2, 3].map((value) => (
-                        <option key={value} value={value}>
-                          {value === 0
-                            ? language === "en"
-                              ? "No RTT"
-                              : "Sans RTT"
-                            : language === "en"
-                              ? `${value} RTT day${value > 1 ? "s" : ""}`
-                              : `${value} RTT par mois`}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                  <Field
-                    label={
-                      language === "en" ? "French school zone (A, B or C)" : "Zone scolaire"
-                    }
-                  >
-                    <div
-                      aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
-                      role="group"
-                      className={`inline-flex rounded-full border border-ink bg-white p-1 ${
-                        zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
-                      }`}
-                    >
-                      {(["A", "B", "C"] as const).map((zone) => (
-                        <ModeButton
-                          key={zone}
-                          active={state.schoolZone === zone}
-                          disabled={zoneSelectionLocked}
-                          onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
-                          label={zone}
-                        />
-                      ))}
-                    </div>
-                  </Field>
-                  <Field label={language === "en" ? "School holidays" : "Vacances scolaires"}>
-                    <div
-                      aria-label={
-                        language === "en"
-                          ? "Choose school holiday preference"
-                          : "Choisir la préférence vacances scolaires"
-                      }
-                      role="group"
-                      className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1"
-                    >
-                      {[
-                        { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
-                        { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
-                        { value: "avoid" as const, label: language === "en" ? "Avoid" : "Éviter" },
-                      ].map((item) => (
-                        <ModeButton
-                          key={item.value}
-                          active={state.schoolHolidayPreference === item.value}
-                          onClick={() => updateSchoolPreference(item.value)}
-                          label={item.label}
-                          className="w-full px-2"
-                        />
-                      ))}
-                    </div>
-                  </Field>
                 </div>
 
-                <button
+                <div className="mt-4 rounded-3xl border border-dashed border-line bg-paper/70 p-4 md:hidden">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="chip">Zone {state.schoolZone}</span>
+                    <span className="chip">RTT {safeMonthlyRtt}</span>
+                    <span className="chip">
+                      {language === "en" ? "School holidays" : "Vacances scolaires"}:{" "}
+                      {selectedSchoolHolidayPreferenceLabel}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowMobileAdvancedSettings((current) => !current)}
+                    className="mt-4 inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+                  >
+                    {showMobileAdvancedSettings
+                      ? language === "en"
+                        ? "Hide advanced settings"
+                        : "Masquer les réglages avancés"
+                      : language === "en"
+                        ? "Show advanced settings"
+                        : "Afficher les réglages avancés"}
+                  </button>
+                </div>
+
+                <div className={`${showMobileAdvancedSettings ? "mt-5 block" : "mt-5 hidden"} md:mt-5 md:block`}>
+                  <ZoneLookupPanel
+                    language={language}
+                    disabled={zoneSelectionLocked}
+                    onZoneResolved={(zone) =>
+                      setState((current) => ({
+                        ...current,
+                        schoolZone: zone,
+                      }))
+                    }
+                    title={
+                      language === "en"
+                        ? "Don't know your zone yet?"
+                        : "Vous ne connaissez pas encore votre zone ?"
+                    }
+                    subtitle={
+                      language === "en"
+                        ? "A department code, department name, or academy is enough. The planner will keep the manual A/B/C toggle afterwards."
+                        : "Un numéro de département, un nom de département ou une académie suffit. Le simulateur garde ensuite le réglage manuel A/B/C."
+                    }
+                    className="mb-5 bg-paper shadow-none"
+                  />
+
+                  <div className="grid gap-4 xl:grid-cols-[1fr_auto_1.25fr] xl:items-start">
+                    <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
+                      <select
+                        aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
+                        value={safeMonthlyRtt}
+                        onChange={(event) =>
+                          setState((current) => ({
+                            ...current,
+                            monthlyRtt: Number(event.target.value),
+                          }))
+                        }
+                        className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
+                      >
+                        {[0, 1, 2, 3].map((value) => (
+                          <option key={value} value={value}>
+                            {value === 0
+                              ? language === "en"
+                                ? "No RTT"
+                                : "Sans RTT"
+                              : language === "en"
+                                ? `${value} RTT day${value > 1 ? "s" : ""}`
+                                : `${value} RTT par mois`}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field
+                      label={
+                        language === "en" ? "French school zone (A, B or C)" : "Zone scolaire"
+                      }
+                    >
+                      <div
+                        aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
+                        role="group"
+                        className={`inline-flex rounded-full border border-ink bg-white p-1 ${
+                          zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
+                        }`}
+                      >
+                        {(["A", "B", "C"] as const).map((zone) => (
+                          <ModeButton
+                            key={zone}
+                            active={state.schoolZone === zone}
+                            disabled={zoneSelectionLocked}
+                            onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
+                            label={zone}
+                          />
+                        ))}
+                      </div>
+                    </Field>
+                    <Field label={language === "en" ? "School holidays" : "Vacances scolaires"}>
+                      <div
+                        aria-label={
+                          language === "en"
+                            ? "Choose school holiday preference"
+                            : "Choisir la préférence vacances scolaires"
+                        }
+                        role="group"
+                        className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1"
+                      >
+                        {[
+                          { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
+                          { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
+                          { value: "avoid" as const, label: language === "en" ? "Avoid" : "Éviter" },
+                        ].map((item) => (
+                          <ModeButton
+                            key={item.value}
+                            active={state.schoolHolidayPreference === item.value}
+                            onClick={() => updateSchoolPreference(item.value)}
+                            label={item.label}
+                            className="w-full px-2"
+                          />
+                        ))}
+                      </div>
+                    </Field>
+                  </div>
+
+                  <button
                     type="button"
                     onClick={() =>
                       setState((current) =>
@@ -502,6 +536,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       ? "Allow overlap with school holidays"
                       : "Autoriser le chevauchement avec les vacances scolaires"}
                   </button>
+                </div>
               </div>
 
               <div className="rounded-4xl border border-line bg-white p-6">
