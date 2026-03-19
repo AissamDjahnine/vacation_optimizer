@@ -9,6 +9,7 @@ import { routes } from "@/lib/routes";
 
 type SiteHeaderProps = {
   language: AppLanguage;
+  host?: string;
 };
 
 const navItems = {
@@ -35,7 +36,7 @@ const navItems = {
   ],
 } as const;
 
-export function SiteHeader({ language }: SiteHeaderProps) {
+export function SiteHeader({ language, host }: SiteHeaderProps) {
   const pathname = usePathname() || "/";
   const localizedPath = (path: string) => prefixForLanguage(path, language);
 
@@ -79,7 +80,7 @@ export function SiteHeader({ language }: SiteHeaderProps) {
           })}
         </nav>
 
-        <LanguageSwitch />
+        <LanguageSwitch host={host} />
       </div>
     </header>
   );

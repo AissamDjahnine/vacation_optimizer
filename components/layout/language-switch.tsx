@@ -3,15 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/components/cn";
-import { AppLanguage, isEnglishPath, isGermanPath, prefixForLanguage } from "@/lib/i18n";
+import {
+  AppLanguage,
+  isGermanHost,
+  prefixForLanguage,
+  resolveLanguage,
+} from "@/lib/i18n";
 
-export function LanguageSwitch() {
+export function LanguageSwitch({ host = "" }: { host?: string }) {
   const pathname = usePathname() || "/";
-  if (isGermanPath(pathname)) {
+  if (isGermanHost(host)) {
     return null;
   }
 
-  const currentLanguage: AppLanguage = isEnglishPath(pathname) ? "en" : "fr";
+  const currentLanguage: AppLanguage = resolveLanguage(pathname, host);
 
   return (
     <div className="inline-flex rounded-full border border-line bg-white/80 p-1 shadow-sm backdrop-blur">

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
-import { prefixForLanguage } from "@/lib/i18n";
+import { prefixForLanguage, resolveLanguage } from "@/lib/i18n";
 import { buildMetadata } from "@/lib/seo";
 
 describe("SEO routing", () => {
@@ -40,6 +40,12 @@ describe("SEO routing", () => {
     expect(prefixForLanguage("/planifier-annee/2026", "en")).toBe("/en/plan-year/2026");
     expect(prefixForLanguage("/ponts/2026", "en")).toBe("/en/ponts/2026");
     expect(prefixForLanguage("/jours-feries/2026", "en")).toBe("/en/jours-feries/2026");
+  });
+
+  test("resolves app language from subdomain host before pathname", () => {
+    expect(resolveLanguage("/", "de.pontsmalins.com")).toBe("de");
+    expect(resolveLanguage("/", "en.pontsmalins.com")).toBe("en");
+    expect(resolveLanguage("/", "pontsmalins.com")).toBe("fr");
   });
 
   test("serves a crawlable robots policy with the production sitemap", () => {

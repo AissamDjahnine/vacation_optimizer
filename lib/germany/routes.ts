@@ -6,6 +6,9 @@ export const deRoutes = {
   countryBridgesYear: (year: number) => `/de/brueckentage-deutschland/${year}`,
   countryHolidaysYear: (year: number) => `/de/feiertage-deutschland/${year}`,
   countrySchoolHolidaysYear: (year: number) => `/de/schulferien-deutschland/${year}`,
+  sources: "/de/offizielle-quellen",
+  legal: "/de/impressum",
+  privacy: "/de/datenschutz",
   stateBridgesYear: (year: number, state: GermanStateCode) =>
     `/de/brueckentage/${germanStateMap[state].slug}/${year}`,
   stateHolidaysYear: (year: number, state: GermanStateCode) =>

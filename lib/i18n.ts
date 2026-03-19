@@ -17,6 +17,24 @@ export function isGermanPath(pathname: string): boolean {
   return pathname === "/de" || pathname.startsWith("/de/");
 }
 
+export function isEnglishHost(hostname: string): boolean {
+  return hostname === "en.pontsmalins.com" || hostname.startsWith("en.");
+}
+
+export function isGermanHost(hostname: string): boolean {
+  return hostname === "de.pontsmalins.com" || hostname.startsWith("de.");
+}
+
+export function resolveLanguage(pathname: string, hostname = ""): AppLanguage {
+  if (isGermanHost(hostname) || isGermanPath(pathname)) {
+    return "de";
+  }
+  if (isEnglishHost(hostname) || isEnglishPath(pathname)) {
+    return "en";
+  }
+  return "fr";
+}
+
 export function stripLanguagePrefix(pathname: string): string {
   if (pathname === "/en") {
     return "/";

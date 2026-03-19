@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ProtectedEmailLink } from "@/components/layout/protected-email-link";
 import { AppLanguage, prefixForLanguage } from "@/lib/i18n";
+import { deRoutes } from "@/lib/germany/routes";
 import { routes } from "@/lib/routes";
 
 type SiteFooterProps = {
@@ -22,9 +23,9 @@ export function SiteFooter({ language }: SiteFooterProps) {
           privacyPage: "Datenschutz",
           note: "Gebaut für saubere Orientierung nach Bundesland, mit klaren Verweisen auf KMK und Landesportale.",
           links: [
-            { href: "/de/brueckentage-deutschland/2026", label: "Brückentage Deutschland 2026" },
-            { href: "/de/feiertage-deutschland/2026", label: "Feiertage Deutschland 2026" },
-            { href: "/de/schulferien-deutschland/2026", label: "Schulferien Deutschland 2026" },
+            { href: deRoutes.countryBridgesYear(2026), label: "Brückentage Deutschland 2026" },
+            { href: deRoutes.countryHolidaysYear(2026), label: "Feiertage Deutschland 2026" },
+            { href: deRoutes.countrySchoolHolidaysYear(2026), label: "Schulferien Deutschland 2026" },
           ],
         }
       : language === "en"
@@ -133,16 +134,16 @@ export function SiteFooter({ language }: SiteFooterProps) {
             {copy.trust}
           </h3>
           <Link
-            href={prefixForLanguage(routes.sources, language)}
+            href={language === "de" ? deRoutes.sources : prefixForLanguage(routes.sources, language)}
             className="block text-white/84 transition hover:text-white"
           >
             {copy.sources}
           </Link>
-          <Link href={prefixForLanguage(routes.legal, language)} className="block text-white/84 transition hover:text-white">
+          <Link href={language === "de" ? deRoutes.legal : prefixForLanguage(routes.legal, language)} className="block text-white/84 transition hover:text-white">
             {copy.legal}
           </Link>
           <Link
-            href={prefixForLanguage(routes.privacy, language)}
+            href={language === "de" ? deRoutes.privacy : prefixForLanguage(routes.privacy, language)}
             className="block text-white/84 transition hover:text-white"
           >
             {copy.privacyPage}

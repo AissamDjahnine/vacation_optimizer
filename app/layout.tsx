@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/site-shell";
+import { resolveLanguage } from "@/lib/i18n";
 
 const googleAnalyticsId = "G-D9TND19B0J";
 
@@ -36,15 +38,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const host = (await headers()).get("host") ?? "";
+  const language = resolveLanguage("/", host);
+
   return (
-    <html lang="fr">
+    <html lang={language}>
       <body className="min-h-screen text-ink">
-        <SiteShell>{children}</SiteShell>
+        <SiteShell initialHost={host} initialLanguage={language}>
+          {children}
+        </SiteShell>
         <SpeedInsights />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
