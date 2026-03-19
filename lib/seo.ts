@@ -13,7 +13,7 @@ export function buildMetadata({
   description: string;
   path: string;
   enPath?: string;
-  locale?: "fr" | "en";
+  locale?: "fr" | "en" | "de";
 }): Metadata {
   const canonicalPath = locale === "en" && enPath ? enPath : path;
 
@@ -46,12 +46,15 @@ export function buildMetadata({
   };
 }
 
-export function buildNotFoundMetadata(language: "fr" | "en" = "fr"): Metadata {
-  const title = language === "en" ? "Page not found" : "Page introuvable";
+export function buildNotFoundMetadata(language: "fr" | "en" | "de" = "fr"): Metadata {
+  const title =
+    language === "en" ? "Page not found" : language === "de" ? "Seite nicht gefunden" : "Page introuvable";
   const description =
     language === "en"
       ? "The requested page does not exist or is no longer available on Ponts Malins."
-      : "La page demandée n’existe pas ou n’est plus disponible sur Ponts Malins.";
+      : language === "de"
+        ? "Die angeforderte Seite existiert nicht oder ist auf Ponts Malins nicht mehr verfügbar."
+        : "La page demandée n’existe pas ou n’est plus disponible sur Ponts Malins.";
 
   return {
     title,
@@ -80,6 +83,38 @@ export function buildNotFoundMetadata(language: "fr" | "en" = "fr"): Metadata {
   };
 }
 
+export function buildAbsoluteMetadata({
+  title,
+  description,
+  canonical,
+}: {
+  title: string;
+  description: string;
+  canonical: string;
+}): Metadata {
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Ponts Malins",
+      type: "article",
+      images: [defaultOpenGraphImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [defaultOpenGraphImage],
+    },
+  };
+}
+
 export function buildArticleSchema({
   headline,
   description,
@@ -89,14 +124,14 @@ export function buildArticleSchema({
   headline: string;
   description: string;
   path: string;
-  language: "fr" | "en";
+  language: "fr" | "en" | "de";
 }) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline,
     description,
-    inLanguage: language === "fr" ? "fr-FR" : "en-US",
+    inLanguage: language === "fr" ? "fr-FR" : language === "en" ? "en-US" : "de-DE",
     mainEntityOfPage: `https://pontsmalins.com${path}`,
     url: `https://pontsmalins.com${path}`,
     image: ["https://pontsmalins.com/opengraph-image"],
@@ -123,7 +158,7 @@ export function buildWebApplicationSchema({
   name: string;
   description: string;
   path: string;
-  language: "fr" | "en";
+  language: "fr" | "en" | "de";
 }) {
   return {
     "@context": "https://schema.org",
@@ -133,7 +168,7 @@ export function buildWebApplicationSchema({
     url: `https://pontsmalins.com${path}`,
     applicationCategory: "TravelApplication",
     operatingSystem: "Web",
-    inLanguage: language === "fr" ? "fr-FR" : "en-US",
+    inLanguage: language === "fr" ? "fr-FR" : language === "en" ? "en-US" : "de-DE",
     image: "https://pontsmalins.com/opengraph-image",
     publisher: {
       "@type": "Organization",

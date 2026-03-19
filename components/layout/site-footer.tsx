@@ -9,7 +9,25 @@ type SiteFooterProps = {
 
 export function SiteFooter({ language }: SiteFooterProps) {
   const copy =
-    language === "en"
+    language === "de"
+      ? {
+          title: "Ponts Malins Deutschland",
+          summary: "Brückentage, Feiertage und Schulferien für Deutschland mit Fokus auf offizielle Quellen.",
+          product: "Deutschland-Startseite",
+          privacy: "Kein Konto, keine gespeicherten Personendaten.",
+          guides: "Wichtige Einstiege",
+          trust: "Quellen und Rechtliches",
+          sources: "Offizielle Quellen",
+          legal: "Impressum",
+          privacyPage: "Datenschutz",
+          note: "Gebaut für saubere Orientierung nach Bundesland, mit klaren Verweisen auf KMK und Landesportale.",
+          links: [
+            { href: "/de/brueckentage-deutschland/2026", label: "Brückentage Deutschland 2026" },
+            { href: "/de/feiertage-deutschland/2026", label: "Feiertage Deutschland 2026" },
+            { href: "/de/schulferien-deutschland/2026", label: "Schulferien Deutschland 2026" },
+          ],
+        }
+      : language === "en"
       ? {
           title: "Ponts Malins",
           summary: "Bridge planning, public holidays and school holidays for France.",
@@ -51,26 +69,30 @@ export function SiteFooter({ language }: SiteFooterProps) {
         <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 md:grid-cols-3">
           <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {language === "en" ? "Public data" : "Données publiques"}
+              {language === "de" ? "Öffentliche Daten" : language === "en" ? "Public data" : "Données publiques"}
             </p>
             <p className="mt-3 text-sm leading-7 text-white/74">
-              {language === "en"
+              {language === "de"
+                ? "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
+                : language === "en"
                 ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
                 : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
             </p>
           </div>
           <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {language === "en" ? "No account" : "Sans compte"}
+              {language === "de" ? "Ohne Konto" : language === "en" ? "No account" : "Sans compte"}
             </p>
             <p className="mt-3 text-sm leading-7 text-white/74">{copy.privacy}</p>
           </div>
           <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-              {language === "en" ? "Calendar export" : "Export agenda"}
+              {language === "de" ? "Offizielle Einordnung" : language === "en" ? "Calendar export" : "Export agenda"}
             </p>
             <p className="mt-3 text-sm leading-7 text-white/74">
-              {language === "en"
+              {language === "de"
+                ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
+                : language === "en"
                 ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
                 : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
             </p>
@@ -85,7 +107,7 @@ export function SiteFooter({ language }: SiteFooterProps) {
         </div>
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
-            {language === "en" ? "Product" : "Produit"}
+            {language === "de" ? "Produkt" : language === "en" ? "Product" : "Produit"}
           </h3>
           <Link href={prefixForLanguage(routes.home, language)} className="block text-white/84 transition hover:text-white">
             {copy.product}

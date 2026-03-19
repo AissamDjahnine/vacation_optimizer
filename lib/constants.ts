@@ -35,9 +35,24 @@ export const monthLabels: Record<AppLanguage, string[]> = {
     "November",
     "December",
   ],
+  de: [
+    "Januar",
+    "Februar",
+    "März",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "Dezember",
+  ],
 };
 
 export const weekdayShortLabels: Record<AppLanguage, string[]> = {
   fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
   en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
 };

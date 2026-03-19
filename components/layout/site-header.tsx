@@ -26,6 +26,13 @@ const navItems = {
     { href: routes.holidaysYear(2026), label: "Public holidays" },
     { href: routes.schoolHolidaysBridgesYear(2026), label: "School holidays" },
   ],
+  de: [
+    { href: "/de", label: "Deutschland" },
+    { href: "/de/brueckentage-deutschland/2026", label: "Brückentage" },
+    { href: "/de/feiertage-deutschland/2026", label: "Feiertage" },
+    { href: "/de/schulferien-deutschland/2026", label: "Schulferien" },
+    { href: "/de/ratgeber/was-ist-ein-brueckentag", label: "Ratgeber" },
+  ],
 } as const;
 
 export function SiteHeader({ language }: SiteHeaderProps) {
@@ -42,7 +49,9 @@ export function SiteHeader({ language }: SiteHeaderProps) {
           <div>
             <p className="text-xl font-extrabold tracking-tight text-ink">Ponts Malins</p>
             <p className="text-sm text-ink/62">
-              {language === "en"
+              {language === "de"
+                ? "Brückentage, Feiertage und Schulferien in Deutschland"
+                : language === "en"
                 ? "French leave planner and bridge ideas"
                 : "Simulateur de ponts et congés en France"}
             </p>

@@ -4,6 +4,7 @@ import { buildGoogleCalendarUrl, buildPeriodCalendarBundle } from "@/lib/calenda
 import { sameDay } from "@/lib/domain/date-utils";
 import type { BestVacationPeriod } from "@/lib/domain/types";
 import type { AppLanguage } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { formatShortRange, weekdayShort } from "@/lib/formatting";
 
 type ResultCardProps = {
@@ -130,7 +131,7 @@ export function ResultCard({
                   </p>
                   <p className="text-4xl font-black leading-none">{day.date.getDate()}</p>
                   <p className="mt-2 min-h-8 overflow-hidden text-[11px] font-medium leading-4 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
-                    {day.label[language]}
+                    {t(day.label, language)}
                   </p>
                 </div>
               ))}

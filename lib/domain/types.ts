@@ -11,6 +11,55 @@ export type SchoolHolidayPeriod = {
   schoolYear: string;
 };
 
+export type GermanStateCode =
+  | "bw"
+  | "by"
+  | "be"
+  | "bb"
+  | "hb"
+  | "hh"
+  | "he"
+  | "mv"
+  | "ni"
+  | "nw"
+  | "rp"
+  | "sl"
+  | "sn"
+  | "st"
+  | "sh"
+  | "th";
+
+export type GermanOfficialSource = {
+  title: string;
+  url: string;
+  label?: string;
+};
+
+export type GermanHoliday = {
+  id: string;
+  name: string;
+  date: Date;
+  state: GermanStateCode;
+  nationwide: boolean;
+  source: GermanOfficialSource;
+};
+
+export type GermanSchoolHolidayPeriod = {
+  label: string;
+  startDate: Date;
+  endDate: Date;
+  state: GermanStateCode;
+  schoolYear: string;
+  source: GermanOfficialSource;
+};
+
+export type GermanEditorialPage = {
+  title: string;
+  description: string;
+  intro: string;
+  highlights: string[];
+};
+
 export type SchoolHolidayPreference = "neutral" | "favor" | "avoid";
 export type PlanningMode = "single" | "distributed";
 export type PlannerScope = "monthly" | "yearly";

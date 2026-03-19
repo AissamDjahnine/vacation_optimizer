@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/components/cn";
 import type { AppLanguage } from "@/lib/i18n";
-import { prefixForLanguage } from "@/lib/i18n";
+import { prefixForLanguage, t } from "@/lib/i18n";
 import { lookupSchoolZone, zoneLookupSourceNote } from "@/lib/zone-lookup";
 
 export function ZoneLookupPanel({
@@ -140,10 +140,10 @@ export function ZoneLookupPanel({
               <span className="rounded-full bg-ink px-4 py-2 text-sm font-bold text-white">
                 {language === "en" ? "Zone" : "Zone"} {result.zone}
               </span>
-              <p className="text-sm leading-7 text-ink/78">{result.message[language]}</p>
+              <p className="text-sm leading-7 text-ink/78">{t(result.message, language)}</p>
             </div>
           ) : (
-            <p className="text-sm leading-7 text-ink/78">{result.message[language]}</p>
+            <p className="text-sm leading-7 text-ink/78">{t(result.message, language)}</p>
           )}
 
           {result.matched && result.zone && actionHrefTemplate ? (
@@ -157,7 +157,7 @@ export function ZoneLookupPanel({
         </div>
       ) : null}
 
-      <p className="mt-4 text-xs leading-6 text-ink/48">{zoneLookupSourceNote[language]}</p>
+      <p className="mt-4 text-xs leading-6 text-ink/48">{t(zoneLookupSourceNote, language)}</p>
     </section>
   );
 }

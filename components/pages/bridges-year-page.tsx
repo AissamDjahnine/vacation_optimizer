@@ -7,6 +7,7 @@ import { DateOptimizer } from "@/lib/domain/date-optimizer";
 import type { BestVacationPeriod, Holiday } from "@/lib/domain/types";
 import { formatMonthYear } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { routes } from "@/lib/routes";
 
 export function BridgesYearPage({
@@ -142,7 +143,7 @@ export function BridgesYearPage({
                 key={`${month}-${result.startDate.toISOString()}`}
                 className="rounded-4xl border border-line bg-paper p-6"
               >
-                <p className="editorial-kicker">{label[language]}</p>
+                <p className="editorial-kicker">{t(label, language)}</p>
                 <h3 className="mt-3 text-2xl font-black tracking-tight text-ink">
                   {formatMonthYear(month, year, language)}
                 </h3>

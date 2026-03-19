@@ -52,7 +52,7 @@ const copy = {
 } as const;
 
 export function HomeTrustStrip({ language }: { language: AppLanguage }) {
-  const section = copy[language];
+  const section = language === "en" ? copy.en : copy.fr;
 
   return (
     <section className="editorial-panel space-y-6">

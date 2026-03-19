@@ -3,10 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/components/cn";
-import { AppLanguage, isEnglishPath, prefixForLanguage } from "@/lib/i18n";
+import { AppLanguage, isEnglishPath, isGermanPath, prefixForLanguage } from "@/lib/i18n";
 
 export function LanguageSwitch() {
   const pathname = usePathname() || "/";
+  if (isGermanPath(pathname)) {
+    return null;
+  }
+
   const currentLanguage: AppLanguage = isEnglishPath(pathname) ? "en" : "fr";
 
   return (
