@@ -96,11 +96,11 @@ export function SiteFooter({
         };
 
   return (
-    <footer className="mt-24 border-t border-white/40 bg-[#171f31] py-14 text-white">
-      <div className="container-shell space-y-10">
+    <footer className="mt-24 border-t border-slate-200 bg-[#1d2433] py-12 text-white">
+      <div className="container-shell space-y-8">
         {showTrustStrip ? (
-          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-5 md:grid-cols-3">
-            <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+          <div className="grid gap-3 rounded-[1.75rem] border border-white/8 bg-white/[0.03] p-4 md:grid-cols-3">
+            <div className="rounded-[1.25rem] border border-white/8 bg-white/[0.04] p-4">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
                 {germanyHost
                   ? germanyLocale === "en"
@@ -110,7 +110,7 @@ export function SiteFooter({
                     ? "Public data"
                     : "Données publiques"}
               </p>
-              <p className="mt-3 text-sm leading-7 text-white/74">
+              <p className="mt-3 text-sm leading-6 text-white/74">
                 {germanyHost
                   ? germanyLocale === "en"
                     ? "Public-holiday and school-holiday references are surfaced with clear official sourcing."
@@ -122,17 +122,17 @@ export function SiteFooter({
                   : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+            <div className="rounded-[1.25rem] border border-white/8 bg-white/[0.04] p-4">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
                 {germanyHost ? (germanyLocale === "en" ? "No account" : "Ohne Konto") : language === "en" ? "No account" : "Sans compte"}
               </p>
-              <p className="mt-3 text-sm leading-7 text-white/74">{copy.privacy}</p>
+              <p className="mt-3 text-sm leading-6 text-white/74">{copy.privacy}</p>
             </div>
-            <div className="rounded-[1.5rem] border border-white/8 bg-white/5 p-5">
+            <div className="rounded-[1.25rem] border border-white/8 bg-white/[0.04] p-4">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
                 {germanyHost ? (germanyLocale === "en" ? "Editorial framing" : "Offizielle Einordnung") : language === "en" ? "Calendar export" : "Export agenda"}
               </p>
-              <p className="mt-3 text-sm leading-7 text-white/74">
+              <p className="mt-3 text-sm leading-6 text-white/74">
                 {germanyHost
                   ? germanyLocale === "en"
                     ? "The Germany pages are intentionally editorial first: context and official sources first, then the right next pages for each state."
@@ -147,11 +147,11 @@ export function SiteFooter({
           </div>
         ) : null}
 
-        <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
+        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
         <div className="space-y-4">
           <h2 className="text-2xl font-black">{copy.title}</h2>
-          <p className="max-w-sm text-sm leading-7 text-white/74">{copy.summary}</p>
-          <p className="max-w-sm text-sm leading-7 text-white/58">{copy.note}</p>
+          <p className="max-w-sm text-sm leading-6 text-white/74">{copy.summary}</p>
+          <p className="max-w-sm text-sm leading-6 text-white/58">{copy.note}</p>
         </div>
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">

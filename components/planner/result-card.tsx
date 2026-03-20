@@ -40,17 +40,17 @@ export function ResultCard({
       : "Le score compare le total de jours de repos aux jours de congé payé réellement posés.";
   return (
     <article
-      className={`rounded-[2rem] border p-5 shadow-card transition duration-200 hover:-translate-y-0.5 sm:p-6 ${
+      className={`rounded-[1.75rem] border p-5 shadow-sm transition duration-200 sm:p-6 ${
         highlighted
-          ? "border-orange-200 bg-gradient-to-br from-white to-[#fff7f2] shadow-[0_18px_50px_rgba(255,122,89,0.12)]"
-          : "border-line bg-white hover:shadow-soft"
+          ? "border-orange-200 bg-[#fffaf6]"
+          : "border-line/90 bg-white"
       }`}
     >
-      <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-stretch lg:gap-8">
-        <div className="flex h-full flex-col gap-5">
+      <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-6">
+        <div className="flex h-full flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             {highlighted ? (
-              <span className="rounded-full bg-peach px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-orange-800">
+              <span className="rounded-full border border-orange-200 bg-peach px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-orange-800">
                 {language === "en" ? "Best fit for this month" : "Meilleur rendement pour ce mois"}
               </span>
             ) : null}
@@ -64,23 +64,23 @@ export function ResultCard({
               <button
                 type="button"
                 aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint px-3 text-xs font-bold text-mint-strong transition hover:border-mint-strong/35 hover:bg-mint/80"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint/70 px-3 text-xs font-bold text-mint-strong transition hover:border-mint-strong/35"
               >
                 Score: {period.worthScore.toFixed(2)}
               </button>
-              <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-3 w-64 -translate-x-1/2 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+              <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-3 w-64 -translate-x-1/2 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-sm transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
                 {scoreTooltip}
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <h3 className="text-3xl font-black tracking-tight text-ink sm:text-[2rem]">
+          <div className="space-y-2">
+            <h3 className="text-3xl font-black tracking-tight text-ink sm:text-[1.9rem]">
               {language === "en"
                 ? `${period.totalDaysOff} consecutive days off`
                 : `${period.totalDaysOff} jours de repos d’affilée`}
             </h3>
-            <p className="text-lg font-semibold text-ink/72">
+            <p className="text-base font-semibold text-ink/72 sm:text-lg">
               {formatShortRange(period.startDate, period.endDate, language)}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -100,7 +100,7 @@ export function ResultCard({
             </div>
           </div>
 
-          <div className="mt-auto border-t border-line/70 pt-4">
+          <div className="mt-auto border-t border-line/70 pt-3">
             <div className="grid gap-3 sm:grid-cols-2">
               <IcsExportButton
                 bundle={calendarBundle}
@@ -118,21 +118,21 @@ export function ResultCard({
           </div>
         </div>
 
-          <div className="rounded-[1.75rem] border border-line bg-paper p-4 sm:p-5">
-            <h4 className="text-lg font-bold text-ink">
+          <div className="rounded-[1.5rem] border border-line/80 bg-paper/70 p-4">
+            <h4 className="text-base font-bold text-ink">
               {language === "en" ? "Day-by-day view" : "Vue jour par jour"}
             </h4>
-            <div className="mt-4 grid grid-cols-2 gap-3 min-[540px]:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-3 grid grid-cols-2 gap-2.5 min-[540px]:grid-cols-3 xl:grid-cols-4">
               {buildTimelineDays(period).map((day) => (
                 <div
                   key={day.date.toISOString()}
-                  className={`h-[112px] min-w-0 rounded-[1.35rem] px-3.5 py-3.5 sm:h-[116px] sm:px-4 sm:py-4 ${day.className}`}
+                  className={`min-h-[98px] min-w-0 rounded-[1.1rem] px-3 py-3 sm:px-3.5 sm:py-3.5 ${day.className}`}
                 >
-                  <p className="text-sm font-semibold">
+                  <p className="text-xs font-semibold sm:text-sm">
                     {weekdayShort(day.date, language)}
                   </p>
-                  <p className="text-4xl font-black leading-none">{day.date.getDate()}</p>
-                  <p className="mt-2 min-h-8 overflow-hidden text-[11px] font-medium leading-4 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+                  <p className="mt-1 text-3xl font-black leading-none sm:text-4xl">{day.date.getDate()}</p>
+                  <p className="mt-1.5 min-h-8 overflow-hidden text-[11px] font-medium leading-4 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
                     {t(day.label, language)}
                   </p>
                 </div>
