@@ -25,6 +25,17 @@ function getCanonicalHost(hostname: string): string {
   return hostname;
 }
 
+function isPontsmalinsHost(hostname: string): boolean {
+  return hostname === PRIMARY_HOST || hostname.endsWith(".pontsmalins.com");
+}
+
+function stripDePrefix(pathname: string): string {
+  if (pathname === "/de") {
+    return "/";
+  }
+  return pathname.startsWith("/de/") ? pathname.replace(/^\/de/, "") || "/" : pathname;
+}
+
 function shouldBypass(pathname: string) {
   return (
     pathname.startsWith("/_next") ||
@@ -44,7 +55,7 @@ export function middleware(request: NextRequest) {
   const canonicalHost = getCanonicalHost(hostname);
   const shouldRedirectToCanonical =
     !isLocalHost(hostname) &&
-    hostname.endsWith(".pontsmalins.com") &&
+    isPontsmalinsHost(hostname) &&
     (canonicalHost !== hostname || forwardedProto !== "https");
 
   if (shouldRedirectToCanonical) {
@@ -55,6 +66,14 @@ export function middleware(request: NextRequest) {
   }
 
   const effectiveHost = canonicalHost;
+
+  if (effectiveHost === PRIMARY_HOST && (pathname === "/de" || pathname.startsWith("/de/"))) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.protocol = "https";
+    redirectUrl.host = DE_HOST;
+    redirectUrl.pathname = stripDePrefix(pathname);
+    return NextResponse.redirect(redirectUrl, 308);
+  }
 
   if (!effectiveHost.startsWith(DE_HOST) || shouldBypass(pathname)) {
     return NextResponse.next();

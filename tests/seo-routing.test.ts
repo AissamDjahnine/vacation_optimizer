@@ -1,8 +1,10 @@
 import { describe, expect, test } from "vitest";
+import { NextRequest } from "next/server";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { prefixForLanguage, resolveLanguage } from "@/lib/i18n";
-import { buildMetadata } from "@/lib/seo";
+import { buildBreadcrumbSchema, buildMetadata } from "@/lib/seo";
+import { middleware } from "@/middleware";
 
 describe("SEO routing", () => {
   test("uses the english path as canonical for english pages", () => {
@@ -71,5 +73,54 @@ describe("SEO routing", () => {
         }),
       ]),
     );
+  });
+
+  test("forces canonical https host on www URLs", () => {
+    const request = new NextRequest("https://www.pontsmalins.com/ponts/2026", {
+      headers: {
+        host: "www.pontsmalins.com",
+        "x-forwarded-proto": "https",
+      },
+    });
+
+    const response = middleware(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://pontsmalins.com/ponts/2026");
+  });
+
+  test("forces https on apex host", () => {
+    const request = new NextRequest("http://pontsmalins.com/planifier-annee/2026", {
+      headers: {
+        host: "pontsmalins.com",
+        "x-forwarded-proto": "http",
+      },
+    });
+
+    const response = middleware(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://pontsmalins.com/planifier-annee/2026");
+  });
+
+  test("redirects /de prefixed URLs on the main host to the Germany host", () => {
+    const request = new NextRequest("https://pontsmalins.com/de/feiertage/bayern/2026", {
+      headers: {
+        host: "pontsmalins.com",
+        "x-forwarded-proto": "https",
+      },
+    });
+
+    const response = middleware(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://de.pontsmalins.com/feiertage/bayern/2026");
+  });
+
+  test("always publishes absolute breadcrumb item URLs", () => {
+    const schema = buildBreadcrumbSchema([
+      { name: "Accueil", url: "/" },
+      { name: "Ponts 2026", url: "/ponts/2026" },
+    ]);
+
+    expect(schema.itemListElement[0]?.item).toBe("https://pontsmalins.com/");
+    expect(schema.itemListElement[1]?.item).toBe("https://pontsmalins.com/ponts/2026");
   });
 });
