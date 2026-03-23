@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ year: str
     notFound();
   }
   return buildGermanMetadata({
-    title: `Feiertage Deutschland ${year}`,
-    description: `Die föderale Übersicht der Feiertage in Deutschland ${year} und der wichtigsten Länder-Unterschiede.`,
+    title: `Feiertage ${year}: Deutschland nach Bundesland`,
+    description: `Alle Feiertage ${year} in Deutschland mit Fokus auf bundeseinheitliche und landesspezifische Unterschiede.`,
     externalPath: `/feiertage-deutschland/${year}`,
   });
 }

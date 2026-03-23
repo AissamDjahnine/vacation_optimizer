@@ -83,11 +83,18 @@ function LinkGrid({
   locale,
   title,
   links,
+  initialVisibleCount,
 }: {
   locale: GermanyLocale;
   title: string;
   links: { href: string; label: string; body: string }[];
+  initialVisibleCount?: number;
 }) {
+  const visibleLinks =
+    typeof initialVisibleCount === "number" ? links.slice(0, initialVisibleCount) : links;
+  const hiddenLinks =
+    typeof initialVisibleCount === "number" ? links.slice(initialVisibleCount) : [];
+
   return (
     <Reveal>
       <section className="editorial-panel">
@@ -96,7 +103,7 @@ function LinkGrid({
         </p>
         <h2 className="mt-3 text-3xl font-black tracking-tight text-ink">{title}</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {links.map((link) => (
+          {visibleLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -107,6 +114,25 @@ function LinkGrid({
             </Link>
           ))}
         </div>
+        {hiddenLinks.length > 0 ? (
+          <details className="mt-6 group rounded-4xl border border-line bg-paper/70 p-5">
+            <summary className="cursor-pointer list-none text-sm font-bold uppercase tracking-[0.2em] text-coral marker:hidden">
+              {locale === "en" ? "Show all states" : "Alle Bundesländer anzeigen"}
+            </summary>
+            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {hiddenLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
+                >
+                  <h3 className="text-2xl font-black tracking-tight text-ink">{link.label}</h3>
+                  <p className="mt-3 text-sm leading-7 text-ink/72">{link.body}</p>
+                </Link>
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
     </Reveal>
   );
@@ -148,6 +174,40 @@ function GermanyArticleSchema({
   return (
     <Script
       id={`de-schema-${locale}-${path}`}
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+type GermanyFaq = {
+  question: string;
+  answer: string;
+};
+
+function GermanyFaqSchema({
+  id,
+  items,
+}: {
+  id: string;
+  items: GermanyFaq[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
+  return (
+    <Script
+      id={id}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
@@ -329,6 +389,7 @@ export function GermanyHomePage({ locale = "de" }: { locale?: GermanyLocale }) {
             : "Direkt in ein Bundesland springen"
         }
         links={links}
+        initialVisibleCount={6}
       />
       <OfficialSourcesBlock locale={locale} sources={germanNationalSources} />
     </PageShell>
@@ -477,6 +538,84 @@ export function GermanyCountryYearPage({
             : `Schulferien ${state.name} ${year}`,
     body: locale === "en" ? state.englishNuance : state.nuance,
   }));
+  const faqItems: GermanyFaq[] =
+    locale === "en"
+      ? kind === "bridges"
+        ? [
+            {
+              question: `What are bridge days in Germany in ${year}?`,
+              answer:
+                "Bridge days are opportunities to extend weekends by placing leave around a public holiday. In Germany they must be evaluated state by state because holiday calendars differ.",
+            },
+            {
+              question: "How should I use this page first?",
+              answer:
+                "Start with the federal overview, then open your state page for the same year. Compare public holidays and school-holiday windows before deciding your leave blocks.",
+            },
+          ]
+        : kind === "holidays"
+          ? [
+              {
+                question: `Are public holidays the same in every German state in ${year}?`,
+                answer:
+                  "No. Germany has nationwide holidays and state-specific holidays. Use the state pages to see what applies in your region.",
+              },
+              {
+                question: "What is the fastest way to plan from this overview?",
+                answer:
+                  "Open your state page, identify holidays near Fridays and Mondays, then switch to bridge-day pages to evaluate leave-day efficiency.",
+              },
+            ]
+          : [
+              {
+                question: `How should families read school holidays in Germany in ${year}?`,
+                answer:
+                  "Use the KMK-based overview first, then check your exact state page. School-holiday windows are state-specific and should be compared with public holidays.",
+              },
+              {
+                question: "Can I plan only from the national calendar?",
+                answer:
+                  "Not reliably. Family planning quality improves when you combine the federal overview with your state-specific school and public holiday pages.",
+              },
+            ]
+      : kind === "bridges"
+        ? [
+            {
+              question: `Was sind Brückentage in Deutschland ${year}?`,
+              answer:
+                "Brückentage entstehen, wenn ein Urlaubstag zwischen Feiertag und Wochenende liegt. In Deutschland müssen sie immer nach Bundesland bewertet werden.",
+            },
+            {
+              question: "Wie nutze ich diese Seite am schnellsten?",
+              answer:
+                "Starten Sie mit der Deutschland-Übersicht und wechseln Sie dann direkt in Ihr Bundesland für dasselbe Jahr. Dort sehen Sie die konkret relevanten Chancen.",
+            },
+          ]
+        : kind === "holidays"
+          ? [
+              {
+                question: `Sind Feiertage in Deutschland ${year} in allen Bundesländern gleich?`,
+                answer:
+                  "Nein. Es gibt bundeseinheitliche und landesspezifische Feiertage. Für belastbare Planung müssen Sie die Länderseite lesen.",
+              },
+              {
+                question: "Wie komme ich von dieser Übersicht zur konkreten Planung?",
+                answer:
+                  "Öffnen Sie Ihr Bundesland, markieren Sie Feiertage nahe Freitag oder Montag und prüfen Sie danach die Brückentage-Seite.",
+              },
+            ]
+          : [
+              {
+                question: `Wie sollten Familien Schulferien in Deutschland ${year} lesen?`,
+                answer:
+                  "Erst die KMK-Übersicht, dann das konkrete Bundesland. Schulferien sind föderal und müssen zusammen mit Feiertagen bewertet werden.",
+              },
+              {
+                question: "Reicht der Blick auf den Deutschland-Schnitt?",
+                answer:
+                  "Nein. Verlässliche Planung entsteht erst mit der Länderseite, weil sich Ferienfenster und Feiertagslage regional unterscheiden.",
+              },
+            ];
 
   return (
     <PageShell>
@@ -493,6 +632,7 @@ export function GermanyCountryYearPage({
         ]}
       />
       <GermanyArticleSchema headline={titleMap[kind]} description={summary} path={pathMap[kind]} locale={locale} />
+      <GermanyFaqSchema id={`de-faq-country-${locale}-${kind}-${year}`} items={faqItems} />
       <ContentHero
         badge={{
           fr: locale === "en" ? "Germany" : "Deutschland",
@@ -569,6 +709,32 @@ export function GermanyStateHolidaysPage({
   const displayState = stateName(state, locale);
   const path = deRoutes.stateHolidaysYear(year, state);
   const nationwideCount = holidays.filter((holiday) => holiday.nationwide).length;
+  const faqItems: GermanyFaq[] =
+    locale === "en"
+      ? [
+          {
+            question: `How many public holidays apply in ${displayState} in ${year}?`,
+            answer:
+              "This page lists all holidays that apply in the state, including nationwide and state-specific ones, with official context.",
+          },
+          {
+            question: `How do I turn ${displayState} holidays into concrete leave plans?`,
+            answer:
+              "Use holidays near Fridays and Mondays as priority candidates, then open the bridge-day page for the same state and year to estimate leave efficiency.",
+          },
+        ]
+      : [
+          {
+            question: `Wie viele Feiertage gelten in ${displayState} im Jahr ${year}?`,
+            answer:
+              "Diese Seite zeigt alle für das Bundesland relevanten Feiertage inklusive bundeseinheitlicher und landesspezifischer Tage.",
+          },
+          {
+            question: `Wie werden Feiertage in ${displayState} zu konkreten Urlaubsplänen?`,
+            answer:
+              "Setzen Sie zuerst Feiertage nahe Freitag oder Montag als Priorität und wechseln Sie dann zur Brückentage-Seite desselben Landes und Jahres.",
+          },
+        ];
 
   return (
     <PageShell>
@@ -598,6 +764,7 @@ export function GermanyStateHolidaysPage({
         path={path}
         locale={locale}
       />
+      <GermanyFaqSchema id={`de-faq-holidays-${locale}-${state}-${year}`} items={faqItems} />
       <ContentHero
         badge={{
           fr: locale === "en" ? "Public holidays" : "Feiertage",
@@ -717,6 +884,32 @@ export function GermanyStateBridgesPage({
   const meta = germanStateMap[state];
   const displayState = stateName(state, locale);
   const highlights = getStatePageHighlights(state, locale);
+  const faqItems: GermanyFaq[] =
+    locale === "en"
+      ? [
+          {
+            question: `What are the best bridge-day windows in ${displayState} for ${year}?`,
+            answer:
+              "The top opportunities are listed first on this page, including required leave days and expected total days off.",
+          },
+          {
+            question: `Should I compare ${displayState} with other states?`,
+            answer:
+              "Yes, if you can travel or work across regions. But final planning should always follow the holiday calendar of your actual state.",
+          },
+        ]
+      : [
+          {
+            question: `Was sind die besten Brückentage in ${displayState} ${year}?`,
+            answer:
+              "Die stärksten Chancen stehen oben auf der Seite, inklusive benötigter Urlaubstage und möglicher Gesamttage frei.",
+          },
+          {
+            question: `Sollte ich ${displayState} mit anderen Bundesländern vergleichen?`,
+            answer:
+              "Ja, für Orientierung. Die endgültige Planung sollte aber immer auf dem Feiertagskalender Ihres tatsächlichen Bundeslandes basieren.",
+          },
+        ];
 
   return (
     <PageShell>
@@ -746,6 +939,7 @@ export function GermanyStateBridgesPage({
         path={deRoutes.stateBridgesYear(year, state)}
         locale={locale}
       />
+      <GermanyFaqSchema id={`de-faq-bridges-${locale}-${state}-${year}`} items={faqItems} />
       <ContentHero
         badge={{
           fr: locale === "en" ? "Bridge days" : "Brückentage",
@@ -868,6 +1062,32 @@ export function GermanyStateSchoolHolidaysPage({
 }) {
   const meta = germanStateMap[state];
   const displayState = stateName(state, locale);
+  const faqItems: GermanyFaq[] =
+    locale === "en"
+      ? [
+          {
+            question: `When are the main school-holiday windows in ${displayState} for ${year}?`,
+            answer:
+              "This page lists all visible school-holiday periods for the state and year, based on KMK-linked sourcing.",
+          },
+          {
+            question: `How should families combine school holidays and bridge days in ${displayState}?`,
+            answer:
+              "Start with the largest school-holiday windows, then check the bridge-day page for the same year to identify efficient leave extensions.",
+          },
+        ]
+      : [
+          {
+            question: `Wann liegen die wichtigsten Schulferienfenster in ${displayState} ${year}?`,
+            answer:
+              "Diese Seite zeigt alle sichtbaren Ferienzeiträume des Bundeslandes im Jahr inklusive KMK-basierter Quelle.",
+          },
+          {
+            question: `Wie kombinieren Familien Schulferien und Brückentage in ${displayState}?`,
+            answer:
+              "Starten Sie mit den größten Ferienfenstern und prüfen Sie danach die Brückentage-Seite desselben Jahres für effiziente Verlängerungen.",
+          },
+        ];
 
   return (
     <PageShell>
@@ -897,6 +1117,7 @@ export function GermanyStateSchoolHolidaysPage({
         path={deRoutes.stateSchoolHolidaysYear(year, state)}
         locale={locale}
       />
+      <GermanyFaqSchema id={`de-faq-school-${locale}-${state}-${year}`} items={faqItems} />
       <ContentHero
         badge={{
           fr: locale === "en" ? "School holidays" : "Schulferien",

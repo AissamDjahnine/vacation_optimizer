@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ year: str
     notFound();
   }
   return buildGermanMetadata({
-    title: `Schulferien Deutschland ${year}`,
-    description: `Die Deutschland-Übersicht der Schulferien ${year}, gelesen über die KMK und aufbereitet nach Bundesland.`,
+    title: `Schulferien ${year}: Deutschland nach Bundesland`,
+    description: `Die Schulferien ${year} in Deutschland mit KMK-Logik, sauber gegliedert nach Bundesland für Familienplanung.`,
     externalPath: `/schulferien-deutschland/${year}`,
   });
 }

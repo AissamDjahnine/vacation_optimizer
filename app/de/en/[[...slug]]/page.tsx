@@ -45,8 +45,8 @@ export async function generateMetadata({ params }: { params: Promise<SlugParams>
 
   if (!slug || slug.length === 0) {
     return buildGermanMetadata({
-      title: "Germany",
-      description: "Bridge days, public holidays and school holidays in Germany, organized by state and backed by official sources.",
+      title: "Germany bridge days and public holidays",
+      description: "Bridge days, public holidays and school holidays in Germany, organized by state with visible official sources.",
       externalPath: "/en",
     });
   }
@@ -110,24 +110,24 @@ export async function generateMetadata({ params }: { params: Promise<SlugParams>
 
   if (section === "brueckentage-deutschland") {
     return buildGermanMetadata({
-      title: `Bridge days Germany ${year}`,
-      description: `The federal overview of the strongest bridge-day opportunities in Germany for ${year}.`,
+      title: `Bridge days Germany ${year}: by state`,
+      description: `The strongest bridge-day opportunities in Germany for ${year}, broken down by state for faster planning.`,
       externalPath: `/en/brueckentage-deutschland/${year}`,
     });
   }
 
   if (section === "feiertage-deutschland") {
     return buildGermanMetadata({
-      title: `Public holidays Germany ${year}`,
-      description: `The federal overview of German public holidays in ${year} and the main differences between states.`,
+      title: `Public holidays Germany ${year}: by state`,
+      description: `German public holidays in ${year}, including nationwide and state-level differences.`,
       externalPath: `/en/feiertage-deutschland/${year}`,
     });
   }
 
   if (section === "schulferien-deutschland") {
     return buildGermanMetadata({
-      title: `School holidays Germany ${year}`,
-      description: `The Germany-wide overview of school holidays in ${year}, read through the KMK and organized by state.`,
+      title: `School holidays Germany ${year}: by state`,
+      description: `The Germany-wide overview of school holidays in ${year}, read through KMK data and organized by state.`,
       externalPath: `/en/schulferien-deutschland/${year}`,
     });
   }
@@ -139,7 +139,7 @@ export async function generateMetadata({ params }: { params: Promise<SlugParams>
 
   if (section === "brueckentage") {
     return buildGermanMetadata({
-      title: `Bridge days ${state.englishName} ${year}`,
+      title: `Bridge days ${state.englishName} ${year}: long weekends`,
       description: `The strongest bridge-day opportunities in ${state.englishName} for ${year}, grounded in official public-holiday data.`,
       externalPath: `/en/brueckentage/${state.slug}/${year}`,
     });
@@ -147,16 +147,16 @@ export async function generateMetadata({ params }: { params: Promise<SlugParams>
 
   if (section === "feiertage") {
     return buildGermanMetadata({
-      title: `Public holidays ${state.englishName} ${year}`,
-      description: `The public holidays in ${state.englishName} for ${year}, with official context.`,
+      title: `Public holidays ${state.englishName} ${year}: full list`,
+      description: `All public holidays in ${state.englishName} for ${year}, including nationwide and state-specific dates.`,
       externalPath: `/en/feiertage/${state.slug}/${year}`,
     });
   }
 
   if (section === "schulferien") {
     return buildGermanMetadata({
-      title: `School holidays ${state.englishName} ${year}`,
-      description: `The school holidays in ${state.englishName} for ${year}, backed by visible KMK sourcing.`,
+      title: `School holidays ${state.englishName} ${year}: holiday windows`,
+      description: `The school holidays in ${state.englishName} for ${year}, backed by visible KMK sourcing and practical family planning context.`,
       externalPath: `/en/schulferien/${state.slug}/${year}`,
     });
   }

@@ -23,8 +23,8 @@ export async function generateMetadata({
   }
 
   return buildGermanMetadata({
-    title: `Brückentage ${state.name} ${year}`,
-    description: `Die wichtigsten Brückentage in ${state.name} ${year} mit offizieller Feiertagsbasis.`,
+    title: `Brückentage ${state.name} ${year}: lange Wochenenden`,
+    description: `Die stärksten Brückentage in ${state.name} ${year} mit offizieller Feiertagsbasis und direktem Vergleich zum Folgejahr.`,
     externalPath: `/brueckentage/${state.slug}/${year}`,
   });
 }

@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ year: str
     notFound();
   }
   return buildGermanMetadata({
-    title: `Brückentage Deutschland ${year}`,
-    description: `Die föderale Übersicht der wichtigsten Brückentage in Deutschland ${year}.`,
+    title: `Brückentage ${year}: Deutschland nach Bundesland`,
+    description: `Die wichtigsten Brückentage ${year} in Deutschland: lange Wochenenden, Länderunterschiede und direkte Einstiege je Bundesland.`,
     externalPath: `/brueckentage-deutschland/${year}`,
   });
 }
