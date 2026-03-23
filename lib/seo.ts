@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 
 const defaultOpenGraphImage = "/opengraph-image";
+const siteUrl = "https://pontsmalins.com";
+
+function toAbsoluteUrl(url: string): string {
+  try {
+    return new URL(url, siteUrl).toString();
+  } catch {
+    return siteUrl;
+  }
+}
 
 export function buildMetadata({
   title,
@@ -132,13 +141,13 @@ export function buildArticleSchema({
     headline,
     description,
     inLanguage: language === "fr" ? "fr-FR" : language === "en" ? "en-US" : "de-DE",
-    mainEntityOfPage: `https://pontsmalins.com${path}`,
-    url: `https://pontsmalins.com${path}`,
-    image: ["https://pontsmalins.com/opengraph-image"],
+    mainEntityOfPage: `${siteUrl}${path}`,
+    url: `${siteUrl}${path}`,
+    image: [`${siteUrl}/opengraph-image`],
     author: {
       "@type": "Organization",
       name: "Ponts Malins",
-      url: "https://pontsmalins.com",
+      url: siteUrl,
     },
     publisher: {
       "@type": "Organization",
@@ -165,15 +174,15 @@ export function buildWebApplicationSchema({
     "@type": "WebApplication",
     name,
     description,
-    url: `https://pontsmalins.com${path}`,
+    url: `${siteUrl}${path}`,
     applicationCategory: "TravelApplication",
     operatingSystem: "Web",
     inLanguage: language === "fr" ? "fr-FR" : language === "en" ? "en-US" : "de-DE",
-    image: "https://pontsmalins.com/opengraph-image",
+    image: `${siteUrl}/opengraph-image`,
     publisher: {
       "@type": "Organization",
       name: "Ponts Malins",
-      url: "https://pontsmalins.com",
+      url: siteUrl,
     },
   };
 }
@@ -191,7 +200,7 @@ export function buildBreadcrumbSchema(items: BreadcrumbItem[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url,
+      item: toAbsoluteUrl(item.url),
     })),
   };
 }
