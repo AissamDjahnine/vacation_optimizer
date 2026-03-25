@@ -14,6 +14,12 @@ export function AnnualPlannerPage({
   language: AppLanguage;
   year: number;
 }) {
+  const updatedOn = new Intl.DateTimeFormat(language === "en" ? "en-US" : "fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date("2026-03-25T00:00:00.000Z"));
+
   return (
     <PageShell aside={defaultPageAside(language)}>
       <ContentHero
@@ -28,6 +34,9 @@ export function AnnualPlannerPage({
         }}
         language={language}
       />
+      <p className="text-sm font-medium text-ink/60">
+        {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
+      </p>
 
       <AnnualPlanner language={language} year={year} />
 

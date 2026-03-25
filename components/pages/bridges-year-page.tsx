@@ -57,6 +57,11 @@ export function BridgesYearPage({
         })[0] ?? null,
     }))
     .filter((entry): entry is { label: { fr: string; en: string }; month: number; result: BestVacationPeriod } => Boolean(entry.result));
+  const updatedOn = new Intl.DateTimeFormat(language === "en" ? "en-US" : "fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date("2026-03-25T00:00:00.000Z"));
 
   const holidayMonths = new Set(holidays.map((holiday) => holiday.date.getMonth() + 1));
 
@@ -86,6 +91,9 @@ export function BridgesYearPage({
         }}
         language={language}
       />
+      <p className="text-sm font-medium text-ink/60">
+        {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
+      </p>
 
       <Reveal>
         <section className="editorial-panel space-y-6">

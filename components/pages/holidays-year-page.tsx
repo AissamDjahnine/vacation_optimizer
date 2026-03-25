@@ -34,6 +34,11 @@ export function HolidaysYearPage({
     return day === 0 || day === 6;
   });
   const bestBridgeCandidates = weekdayHolidays.slice(0, 3);
+  const updatedOn = new Intl.DateTimeFormat(language === "en" ? "en-US" : "fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date("2026-03-25T00:00:00.000Z"));
 
   return (
     <PageShell aside={defaultPageAside(language)}>
@@ -61,11 +66,14 @@ export function HolidaysYearPage({
         }}
         language={language}
       />
+      <p className="text-sm font-medium text-ink/60">
+        {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
+      </p>
 
       <AuthorityBlock block={rulesAuthorityBlock} language={language} />
 
       <Reveal>
-        <section className="editorial-panel space-y-6">
+        <section className="editorial-panel space-y-5">
           <div className="space-y-3">
             <p className="editorial-kicker">{language === "en" ? "At a glance" : "À retenir"}</p>
             <h2 className="text-3xl font-black tracking-tight text-ink sm:text-4xl">
@@ -73,7 +81,7 @@ export function HolidaysYearPage({
                 ? "The useful question is not “how many holidays” but “which ones help”"
                 : "La vraie question n’est pas “combien de jours fériés” mais “lesquels aident vraiment”."}
             </h2>
-            <p className="editorial-lead">
+            <p className="max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
               {language === "en"
                 ? "A yearly list is useful only if it helps you spot the dates that create a bridge opportunity. Start with weekdays, then focus on the dates closest to a weekend."
                 : "Une liste annuelle n’est utile que si elle aide à repérer les dates qui créent une opportunité de pont. Commencez par les jours en semaine, puis regardez ceux qui tombent près d’un week-end."}
@@ -122,12 +130,12 @@ export function HolidaysYearPage({
             {bestBridgeCandidates.map((holiday) => (
               <article
                 key={`${holiday.localName}-${holiday.date.toISOString()}`}
-                className="rounded-4xl border border-line bg-paper p-6"
+                className="rounded-4xl border border-line/80 bg-slate-50/80 p-5"
               >
                 <p className="editorial-kicker">{formatMonthYear(holiday.date.getMonth() + 1, year, language)}</p>
                 <h3 className="mt-3 text-2xl font-black tracking-tight text-ink">{holiday.localName}</h3>
                 <p className="mt-3 text-base leading-7 text-ink/74">{formatFullDate(holiday.date, language)}</p>
-                <div className="mt-4 editorial-example">
+                <div className="mt-4 rounded-3xl border border-sky-100 bg-white px-4 py-3 text-sm font-medium leading-6 text-slate-700">
                   {language === "en"
                     ? "Open the planner on this month, keep your real leave budget, then compare the single-bridge and multiple-bridges modes."
                     : "Ouvrez le simulateur sur ce mois, gardez votre vrai budget, puis comparez le mode gros pont et le mode plusieurs ponts."}
@@ -139,7 +147,7 @@ export function HolidaysYearPage({
       </Reveal>
 
       <Reveal>
-        <section className="editorial-panel space-y-5">
+        <section className="editorial-panel space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-3xl font-black tracking-tight text-ink">
               {language === "en" ? "All official dates" : "Toutes les dates officielles"}
@@ -148,7 +156,7 @@ export function HolidaysYearPage({
               {holidays.length} {language === "en" ? "public holidays" : "jours fériés"}
             </span>
           </div>
-          <p className="text-base leading-7 text-ink/72">
+          <p className="text-sm leading-6 text-ink/70">
             {language === "en"
               ? "Keep this table as a reference, then switch back to the bridge page or the planner when one date deserves a real test."
               : "Gardez ce tableau comme repère, puis revenez vers la page ponts ou le simulateur quand une date mérite un vrai test."}

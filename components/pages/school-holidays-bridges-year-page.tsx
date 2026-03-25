@@ -42,6 +42,11 @@ export function SchoolHolidaysBridgesYearPage({
   const zoneSummary = periodsByZoneForYear[zone];
   const visiblePeriods = showAllPeriods ? periods : periods.slice(0, 3);
   const hiddenPeriodsCount = Math.max(periods.length - visiblePeriods.length, 0);
+  const updatedOn = new Intl.DateTimeFormat(language === "en" ? "en-US" : "fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date("2026-03-25T00:00:00.000Z"));
 
   return (
     <PageShell aside={defaultPageAside(language)}>
@@ -72,6 +77,9 @@ export function SchoolHolidaysBridgesYearPage({
         }}
         language={language}
       />
+      <p className="text-sm font-medium text-ink/60">
+        {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
+      </p>
 
       <ZoneLookupPanel
         language={language}
@@ -120,7 +128,7 @@ export function SchoolHolidaysBridgesYearPage({
       ) : null}
 
       <Reveal>
-        <section className="editorial-panel space-y-6">
+        <section className="editorial-panel space-y-5">
           <div className="space-y-3">
             <p className="editorial-kicker">{language === "en" ? "How to use this page" : "Comment utiliser cette page"}</p>
             <h2 className="text-3xl font-black tracking-tight text-ink sm:text-4xl">
@@ -128,7 +136,7 @@ export function SchoolHolidaysBridgesYearPage({
                 ? "Start with your zone, then decide if you want to align with school breaks or avoid them"
                 : "Commencez par votre zone, puis décidez si vous voulez coller aux vacances ou les éviter"}
             </h2>
-            <p className="editorial-lead">
+            <p className="max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
               {language === "en"
                 ? "This page helps families read the calendar faster. The planner becomes useful once you want to test a real month with your own leave budget and overlap settings."
                 : "Cette page aide surtout les familles à lire le calendrier plus vite. Le simulateur devient utile dès que vous voulez tester un vrai mois avec votre budget et vos réglages de chevauchement."}
@@ -146,10 +154,10 @@ export function SchoolHolidaysBridgesYearPage({
                   key={value}
                   type="button"
                   onClick={() => setZone(value)}
-                  className={`rounded-4xl border p-5 text-left shadow-card transition ${
+                  className={`rounded-4xl border p-5 text-left shadow-sm transition ${
                     isActive
-                      ? "border-coral bg-coral/5 shadow-soft"
-                      : "border-line bg-white hover:-translate-y-0.5 hover:border-coral/50 hover:shadow-soft"
+                      ? "border-coral bg-coral/5"
+                      : "border-line bg-white hover:border-coral/50"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -184,7 +192,7 @@ export function SchoolHolidaysBridgesYearPage({
               );
             })}
           </div>
-          <p className="editorial-note">
+          <p className="rounded-3xl border border-coral/12 bg-coral/[0.04] px-5 py-4 text-sm font-medium leading-6 text-slate-700">
             {language === "en"
               ? "Start by picking the right zone. The detailed period cards stay below only for the selected zone, which keeps the page shorter."
               : "Commencez par choisir la bonne zone. Les cartes détaillées ci-dessous restent limitées à la zone sélectionnée, ce qui raccourcit la page."}
@@ -204,7 +212,7 @@ export function SchoolHolidaysBridgesYearPage({
                   ? `Fast view for zone ${zone} in ${year}`
                   : `Vue rapide pour la zone ${zone} en ${year}`}
               </h2>
-              <p className="editorial-lead max-w-2xl">
+              <p className="max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
                 {language === "en"
                   ? "Use this strip to spot the periods that matter first. Then open the full cards only if you need the exact dates."
                   : "Servez-vous de cette bande pour repérer d’abord les périodes utiles. Ouvrez ensuite les cartes complètes seulement si vous avez besoin des dates exactes."}
@@ -237,7 +245,7 @@ export function SchoolHolidaysBridgesYearPage({
             </div>
           )}
 
-          <div className="mt-6 editorial-note">
+          <div className="mt-6 rounded-3xl border border-coral/12 bg-coral/[0.04] px-5 py-4 text-sm font-medium leading-6 text-slate-700">
             {language === "en"
               ? "Practical rule: if a month already contains school holidays, decide early whether you want to extend them, avoid them, or simply tolerate overlap. That choice changes the value of the same bridge."
               : "Règle pratique : si un mois contient déjà des vacances scolaires, décidez tôt si vous voulez les prolonger, les éviter ou simplement tolérer un chevauchement. Ce choix change la valeur d’un même pont."}
