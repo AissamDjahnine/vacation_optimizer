@@ -14,7 +14,7 @@ const config: Config = {
         paper: "#f8fbff",
         mist: "#e8f0f8",
         line: "#d6e3f1",
-        coral: "#ff7a59",
+        coral: "#d55a1d",
         mint: "#dff4ea",
         lavender: "#ece8ff",
         sand: "#fff4dd",
@@ -29,7 +29,7 @@ const config: Config = {
       },
       backgroundImage: {
         glow:
-          "radial-gradient(circle at top, rgba(255,122,89,0.14), transparent 45%), radial-gradient(circle at 80% 20%, rgba(24,59,103,0.09), transparent 42%)",
+          "radial-gradient(circle at top, rgba(213,90,29,0.14), transparent 45%), radial-gradient(circle at 80% 20%, rgba(24,59,103,0.09), transparent 42%)",
       },
     },
   },

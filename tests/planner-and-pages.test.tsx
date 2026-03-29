@@ -105,7 +105,7 @@ describe("planner and content pages", () => {
   test("locks school zone and overlap controls when school holidays are avoided", () => {
     render(<Planner language="fr" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Éviter" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Éviter" })[0]);
 
     expect(findButtonByExactText("A")).toBeDisabled();
     expect(findButtonByExactText("B")).toBeDisabled();

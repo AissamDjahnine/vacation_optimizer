@@ -34,7 +34,7 @@ export function IcsExportButton({
       type="button"
       onClick={handleClick}
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-5 text-sm font-bold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-coral hover:text-coral",
+        "inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-5 text-sm font-bold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[#1f4471] hover:text-[#1f4471]",
         done ? "border-emerald-300 bg-emerald-50 text-emerald-700" : "bg-white",
         className,
       )}

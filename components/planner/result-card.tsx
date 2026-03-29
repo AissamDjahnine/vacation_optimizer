@@ -40,17 +40,17 @@ export function ResultCard({
       : "Le score compare le total de jours de repos aux jours de congé payé réellement posés.";
   return (
     <article
-      className={`rounded-[1.75rem] border p-5 shadow-sm transition duration-200 sm:p-6 ${
+      className={`site-card p-5 transition duration-200 sm:p-6 ${
         highlighted
-          ? "border-orange-200 bg-[#fffaf6]"
-          : "border-line/90 bg-white"
+          ? "border-[#1f4471]/20 bg-[#f7fbff]"
+          : "border-line/80 bg-white"
       }`}
     >
       <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-6">
         <div className="flex h-full flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             {highlighted ? (
-              <span className="rounded-full border border-orange-200 bg-peach px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-orange-800">
+              <span className="rounded-full border border-[#1f4471]/20 bg-[#eff5fb] px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-[#1f4471]">
                 {language === "en" ? "Best fit for this month" : "Meilleur rendement pour ce mois"}
               </span>
             ) : null}
@@ -64,7 +64,7 @@ export function ResultCard({
               <button
                 type="button"
                 aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint/70 px-3 text-xs font-bold text-mint-strong transition hover:border-mint-strong/35"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-[#1f4471]/20 bg-white px-3 text-xs font-bold text-[#1f4471] transition hover:border-[#1f4471]/35"
               >
                 Score: {period.worthScore.toFixed(2)}
               </button>
@@ -118,7 +118,7 @@ export function ResultCard({
           </div>
         </div>
 
-          <div className="rounded-[1.5rem] border border-line/80 bg-paper/70 p-4">
+          <div className="rounded-[1.5rem] border border-line/80 bg-slate-50/70 p-4">
             <h4 className="text-base font-bold text-ink">
               {language === "en" ? "Day-by-day view" : "Vue jour par jour"}
             </h4>

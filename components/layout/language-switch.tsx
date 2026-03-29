@@ -24,7 +24,7 @@ export function LanguageSwitch({
     const currentLocale = germanyLocale ?? "de";
 
     return (
-      <div className="inline-flex rounded-full border border-line bg-white/80 p-1 shadow-sm backdrop-blur">
+      <div className="inline-flex rounded-full border border-line/80 bg-white p-1 shadow-sm backdrop-blur">
         {(["de", "en"] as const).map((locale) => {
           const active = currentLocale === locale;
           const href = withGermanyLocale(pathname, locale);
@@ -34,7 +34,7 @@ export function LanguageSwitch({
               href={href}
               className={cn(
                 "rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] transition-colors",
-                active ? "bg-ink text-white" : "text-ink/60 hover:text-ink",
+                active ? "bg-[#1f4471] text-white" : "text-ink/60 hover:text-ink",
               )}
             >
               {locale}
@@ -48,7 +48,7 @@ export function LanguageSwitch({
   const currentLanguage: AppLanguage = resolveLanguage(pathname, host);
 
   return (
-    <div className="inline-flex rounded-full border border-line bg-white/80 p-1 shadow-sm backdrop-blur">
+    <div className="inline-flex rounded-full border border-line/80 bg-white p-1 shadow-sm backdrop-blur">
       {(["fr", "en"] as const).map((language) => {
         const active = currentLanguage === language;
         const href = prefixForLanguage(pathname, language);
@@ -58,7 +58,7 @@ export function LanguageSwitch({
             href={href}
             className={cn(
               "rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] transition-colors",
-              active ? "bg-ink text-white" : "text-ink/60 hover:text-ink",
+              active ? "bg-[#1f4471] text-white" : "text-ink/60 hover:text-ink",
             )}
           >
             {language}

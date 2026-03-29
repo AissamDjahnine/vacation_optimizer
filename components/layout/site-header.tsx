@@ -70,19 +70,19 @@ export function SiteHeader({ language, host, germanyHost = false, germanyLocale 
       : "Simulateur de ponts et congés en France";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/70 bg-white/94 py-3 shadow-sm">
-      <div className="container-shell flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-line/70 bg-white/96 backdrop-blur-md">
+      <div className="container-shell flex items-center justify-between gap-4 py-3">
         <Link href={displayedHomeHref} className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-lg font-black text-white shadow-sm">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1f4471] text-base font-black text-white shadow-sm">
             PM
           </div>
-          <div>
-            <p className="text-xl font-extrabold tracking-tight text-ink">Ponts Malins</p>
-            <p className="text-sm text-ink/62">{subtitle}</p>
+          <div className="leading-tight">
+            <p className="text-lg font-extrabold tracking-tight text-ink">Ponts Malins</p>
+            <p className="text-xs font-medium text-ink/56">{subtitle}</p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-2 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {displayedNavItems.map((item) => {
             const external = item.href.startsWith("https://");
             const active =
@@ -109,11 +109,11 @@ export function SiteHeader({ language, host, germanyHost = false, germanyLocale 
                     });
                   }
                 }}
-                className={cn(
+              className={cn(
                   "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
                   active
-                    ? "bg-ink text-white"
-                    : "text-ink/70 hover:bg-slate-50 hover:text-ink",
+                    ? "bg-[#1f4471] text-white shadow-sm"
+                    : "text-ink/68 hover:bg-slate-50 hover:text-ink",
                 )}
               >
                 {item.label}

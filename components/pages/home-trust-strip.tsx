@@ -59,7 +59,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
   const featuredItems = section.items.slice(0, 2);
 
   return (
-    <section className="editorial-panel space-y-5">
+    <section className="site-card space-y-5 p-6 sm:p-8">
       <div className="space-y-2">
         <p className="editorial-kicker">
           {language === "en" ? "Before you go further" : "Avant d’aller plus loin"}
@@ -70,7 +70,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {featuredItems.map((item) => (
-          <article key={item.title} className="rounded-3xl border border-line bg-slate-50/70 p-5">
+          <article key={item.title} className="rounded-[1.5rem] border border-line/80 bg-slate-50/70 p-5">
             <h3 className="text-lg font-bold text-ink">{item.title}</h3>
             <p className="mt-3 text-sm leading-7 text-slate-600">{item.body}</p>
             <Link
@@ -82,7 +82,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
                   destination: item.href,
                 })
               }
-              className="mt-4 inline-flex text-sm font-bold text-ink transition hover:text-coral"
+              className="mt-4 inline-flex text-sm font-bold text-ink transition hover:text-[#1f4471]"
             >
               {item.cta}
             </Link>
@@ -99,7 +99,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
               year: 2026,
             })
           }
-          className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+          className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-[#1f4471] hover:text-[#1f4471]"
         >
           {language === "en" ? "Open the annual planner" : "Ouvrir le plan annuel"}
         </Link>

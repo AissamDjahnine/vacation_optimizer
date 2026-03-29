@@ -27,7 +27,7 @@ export function SimpleEditorialPage({
 
   return (
     <PageShell>
-      <section className="editorial-panel space-y-5">
+      <section className="site-card space-y-5 p-6 sm:p-8">
         <p className="editorial-kicker">{kicker}</p>
         <h1 className="section-title max-w-4xl">{title}</h1>
         <p className="editorial-lead">{subtitle}</p>
@@ -36,7 +36,7 @@ export function SimpleEditorialPage({
       <section className="grid gap-4 lg:grid-cols-[1.2fr,0.8fr]">
         <div className="space-y-4">
           {sections.map((section) => (
-            <article key={section.title} className="editorial-panel space-y-4">
+            <article key={section.title} className="site-card space-y-4 p-6 sm:p-8">
               <h2 className="text-2xl font-black tracking-tight text-ink">{section.title}</h2>
               <div className="content-copy space-y-4">
                 {section.body.map((paragraph) => (
@@ -48,7 +48,7 @@ export function SimpleEditorialPage({
         </div>
 
         <aside className="space-y-4">
-          <div className="editorial-panel-muted space-y-3">
+          <div className="site-card-soft space-y-3 p-5">
             <p className="editorial-kicker">
               {language === "en" ? "Useful next step" : "Bon réflexe"}
             </p>
@@ -59,12 +59,12 @@ export function SimpleEditorialPage({
             </p>
             <Link
               href={localized(routes.home)}
-              className="inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+              className="inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-[#1f4471] hover:text-[#1f4471]"
             >
               {language === "en" ? "Open the planner" : "Ouvrir le simulateur"}
             </Link>
           </div>
-          <div className="editorial-panel-muted space-y-3">
+          <div className="site-card-soft space-y-3 p-5">
             <p className="editorial-kicker">{language === "en" ? "Official sources" : "Sources officielles"}</p>
             <p className="text-sm leading-7 text-slate-600">
               {language === "en"
@@ -73,7 +73,7 @@ export function SimpleEditorialPage({
             </p>
             <Link
               href={localized(routes.sources)}
-              className="inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+              className="inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-[#1f4471] hover:text-[#1f4471]"
             >
               {language === "en" ? "See source list" : "Voir la liste des sources"}
             </Link>

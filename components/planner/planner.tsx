@@ -55,7 +55,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const [loading, setLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
   const [visibleResultCount, setVisibleResultCount] = useState(5);
-  const [showMobileAdvancedSettings, setShowMobileAdvancedSettings] = useState(false);
   const resultsRef = useRef<HTMLElement | null>(null);
   const lastTrackedResultsKeyRef = useRef<string | null>(null);
 
@@ -380,19 +379,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
   const visiblePeriods = computation ? computation.periods.slice(0, visibleResultCount) : [];
   const hasHiddenPeriods = computation ? computation.periods.length > visibleResultCount : false;
-  const selectedSchoolHolidayPreferenceLabel =
-    state.schoolHolidayPreference === "favor"
-      ? language === "en"
-        ? "Favor"
-        : "Favoriser"
-      : state.schoolHolidayPreference === "avoid"
-        ? language === "en"
-          ? "Avoid"
-          : "Éviter"
-        : language === "en"
-          ? "Neutral"
-          : "Neutre";
-
   const shiftMonth = (direction: -1 | 1) => {
     setState((current) => {
       const currentYear = plannerYears.includes(current.year) ? current.year : defaultPlannerState.year;
@@ -502,7 +488,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 <button
                   type="button"
                   onClick={submit}
-                  className="inline-flex w-full items-center justify-center rounded-full bg-[#d55a1d] px-6 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#c94f18]"
+                  className="inline-flex w-full items-center justify-center rounded-full bg-coral px-6 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-coral/90"
                 >
                   {language === "en" ? "Get my best bridges" : "Voir mes meilleurs ponts"}
                 </button>
@@ -518,189 +504,159 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       </Reveal>
 
       <Reveal>
-        <section className="glass-panel rounded-[2.2rem] p-5 sm:p-8">
-          <div className="grid gap-6 xl:grid-cols-[1fr_auto]">
-            <div className="space-y-6">
-              <div className="flex justify-center">
-                <div className="inline-flex rounded-full border border-ink bg-white p-1">
-                  <ModeButton
-                    active={state.mode === "single"}
-                    onClick={() => setState((current) => ({ ...current, mode: "single" }))}
-                    label={language === "en" ? "Long bridge" : "Gros pont"}
-                  />
-                  <ModeButton
-                    active={state.mode === "distributed"}
-                    onClick={() => setState((current) => ({ ...current, mode: "distributed" }))}
-                    label={language === "en" ? "Multiple bridges" : "Plusieurs ponts"}
-                  />
+        <section className="site-card p-5 sm:p-8">
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <Field label={language === "en" ? "Year" : "Année"}>
+                <select
+                  aria-label={language === "en" ? "Select year" : "Choisir l’année"}
+                  value={safeYear}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      year: Number(event.target.value),
+                    }))
+                  }
+                  className="h-12 w-full rounded-2xl border border-line bg-slate-50 px-4 font-semibold text-ink"
+                >
+                  {plannerYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label={language === "en" ? "Month" : "Mois"}>
+                <select
+                  aria-label={language === "en" ? "Select month" : "Choisir le mois"}
+                  value={safeMonth}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      month: Number(event.target.value),
+                    }))
+                  }
+                  className="h-12 w-full rounded-2xl border border-line bg-slate-50 px-4 font-semibold text-ink"
+                >
+                  {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
+                    <option key={month} value={month}>
+                      {formatMonthYear(month, safeYear, language)}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label={language === "en" ? "Zone" : "Zone"}>
+                <div
+                  aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
+                  role="group"
+                  className={`inline-flex rounded-full border border-line bg-white p-1 ${
+                    zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
+                  }`}
+                >
+                  {(["A", "B", "C"] as const).map((zone) => (
+                    <ModeButton
+                      key={zone}
+                      active={state.schoolZone === zone}
+                      disabled={zoneSelectionLocked}
+                      onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
+                      label={zone}
+                    />
+                  ))}
                 </div>
+              </Field>
+              <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
+                <select
+                  aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
+                  value={safeMonthlyRtt}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      monthlyRtt: Number(event.target.value),
+                    }))
+                  }
+                  className="h-12 w-full rounded-2xl border border-line bg-slate-50 px-4 font-semibold text-ink"
+                >
+                  {[0, 1, 2, 3].map((value) => (
+                    <option key={value} value={value}>
+                      {value === 0
+                        ? language === "en"
+                          ? "No RTT"
+                          : "Sans RTT"
+                        : language === "en"
+                          ? `${value} RTT day${value > 1 ? "s" : ""}`
+                          : `${value} RTT par mois`}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <div className="inline-flex rounded-full border border-line bg-white p-1">
+                <ModeButton
+                  active={state.mode === "single"}
+                  onClick={() => setState((current) => ({ ...current, mode: "single" }))}
+                  label={language === "en" ? "Long bridge" : "Gros pont"}
+                />
+                <ModeButton
+                  active={state.mode === "distributed"}
+                  onClick={() => setState((current) => ({ ...current, mode: "distributed" }))}
+                  label={language === "en" ? "Multiple bridges" : "Plusieurs ponts"}
+                />
               </div>
+              <div className="inline-flex rounded-full border border-line bg-white p-1">
+                <ModeButton
+                  active={state.schoolHolidayPreference === "neutral"}
+                  onClick={() => updateSchoolPreference("neutral")}
+                  label={language === "en" ? "Neutral" : "Neutre"}
+                />
+                <ModeButton
+                  active={state.schoolHolidayPreference === "favor"}
+                  onClick={() => updateSchoolPreference("favor")}
+                  label={language === "en" ? "Favor" : "Favoriser"}
+                />
+                <ModeButton
+                  active={state.schoolHolidayPreference === "avoid"}
+                  onClick={() => updateSchoolPreference("avoid")}
+                  label={language === "en" ? "Avoid" : "Éviter"}
+                />
+              </div>
+            </div>
 
-              <div className="rounded-4xl border border-line bg-white p-5">
-                <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr_1fr] xl:items-start">
-                  <Field label={language === "en" ? "Year" : "Année"}>
-                    <select
-                      aria-label={language === "en" ? "Select year" : "Choisir l’année"}
-                      value={safeYear}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          year: Number(event.target.value),
-                        }))
-                      }
-                      className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                    >
-                      {plannerYears.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                  <Field label={language === "en" ? "Month" : "Mois"}>
-                    <select
-                      aria-label={language === "en" ? "Select month" : "Choisir le mois"}
-                      value={safeMonth}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          month: Number(event.target.value),
-                        }))
-                      }
-                      className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                    >
-                      {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
-                        <option key={month} value={month}>
-                          {formatMonthYear(month, safeYear, language)}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                </div>
-
-                <div className="mt-4 rounded-3xl border border-dashed border-line bg-paper/70 p-4 md:hidden">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="chip">Zone {state.schoolZone}</span>
-                    <span className="chip">RTT {safeMonthlyRtt}</span>
-                    <span className="chip">
-                      {language === "en" ? "School holidays" : "Vacances scolaires"}:{" "}
-                      {selectedSchoolHolidayPreferenceLabel}
-                    </span>
+            <div className="space-y-5 rounded-[1.8rem] border border-line/80 bg-slate-50/70 p-5">
+              <ZoneLookupPanel
+                language={language}
+                disabled={zoneSelectionLocked}
+                onZoneResolved={(zone) =>
+                  setState((current) => ({
+                    ...current,
+                    schoolZone: zone,
+                  }))
+                }
+                title={
+                  language === "en"
+                    ? "Don't know your zone yet?"
+                    : "Vous ne connaissez pas encore votre zone ?"
+                }
+                subtitle={
+                  language === "en"
+                    ? "A department code, department name, or academy is enough."
+                    : "Un numéro de département, un nom de département ou une académie suffit."
+                }
+                className="bg-white shadow-none"
+              />
+              <div className="rounded-[1.4rem] border border-line/80 bg-white p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-bold text-ink">
+                      {language === "en" ? "Overlap rule" : "Chevauchement"}
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-ink/72">
+                      {language === "en"
+                        ? "Allow a result to cross school holidays when it improves the plan."
+                        : "Autorisez un résultat à traverser les vacances scolaires quand cela améliore le plan."}
+                    </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowMobileAdvancedSettings((current) => !current)}
-                    className="mt-4 inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-                  >
-                    {showMobileAdvancedSettings
-                      ? language === "en"
-                        ? "Hide advanced settings"
-                        : "Masquer les réglages avancés"
-                      : language === "en"
-                        ? "Show advanced settings"
-                        : "Afficher les réglages avancés"}
-                  </button>
-                </div>
-
-                <div className={`${showMobileAdvancedSettings ? "mt-5 block" : "mt-5 hidden"} md:mt-5 md:block`}>
-                  <ZoneLookupPanel
-                    language={language}
-                    disabled={zoneSelectionLocked}
-                    onZoneResolved={(zone) =>
-                      setState((current) => ({
-                        ...current,
-                        schoolZone: zone,
-                      }))
-                    }
-                    title={
-                      language === "en"
-                        ? "Don't know your zone yet?"
-                        : "Vous ne connaissez pas encore votre zone ?"
-                    }
-                    subtitle={
-                      language === "en"
-                        ? "A department code, department name, or academy is enough. The planner will keep the manual A/B/C toggle afterwards."
-                        : "Un numéro de département, un nom de département ou une académie suffit. Le simulateur garde ensuite le réglage manuel A/B/C."
-                    }
-                    className="mb-5 bg-paper shadow-none"
-                  />
-
-                  <div className="grid gap-4 xl:grid-cols-[1fr_auto_1.25fr] xl:items-start">
-                    <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
-                      <select
-                        aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
-                        value={safeMonthlyRtt}
-                        onChange={(event) =>
-                          setState((current) => ({
-                            ...current,
-                            monthlyRtt: Number(event.target.value),
-                          }))
-                        }
-                        className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                      >
-                        {[0, 1, 2, 3].map((value) => (
-                          <option key={value} value={value}>
-                            {value === 0
-                              ? language === "en"
-                                ? "No RTT"
-                                : "Sans RTT"
-                              : language === "en"
-                                ? `${value} RTT day${value > 1 ? "s" : ""}`
-                                : `${value} RTT par mois`}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field
-                      label={
-                        language === "en" ? "French school zone (A, B or C)" : "Zone scolaire"
-                      }
-                    >
-                      <div
-                        aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
-                        role="group"
-                        className={`inline-flex rounded-full border border-ink bg-white p-1 ${
-                          zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
-                        }`}
-                      >
-                        {(["A", "B", "C"] as const).map((zone) => (
-                          <ModeButton
-                            key={zone}
-                            active={state.schoolZone === zone}
-                            disabled={zoneSelectionLocked}
-                            onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
-                            label={zone}
-                          />
-                        ))}
-                      </div>
-                    </Field>
-                    <Field label={language === "en" ? "School holidays" : "Vacances scolaires"}>
-                      <div
-                        aria-label={
-                          language === "en"
-                            ? "Choose school holiday preference"
-                            : "Choisir la préférence vacances scolaires"
-                        }
-                        role="group"
-                        className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1"
-                      >
-                        {[
-                          { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
-                          { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
-                          { value: "avoid" as const, label: language === "en" ? "Avoid" : "Éviter" },
-                        ].map((item) => (
-                          <ModeButton
-                            key={item.value}
-                            active={state.schoolHolidayPreference === item.value}
-                            onClick={() => updateSchoolPreference(item.value)}
-                            label={item.label}
-                            className="w-full px-2"
-                          />
-                        ))}
-                      </div>
-                    </Field>
-                  </div>
-
                   <button
                     type="button"
                     onClick={() =>
@@ -714,11 +670,11 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       )
                     }
                     disabled={state.schoolHolidayPreference === "avoid"}
-                    className={`mt-4 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition ${
+                    className={`inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition sm:w-auto ${
                       state.schoolHolidayPreference === "avoid"
-                        ? "cursor-not-allowed border border-line bg-paper text-ink/40"
+                        ? "cursor-not-allowed border border-line bg-white text-ink/40"
                         : state.allowSchoolHolidayOverlap
-                          ? "bg-ink text-white"
+                          ? "bg-coral text-white"
                           : "border border-line bg-white text-ink"
                     }`}
                   >
@@ -729,73 +685,72 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   </button>
                 </div>
               </div>
+            </div>
 
-              <div className="rounded-4xl border border-line bg-white p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-lg font-bold text-ink">
-                      {language === "en" ? "Paid leave budget" : "Budget de congés payés"}
-                    </p>
-                    <p className="mt-3 text-4xl font-black tracking-tight text-ink">
-                      {safePaidLeaveBudget}{" "}
-                      {language === "en"
-                        ? `day${safePaidLeaveBudget > 1 ? "s" : ""} available`
-                        : `jour${safePaidLeaveBudget > 1 ? "s" : ""} disponible${safePaidLeaveBudget > 1 ? "s" : ""}`}
-                    </p>
-                    <p className="mt-3 text-sm leading-7 text-ink/82">
-                      {language === "en"
-                        ? "Maximum number of working days to book. RTT is used first when enabled."
-                        : "Maximum de jours ouvrés à poser. Les RTT, si activés, sont utilisés avant."}
-                    </p>
-                  </div>
-                  <div className="rounded-full border border-line bg-paper px-4 py-2 text-lg font-bold text-ink">
-                    {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
-                  </div>
+            <div className="site-card p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-lg font-bold text-ink">
+                    {language === "en" ? "Paid leave budget" : "Budget de congés payés"}
+                  </p>
+                  <p className="mt-3 text-4xl font-black tracking-tight text-ink">
+                    {safePaidLeaveBudget}{" "}
+                    {language === "en"
+                      ? `day${safePaidLeaveBudget > 1 ? "s" : ""} available`
+                      : `jour${safePaidLeaveBudget > 1 ? "s" : ""} disponible${safePaidLeaveBudget > 1 ? "s" : ""}`}
+                  </p>
+                  <p className="mt-3 text-sm leading-7 text-ink/82">
+                    {language === "en"
+                      ? "Maximum number of working days to book. RTT is used first when enabled."
+                      : "Maximum de jours ouvrés à poser. Les RTT, si activés, sont utilisés avant."}
+                  </p>
                 </div>
-                <div className="mt-5 flex justify-end">
-                  <label className="flex items-center gap-3 text-sm font-semibold text-ink/82">
-                    <span>{language === "en" ? "Direct input" : "Saisie directe"}</span>
-                    <input
-                      type="number"
-                      min={1}
-                      max={20}
-                      value={safePaidLeaveBudget}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          paidLeaveBudget: Math.max(
-                            1,
-                            Math.min(20, Number.parseInt(event.target.value || "1", 10)),
-                          ),
-                        }))
-                      }
-                      className="h-11 w-24 rounded-2xl border border-line bg-paper px-3 text-center font-bold text-ink"
-                    />
-                  </label>
+                <div className="rounded-full border border-line bg-paper px-4 py-2 text-lg font-bold text-ink">
+                  {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
                 </div>
-                <input
-                  aria-label={
-                    language === "en" ? "Paid leave budget slider" : "Curseur du budget de congés payés"
-                  }
-                  type="range"
-                  min={1}
-                  max={20}
-                  value={safePaidLeaveBudget}
-                  onChange={(event) =>
-                    setState((current) => ({
-                      ...current,
-                      paidLeaveBudget: Number(event.target.value),
-                    }))
-                  }
-                  className="mt-8 h-2 w-full accent-coral"
-                />
               </div>
-
-              <div className="flex justify-center">
+              <div className="mt-5 flex justify-end">
+                <label className="flex items-center gap-3 text-sm font-semibold text-ink/82">
+                  <span>{language === "en" ? "Direct input" : "Saisie directe"}</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={safePaidLeaveBudget}
+                    onChange={(event) =>
+                      setState((current) => ({
+                        ...current,
+                        paidLeaveBudget: Math.max(
+                          1,
+                          Math.min(20, Number.parseInt(event.target.value || "1", 10)),
+                        ),
+                      }))
+                    }
+                    className="h-11 w-24 rounded-2xl border border-line bg-paper px-3 text-center font-bold text-ink"
+                  />
+                </label>
+              </div>
+              <input
+                aria-label={
+                  language === "en" ? "Paid leave budget slider" : "Curseur du budget de congés payés"
+                }
+                type="range"
+                min={1}
+                max={20}
+                value={safePaidLeaveBudget}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    paidLeaveBudget: Number(event.target.value),
+                  }))
+                }
+                className="mt-8 h-2 w-full accent-coral"
+              />
+              <div className="mt-8 flex justify-center">
                 <button
                   type="button"
                   onClick={submit}
-                  className="rounded-full bg-coral px-10 py-4 text-lg font-bold text-white shadow-card transition hover:-translate-y-0.5 hover:shadow-soft"
+                  className="rounded-full bg-coral px-10 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-coral/90"
                 >
                   {language === "en" ? "Calculate my best bridges" : "Calculer mes meilleurs ponts"}
                 </button>
@@ -1019,7 +974,7 @@ function ModeButton({
       className={`inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-center text-sm font-bold leading-tight transition ${
         disabled
           ? active
-            ? "bg-coral/75 text-white"
+            ? "bg-coral/80 text-white"
             : "cursor-not-allowed text-ink/35"
           : active
             ? "bg-coral text-white"

@@ -87,7 +87,7 @@ export function AnnualPlanner({
 
   return (
     <div className="space-y-8">
-      <section className="rounded-[2.2rem] border border-line bg-white p-6 shadow-card sm:p-8">
+      <section className="site-card p-6 sm:p-8">
         <div className="space-y-3">
           <p className="editorial-kicker">{language === "en" ? "Annual plan" : "Plan annuel"}</p>
           <h1 className="text-4xl font-black tracking-tight text-ink sm:text-5xl">
@@ -288,7 +288,7 @@ export function AnnualPlanner({
         />
       </section>
 
-      <section className="rounded-[2.1rem] border border-line bg-white p-6 shadow-card sm:p-8">
+      <section className="site-card p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="editorial-kicker">{language === "en" ? "Year overview" : "Vue d’ensemble"}</p>
@@ -321,7 +321,7 @@ export function AnnualPlanner({
         </div>
 
         {plan.segments.length === 0 ? (
-          <div className="mt-6 rounded-4xl border border-dashed border-line bg-paper p-8 text-center">
+          <div className="mt-6 rounded-[1.8rem] border border-dashed border-line/80 bg-slate-50/70 p-8 text-center">
             <h3 className="text-3xl font-black tracking-tight text-ink">
               {language === "en"
                 ? "No useful annual plan found"
@@ -407,7 +407,7 @@ function SummaryCard({
   value: string;
 }) {
   return (
-    <article className="h-full min-h-[138px] rounded-4xl border border-line bg-white p-5 shadow-card">
+    <article className="site-card h-full min-h-[138px] p-5">
       <p className="editorial-kicker">{label}</p>
       <p className="mt-3 text-4xl font-black tracking-tight text-ink">{value}</p>
     </article>

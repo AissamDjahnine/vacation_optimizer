@@ -24,7 +24,7 @@ export function ContentSectionCard({
     <Reveal>
       <section
         className={cn(
-          "rounded-4xl border p-7 shadow-card sm:p-10",
+          "site-card p-7 sm:p-10",
           accentMap[section.accent ?? "neutral"],
         )}
       >
@@ -54,7 +54,7 @@ export function ContentSectionCard({
           ) : null}
 
           {section.quote ? (
-            <blockquote className="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5">
+            <blockquote className="rounded-3xl border border-slate-200 bg-white px-5 py-5">
               <p className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500">
                 {language === "en" ? "Quote" : "Citation"}
               </p>
@@ -81,7 +81,7 @@ export function ContentSectionCard({
 
           {section.specialCase ? (
             <div className="editorial-note">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-coral/80">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1f4471]">
                 {language === "en" ? "Avoid this trap" : "À éviter"}
               </p>
               <p className="mt-2">{t(section.specialCase, language)}</p>

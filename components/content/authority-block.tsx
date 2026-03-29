@@ -11,7 +11,7 @@ export function AuthorityBlock({
   language: AppLanguage;
 }) {
   return (
-    <section className="editorial-panel border-violet-200 bg-gradient-to-br from-white to-[#faf5ff]">
+    <section className="site-card p-6 sm:p-8">
       <div className="space-y-3">
         <p className="editorial-kicker">
           {language === "en" ? "Official references" : "Repères officiels"}
@@ -25,10 +25,10 @@ export function AuthorityBlock({
         {block.notes.map((note) => (
           <article
             key={`${t(note.title, language)}-${note.source.href}`}
-            className="rounded-4xl border border-line bg-white p-6"
+            className="rounded-[1.5rem] border border-line/80 bg-slate-50/70 p-6"
           >
             <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full bg-lavender px-4 py-2 text-sm font-bold text-indigo-700">
+              <span className="site-badge bg-[#1f4471]">
                 {t(note.badge, language)}
               </span>
               <h3 className="text-xl font-black tracking-tight text-ink">
@@ -43,7 +43,7 @@ export function AuthorityBlock({
                 href={note.source.href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm font-bold text-coral"
+                className="text-sm font-bold text-[#1f4471]"
               >
                 {t(note.source.label, language)}
               </a>

@@ -38,12 +38,12 @@ export function HomePromos({ language }: { language: AppLanguage }) {
                   destination: item.href,
                 })
               }
-              className="group flex min-h-36 flex-col justify-between rounded-[1.75rem] border border-line bg-slate-50/80 p-5 text-ink transition hover:-translate-y-0.5 hover:border-coral hover:bg-white hover:text-coral"
+              className="group flex min-h-36 flex-col justify-between rounded-[1.75rem] border border-line bg-slate-50/80 p-5 text-ink transition hover:-translate-y-0.5 hover:border-[#1f4471] hover:bg-white hover:text-[#1f4471]"
             >
               <span className="text-base font-bold tracking-tight">
                 {language === "en" ? item.en : item.fr}
               </span>
-              <span className="mt-4 text-sm font-medium text-ink/55 transition group-hover:text-coral">
+              <span className="mt-4 text-sm font-medium text-ink/55 transition group-hover:text-[#1f4471]">
                 {language === "en" ? "Open" : "Ouvrir"}
               </span>
             </Link>
