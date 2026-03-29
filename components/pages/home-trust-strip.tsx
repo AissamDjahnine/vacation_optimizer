@@ -7,11 +7,11 @@ import { routes } from "@/lib/routes";
 
 const copy = {
   fr: {
-    title: "Un outil clair, des sources visibles, aucune surprise.",
+    title: "Pourquoi ce simulateur mérite d’être testé avant de planifier ailleurs.",
     items: [
       {
         title: "Données publiques",
-        body: "Jours fériés, zones scolaires et cas officiels résumés proprement puis reliés aux sources utiles.",
+        body: "Jours fériés, zones scolaires et cas officiels sont résumés proprement, puis reliés aux sources utiles.",
         href: routes.sources,
         cta: "Voir les sources",
       },
@@ -23,18 +23,18 @@ const copy = {
       },
       {
         title: "Sortie exploitable",
-        body: "Chaque suggestion peut être exportée au format .ics ou envoyée vers Google Calendar quand elle vaut le coup d’être conservée.",
+        body: "Chaque suggestion peut être exportée au format .ics ou envoyée vers Google Calendar quand elle vaut vraiment le coup d’être conservée.",
         href: routes.annualPlannerYear(2026),
         cta: "Tester le plan annuel",
       },
     ],
   },
   en: {
-    title: "Clear product, visible sources, no guesswork.",
+    title: "Why this planner is worth trying before you book anything else.",
     items: [
       {
         title: "Public data",
-        body: "Public holidays, school zones and official bridge cases are summarized cleanly and linked back to useful sources.",
+        body: "Public holidays, school zones and official bridge cases are summarized cleanly, then linked back to useful sources.",
         href: routes.sources,
         cta: "See sources",
       },
@@ -101,7 +101,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
           }
           className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
         >
-          {language === "en" ? "Open the annual plan" : "Ouvrir le plan annuel"}
+          {language === "en" ? "Open the annual planner" : "Ouvrir le plan annuel"}
         </Link>
       </div>
     </section>

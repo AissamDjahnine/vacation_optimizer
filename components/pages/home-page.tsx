@@ -36,9 +36,9 @@ export function HomePage({
     <div className="container-shell space-y-8 py-12 sm:py-16">
       <Planner language={language} />
       <section className="editorial-panel">
-        <p className="editorial-kicker">{language === "en" ? "Popular pages" : "Pages populaires"}</p>
+        <p className="editorial-kicker">{language === "en" ? "Fast routes" : "Accès rapides"}</p>
         <h2 className="mt-3 text-3xl font-black tracking-tight text-ink">
-          {language === "en" ? "Start with high-value pages" : "Commencer par les pages les plus utiles"}
+          {language === "en" ? "Jump straight to the pages people search for" : "Aller directement aux pages les plus recherchées"}
         </h2>
         <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {popularLinks.map((item) => (

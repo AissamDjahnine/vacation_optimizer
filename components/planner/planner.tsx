@@ -380,13 +380,13 @@ export function Planner({ language, initialConfig }: PlannerProps) {
         <section className="space-y-5 text-center">
           <h2 className="text-5xl font-black tracking-tight text-ink sm:text-6xl">
             {language === "en"
-              ? "French leave planner and bridge ideas"
+              ? "Find the best bridge days for your leave budget"
               : "Simulateur de ponts et congés 2026"}
           </h2>
           <p id={plannerIntroId} className="mx-auto max-w-3xl max-w-[44rem] text-lg leading-8 text-ink/80">
             {language === "en"
-              ? "Pick a month, your leave budget, and compare the bridge ideas that give you the most days off."
-              : "Choisissez un mois, un budget, puis regardez quelles dates vous donnent le plus de jours de repos."}
+              ? "Pick a month, your leave budget, and see the bridge ideas that give you the most days off first."
+              : "Choisissez un mois, un budget, puis voyez d’abord les ponts qui vous donnent le plus de jours de repos."}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -400,8 +400,13 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               }
               className="rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
             >
-              {language === "en" ? "Plan the full year" : "Planifier toute l’année"}
+              {language === "en" ? "See the yearly plan" : "Voir le plan annuel"}
             </Link>
+            <span className="rounded-full border border-line bg-white px-5 py-3 text-sm font-semibold text-ink/72">
+              {language === "en"
+                ? "No account, official dates, exportable results"
+                : "Pas de compte, dates officielles, résultats exportables"}
+            </span>
           </div>
         </section>
       </Reveal>
