@@ -55,6 +55,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const [loading, setLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
   const [visibleResultCount, setVisibleResultCount] = useState(5);
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const resultsRef = useRef<HTMLElement | null>(null);
   const lastTrackedResultsKeyRef = useRef<string | null>(null);
 
@@ -452,9 +453,11 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </article>
               <article className="rounded-3xl border border-line bg-paper p-4">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                  {language === "en" ? "Zone" : "Zone"}
+                  {language === "en" ? "Budget" : "Budget"}
                 </p>
-                <p className="mt-3 text-2xl font-black tracking-tight text-ink">A / B / C</p>
+                <p className="mt-3 text-2xl font-black tracking-tight text-ink">
+                  {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
+                </p>
               </article>
             </div>
           </div>
@@ -506,7 +509,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       <Reveal>
         <section className="site-card p-5 sm:p-8">
           <div className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               <Field label={language === "en" ? "Year" : "Année"}>
                 <select
                   aria-label={language === "en" ? "Select year" : "Choisir l’année"}
@@ -544,25 +547,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                     </option>
                   ))}
                 </select>
-              </Field>
-              <Field label={language === "en" ? "Zone" : "Zone"}>
-                <div
-                  aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
-                  role="group"
-                  className={`inline-flex rounded-full border border-line bg-white p-1 ${
-                    zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
-                  }`}
-                >
-                  {(["A", "B", "C"] as const).map((zone) => (
-                    <ModeButton
-                      key={zone}
-                      active={state.schoolZone === zone}
-                      disabled={zoneSelectionLocked}
-                      onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
-                      label={zone}
-                    />
-                  ))}
-                </div>
               </Field>
               <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
                 <select
@@ -603,87 +587,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   onClick={() => setState((current) => ({ ...current, mode: "distributed" }))}
                   label={language === "en" ? "Multiple bridges" : "Plusieurs ponts"}
                 />
-              </div>
-              <div className="inline-flex rounded-full border border-line bg-white p-1">
-                <ModeButton
-                  active={state.schoolHolidayPreference === "neutral"}
-                  onClick={() => updateSchoolPreference("neutral")}
-                  label={language === "en" ? "Neutral" : "Neutre"}
-                />
-                <ModeButton
-                  active={state.schoolHolidayPreference === "favor"}
-                  onClick={() => updateSchoolPreference("favor")}
-                  label={language === "en" ? "Favor" : "Favoriser"}
-                />
-                <ModeButton
-                  active={state.schoolHolidayPreference === "avoid"}
-                  onClick={() => updateSchoolPreference("avoid")}
-                  label={language === "en" ? "Avoid" : "Éviter"}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-5 rounded-[1.8rem] border border-line/80 bg-slate-50/70 p-5">
-              <ZoneLookupPanel
-                language={language}
-                disabled={zoneSelectionLocked}
-                onZoneResolved={(zone) =>
-                  setState((current) => ({
-                    ...current,
-                    schoolZone: zone,
-                  }))
-                }
-                title={
-                  language === "en"
-                    ? "Don't know your zone yet?"
-                    : "Vous ne connaissez pas encore votre zone ?"
-                }
-                subtitle={
-                  language === "en"
-                    ? "A department code, department name, or academy is enough."
-                    : "Un numéro de département, un nom de département ou une académie suffit."
-                }
-                className="bg-white shadow-none"
-              />
-              <div className="rounded-[1.4rem] border border-line/80 bg-white p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm font-bold text-ink">
-                      {language === "en" ? "Overlap rule" : "Chevauchement"}
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-ink/72">
-                      {language === "en"
-                        ? "Allow a result to cross school holidays when it improves the plan."
-                        : "Autorisez un résultat à traverser les vacances scolaires quand cela améliore le plan."}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setState((current) =>
-                        current.schoolHolidayPreference === "avoid"
-                          ? current
-                          : {
-                              ...current,
-                              allowSchoolHolidayOverlap: !current.allowSchoolHolidayOverlap,
-                            },
-                      )
-                    }
-                    disabled={state.schoolHolidayPreference === "avoid"}
-                    className={`inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition sm:w-auto ${
-                      state.schoolHolidayPreference === "avoid"
-                        ? "cursor-not-allowed border border-line bg-white text-ink/40"
-                        : state.allowSchoolHolidayOverlap
-                          ? "bg-coral text-white"
-                          : "border border-line bg-white text-ink"
-                    }`}
-                  >
-                    {state.allowSchoolHolidayOverlap ? "✓ " : ""}
-                    {language === "en"
-                      ? "Allow overlap with school holidays"
-                      : "Autoriser le chevauchement avec les vacances scolaires"}
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -756,6 +659,131 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 </button>
               </div>
             </div>
+
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAdvancedOptions((current) => !current)}
+                aria-expanded={showAdvancedOptions}
+                className="rounded-full border border-line bg-white px-6 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+              >
+                {showAdvancedOptions
+                  ? language === "en"
+                    ? "Hide advanced options"
+                    : "Masquer les options avancées"
+                  : language === "en"
+                    ? "Show advanced options"
+                    : "Afficher les options avancées"}
+              </button>
+            </div>
+
+            {showAdvancedOptions ? (
+              <div className="space-y-5 rounded-[1.8rem] border border-line/80 bg-slate-50/70 p-5">
+                <ZoneLookupPanel
+                  language={language}
+                  disabled={zoneSelectionLocked}
+                  onZoneResolved={(zone) =>
+                    setState((current) => ({
+                      ...current,
+                      schoolZone: zone,
+                    }))
+                  }
+                  title={
+                    language === "en"
+                      ? "Don't know your zone yet?"
+                      : "Vous ne connaissez pas encore votre zone ?"
+                  }
+                  subtitle={
+                    language === "en"
+                      ? "A department code, department name, or academy is enough."
+                      : "Un numéro de département, un nom de département ou une académie suffit."
+                  }
+                  className="bg-white shadow-none"
+                />
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-ink/72">
+                      {language === "en" ? "School holidays" : "Vacances scolaires"}
+                    </p>
+                    <div
+                      aria-label={
+                        language === "en"
+                          ? "Choose school holiday preference"
+                          : "Choisir la préférence vacances scolaires"
+                      }
+                      role="group"
+                      className="grid w-full grid-cols-3 rounded-full border border-line bg-white p-1"
+                    >
+                      {[
+                        { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
+                        { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
+                        { value: "avoid" as const, label: language === "en" ? "Avoid" : "Éviter" },
+                      ].map((item) => (
+                        <ModeButton
+                          key={item.value}
+                          active={state.schoolHolidayPreference === item.value}
+                          onClick={() => updateSchoolPreference(item.value)}
+                          label={item.label}
+                          className="w-full px-2"
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-ink/72">
+                      {language === "en" ? "Overlap rule" : "Chevauchement"}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setState((current) =>
+                          current.schoolHolidayPreference === "avoid"
+                            ? current
+                            : {
+                                ...current,
+                                allowSchoolHolidayOverlap: !current.allowSchoolHolidayOverlap,
+                              },
+                        )
+                      }
+                      disabled={state.schoolHolidayPreference === "avoid"}
+                      aria-label={language === "en" ? "Overlap rule" : "Chevauchement"}
+                      className={`inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition ${
+                        state.schoolHolidayPreference === "avoid"
+                          ? "cursor-not-allowed border border-line bg-white text-ink/40"
+                          : state.allowSchoolHolidayOverlap
+                            ? "bg-coral text-white"
+                            : "border border-line bg-white text-ink"
+                      }`}
+                    >
+                      {state.allowSchoolHolidayOverlap ? "✓ " : ""}
+                      {language === "en"
+                        ? "Allow overlap with school holidays"
+                        : "Autoriser le chevauchement avec les vacances scolaires"}
+                    </button>
+                  </div>
+                </div>
+                <Field label={language === "en" ? "School zone" : "Zone scolaire"}>
+                  <div
+                    aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
+                    role="group"
+                    className={`inline-flex rounded-full border border-line bg-white p-1 ${
+                      zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
+                    }`}
+                  >
+                    {(["A", "B", "C"] as const).map((zone) => (
+                      <ModeButton
+                        key={zone}
+                        active={state.schoolZone === zone}
+                        disabled={zoneSelectionLocked}
+                        onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
+                        label={zone}
+                      />
+                    ))}
+                  </div>
+                </Field>
+              </div>
+            ) : null}
           </div>
         </section>
       </Reveal>

@@ -82,7 +82,6 @@ describe("planner and content pages", () => {
     });
 
     expect(screen.getByDisplayValue("2026")).toBeInTheDocument();
-    expect(screen.getByText("C")).toBeInTheDocument();
     expect(screen.getByText(/10 jours disponibles/)).toBeInTheDocument();
   });
 
@@ -105,20 +104,20 @@ describe("planner and content pages", () => {
   test("locks school zone and overlap controls when school holidays are avoided", () => {
     render(<Planner language="fr" />);
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Éviter" })[0]);
+    fireEvent.click(screen.getByRole("button", { name: "Afficher les options avancées" }));
+    fireEvent.click(screen.getByRole("button", { name: "Éviter" }));
 
     expect(findButtonByExactText("A")).toBeDisabled();
     expect(findButtonByExactText("B")).toBeDisabled();
     expect(findButtonByExactText("C")).toBeDisabled();
     expect(screen.getByRole("button", { name: "Trouver la zone" })).toBeDisabled();
-    expect(
-      screen.getByRole("button", { name: /Autoriser le chevauchement avec les vacances scolaires/ }),
-    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Chevauchement" })).toBeDisabled();
   });
 
   test("annual planner also locks zone and overlap when school holidays are avoided", () => {
     render(<AnnualPlanner language="fr" year={2026} />);
 
+    fireEvent.click(screen.getByRole("button", { name: "Afficher les options avancées" }));
     fireEvent.click(screen.getByRole("button", { name: "Éviter" }));
 
     expect(findButtonByExactText("A")).toBeDisabled();

@@ -43,9 +43,6 @@ export function HomePromos({ language }: { language: AppLanguage }) {
               <span className="text-base font-bold tracking-tight">
                 {language === "en" ? item.en : item.fr}
               </span>
-              <span className="mt-4 text-sm font-medium text-ink/55 transition group-hover:text-[#1f4471]">
-                {language === "en" ? "Open" : "Ouvrir"}
-              </span>
             </Link>
           ))}
         </div>

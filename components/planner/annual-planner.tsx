@@ -45,6 +45,7 @@ export function AnnualPlanner({
     allowSchoolHolidayOverlap: defaultPlannerState.allowSchoolHolidayOverlap,
     strategy: "max-efficiency",
   });
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
 
   const holidays = useMemo(() => getHolidaySnapshot(state.year) ?? [], [state.year]);
   const schoolHolidayPeriods = useMemo(
@@ -165,108 +166,153 @@ export function AnnualPlanner({
           </Field>
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-[0.95fr_1.45fr] lg:items-start">
-          <Field label={language === "en" ? "School zone" : "Zone scolaire"}>
-            <div
-              className={`grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1 ${
-                zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
-              }`}
-            >
-              {(["A", "B", "C"] as const).map((zone) => (
+        <div className="mt-4 flex justify-center">
+          <div className="w-full max-w-4xl space-y-4 rounded-[1.8rem] border border-line bg-paper/55 p-5">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div className="space-y-1">
+                <p className="editorial-kicker">{language === "en" ? "Strategy" : "Stratégie"}</p>
+                <p className="text-sm leading-6 text-ink/72">
+                  {language === "en"
+                    ? "Choose the balance between efficiency, fairness, and family-friendly results."
+                    : "Choisissez l’équilibre entre rendement, régularité et logique familiale."}
+                </p>
+              </div>
+              <div className="grid w-full gap-2 sm:grid-cols-3 lg:max-w-2xl">
                 <ModeButton
-                  key={zone}
-                  active={state.schoolZone === zone}
-                  disabled={zoneSelectionLocked}
-                  onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
-                  label={zone}
+                  active={state.strategy === "max-efficiency"}
+                  onClick={() =>
+                    setState((current) => ({ ...current, strategy: "max-efficiency" }))
+                  }
+                  label={language === "en" ? "Efficiency" : "Rendement"}
                   className="w-full"
                 />
-              ))}
+                <ModeButton
+                  active={state.strategy === "balanced"}
+                  onClick={() => setState((current) => ({ ...current, strategy: "balanced" }))}
+                  label={language === "en" ? "Balanced" : "Équilibré"}
+                  className="w-full"
+                />
+                <ModeButton
+                  active={state.strategy === "family"}
+                  onClick={() => setState((current) => ({ ...current, strategy: "family" }))}
+                  label={language === "en" ? "Family" : "Famille"}
+                  className="w-full"
+                />
+              </div>
             </div>
-          </Field>
-
-          <Field label={language === "en" ? "Strategy" : "Stratégie"}>
-            <div className="grid w-full grid-cols-1 gap-2 rounded-[1.6rem] border border-line bg-paper/70 p-2 sm:grid-cols-3">
-              <ModeButton
-                active={state.strategy === "max-efficiency"}
-                onClick={() =>
-                  setState((current) => ({ ...current, strategy: "max-efficiency" }))
-                }
-                label={language === "en" ? "Efficiency" : "Rendement"}
-                className="w-full"
-              />
-              <ModeButton
-                active={state.strategy === "balanced"}
-                onClick={() => setState((current) => ({ ...current, strategy: "balanced" }))}
-                label={language === "en" ? "Balanced" : "Équilibré"}
-                className="w-full"
-              />
-              <ModeButton
-                active={state.strategy === "family"}
-                onClick={() => setState((current) => ({ ...current, strategy: "family" }))}
-                label={language === "en" ? "Family" : "Famille"}
-                className="w-full"
-              />
-            </div>
-            <p className="max-w-2xl text-sm leading-6 text-ink/62">
-              {language === "en"
-                ? "Efficiency prioritizes the best ratio. Balanced spreads the effort. Family gives more weight to school-holiday overlap."
-                : "Rendement privilégie le meilleur ratio. Équilibré répartit l’effort. Famille donne plus de poids aux chevauchements scolaires."}
-            </p>
-          </Field>
+          </div>
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_1.45fr] lg:items-start">
-          <Field label={language === "en" ? "School holidays" : "Vacances scolaires"}>
-            <div className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1">
-              <ModeButton
-                active={state.schoolHolidayPreference === "neutral"}
-                onClick={() => updatePreference("neutral")}
-                label={language === "en" ? "Neutral" : "Neutre"}
-                className="w-full px-2"
-              />
-              <ModeButton
-                active={state.schoolHolidayPreference === "favor"}
-                onClick={() => updatePreference("favor")}
-                label={language === "en" ? "Favor" : "Favoriser"}
-                className="w-full px-2"
-              />
-              <ModeButton
-                active={state.schoolHolidayPreference === "avoid"}
-                onClick={() => updatePreference("avoid")}
-                label={language === "en" ? "Avoid" : "Éviter"}
-                className="w-full px-2"
-              />
-            </div>
-          </Field>
-
-          <Field label={language === "en" ? "Overlap rule" : "Chevauchement"}>
-            <button
-              type="button"
-              onClick={() =>
-                setState((current) =>
-                  current.schoolHolidayPreference === "avoid"
-                    ? current
-                    : {
-                        ...current,
-                        allowSchoolHolidayOverlap: !current.allowSchoolHolidayOverlap,
-                      },
-                )
-              }
-              disabled={state.schoolHolidayPreference === "avoid"}
-              className={`inline-flex h-12 w-full items-center justify-center rounded-full px-6 font-bold transition sm:w-auto ${
-                state.schoolHolidayPreference === "avoid"
-                  ? "cursor-not-allowed border border-line bg-paper text-ink/40"
-                  : "bg-ink text-white"
-              }`}
-            >
-              {state.allowSchoolHolidayOverlap ? "✓ " : ""}
-              {language === "en"
-                ? "Allow overlap with school holidays"
-                : "Autoriser le chevauchement avec les vacances scolaires"}
-            </button>
-          </Field>
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAdvancedOptions((current) => !current)}
+            aria-expanded={showAdvancedOptions}
+            className="rounded-full border border-line bg-white px-6 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+          >
+            {showAdvancedOptions
+              ? language === "en"
+                ? "Hide advanced options"
+                : "Masquer les options avancées"
+              : language === "en"
+                ? "Show advanced options"
+                : "Afficher les options avancées"}
+          </button>
         </div>
+
+        {showAdvancedOptions ? (
+          <div className="mt-4 rounded-[1.8rem] border border-line/80 bg-slate-50/70 p-5">
+            <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="space-y-2 rounded-[1.6rem] border border-line/80 bg-white p-4">
+                <p className="text-sm font-bold text-ink/72">
+                  {language === "en" ? "School zone" : "Zone scolaire"}
+                </p>
+                <div
+                  className={`grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1 ${
+                    zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
+                  }`}
+                >
+                  {(["A", "B", "C"] as const).map((zone) => (
+                    <ModeButton
+                      key={zone}
+                      active={state.schoolZone === zone}
+                      disabled={zoneSelectionLocked}
+                      onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
+                      label={zone}
+                      className="w-full"
+                    />
+                  ))}
+                </div>
+                <p className="text-sm leading-6 text-ink/62">
+                  {language === "en"
+                    ? "Start with the school zone if you know it. Otherwise use the lookup below."
+                    : "Commencez par la zone scolaire si vous la connaissez. Sinon utilisez la recherche ci-dessous."}
+                </p>
+              </div>
+
+              <div className="space-y-4 rounded-[1.6rem] border border-line/80 bg-white p-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-bold text-ink/72">
+                    {language === "en" ? "School holidays" : "Vacances scolaires"}
+                  </p>
+                  <div className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1">
+                    <ModeButton
+                      active={state.schoolHolidayPreference === "neutral"}
+                      onClick={() => updatePreference("neutral")}
+                      label={language === "en" ? "Neutral" : "Neutre"}
+                      className="w-full px-2"
+                    />
+                    <ModeButton
+                      active={state.schoolHolidayPreference === "favor"}
+                      onClick={() => updatePreference("favor")}
+                      label={language === "en" ? "Favor" : "Favoriser"}
+                      className="w-full px-2"
+                    />
+                    <ModeButton
+                      active={state.schoolHolidayPreference === "avoid"}
+                      onClick={() => updatePreference("avoid")}
+                      label={language === "en" ? "Avoid" : "Éviter"}
+                      className="w-full px-2"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-sm font-bold text-ink/72">
+                    {language === "en" ? "Overlap rule" : "Chevauchement"}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setState((current) =>
+                        current.schoolHolidayPreference === "avoid"
+                          ? current
+                          : {
+                              ...current,
+                              allowSchoolHolidayOverlap: !current.allowSchoolHolidayOverlap,
+                            },
+                      )
+                    }
+                    disabled={state.schoolHolidayPreference === "avoid"}
+                    aria-label={language === "en" ? "Overlap rule" : "Chevauchement"}
+                    className={`inline-flex h-12 w-full items-center justify-center rounded-full px-6 font-bold transition ${
+                        state.schoolHolidayPreference === "avoid"
+                          ? "cursor-not-allowed border border-line bg-paper text-ink/40"
+                          : state.allowSchoolHolidayOverlap
+                            ? "bg-coral text-white"
+                            : "border border-line bg-white text-ink"
+                      }`}
+                  >
+                    {state.allowSchoolHolidayOverlap ? "✓ " : ""}
+                    {language === "en"
+                      ? "Allow overlap with school holidays"
+                      : "Autoriser le chevauchement avec les vacances scolaires"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
