@@ -761,101 +761,112 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       </Reveal>
 
       {hasSearchedOnce ? (
-        <section ref={resultsRef} className="glass-panel rounded-[2.25rem] p-6 sm:p-8">
-            <div className="space-y-4">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="section-title">
-                    {language === "en" ? "Recommended bridges" : "Ponts recommandés"}
-                  </h2>
-                  <CounterPill value={computation?.periods.length ?? 0} suffix={language === "en" ? "options ranked" : "options classées"} />
-                  <span className="chip">{formatMonthYear(safeMonth, safeYear, language)}</span>
-                  <span className="chip">
-                    {language === "en" ? "Budget" : "Budget"} : {safePaidLeaveBudget}{" "}
-                    {language === "en" ? "days" : "jours"}
-                  </span>
-                </div>
-                </div>
-
-                <div className="flex shrink-0 flex-wrap justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => shiftMonth(-1)}
-                    className="rounded-full border border-ink px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
-                  >
-                    {language === "en" ? "Previous month" : "Mois précédent"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => shiftMonth(1)}
-                    className="rounded-full border border-ink px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
-                  >
-                    {language === "en" ? "Next month" : "Mois suivant"}
-                  </button>
-                </div>
+        <section ref={resultsRef} className="space-y-6">
+          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="site-card p-6 sm:p-8">
+              <p className="editorial-kicker">
+                {language === "en" ? "Result view" : "Vue des résultats"}
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <h2 className="section-title">
+                  {language === "en" ? "Recommended bridges" : "Ponts recommandés"}
+                </h2>
+                <span className="chip">{formatMonthYear(safeMonth, safeYear, language)}</span>
+                <span className="chip">
+                  {language === "en" ? "Budget" : "Budget"}: {safePaidLeaveBudget}{" "}
+                  {language === "en" ? "days" : "jours"}
+                </span>
+                <span className="chip">
+                  {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
+                </span>
               </div>
-
-              <div className="space-y-4">
-                <p className="text-lg text-ink/82">
-                  {computation?.exact
-                    ? language === "en"
-                      ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
-                      : `Résultats exacts pour ${formatMonthYear(safeMonth, safeYear, language)}.`
-                    : language === "en"
-                      ? `No exact bridge uses the full budget. Here are the closest useful suggestions for ${formatMonthYear(
-                          safeMonth,
-                          safeYear,
-                          language,
-                        )}.`
-                      : `Aucun pont exact n’utilise tout le budget. Voici les suggestions utiles les plus proches pour ${formatMonthYear(
-                          safeMonth,
-                          safeYear,
-                          language,
-                        )}.`}
-                </p>
-                <p className="font-semibold text-ink/80">
-                  {language === "en"
-                    ? `If you kept every displayed suggestion, the cumulative total would be ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
-                    : `Si vous gardiez toutes les suggestions affichées, le total cumulé serait de ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
-                </p>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-ink">
-                  <LegendItem color="bg-sand" label={language === "en" ? "Public holiday" : "Férié"} />
-                  <LegendItem color="bg-mint" label={language === "en" ? "Weekend" : "Week-end"} />
-                  <LegendItem color="bg-lavender" label="RTT" />
-                  <LegendItem color="bg-peach" label={language === "en" ? "Paid leave" : "Congé payé"} />
-                  <LegendItem
-                    color="bg-violet-400"
-                    label={language === "en" ? "School holidays" : "Vacances scolaires"}
-                  />
-                <div className="group relative inline-flex items-center">
-                  <button
-                    type="button"
-                    aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                    className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint px-3 text-sm font-bold text-mint-strong transition hover:border-mint-strong/35 hover:bg-mint/80"
-                  >
-                    Score ?
-                  </button>
-                    <div className="pointer-events-none absolute bottom-full right-0 z-20 mb-3 w-64 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-                      {language === "en"
-                        ? "Score compares the total days off to the paid leave days you actually book."
-                        : "Le score compare le nombre total de jours de repos aux jours de congé payé réellement posés."}
-                    </div>
-                  </div>
-                </div>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-ink/72">
+                {computation?.exact
+                  ? language === "en"
+                    ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
+                    : `Résultats exacts pour ${formatMonthYear(safeMonth, safeYear, language)}.`
+                  : language === "en"
+                    ? `No exact bridge uses the full budget. Here are the closest useful suggestions for ${formatMonthYear(
+                        safeMonth,
+                        safeYear,
+                        language,
+                      )}.`
+                    : `Aucun pont exact n’utilise tout le budget. Voici les suggestions utiles les plus proches pour ${formatMonthYear(
+                        safeMonth,
+                        safeYear,
+                        language,
+                      )}.`}
+              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-ink">
+                <LegendItem color="bg-sand" label={language === "en" ? "Public holiday" : "Férié"} />
+                <LegendItem color="bg-mint" label={language === "en" ? "Weekend" : "Week-end"} />
+                <LegendItem color="bg-lavender" label="RTT" />
+                <LegendItem color="bg-peach" label={language === "en" ? "Paid leave" : "Congé payé"} />
+                <LegendItem
+                  color="bg-violet-400"
+                  label={language === "en" ? "School holidays" : "Vacances scolaires"}
+                />
               </div>
             </div>
 
-            <div className="mt-8 space-y-6">
-              {loading ? (
-                <>
-                  <SkeletonCard />
-                  <SkeletonCard />
-                </>
-              ) : computation && computation.periods.length > 0 ? (
-                visiblePeriods.map((period, index) => (
+            <aside className="site-card-soft p-6 sm:p-8">
+              <p className="editorial-kicker">
+                {language === "en" ? "Quick view" : "Aperçu rapide"}
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+                <ResultSummaryStat
+                  label={language === "en" ? "Total days off" : "Jours de repos"}
+                  value={`${computation?.periods[0]?.totalDaysOff ?? 0}`}
+                />
+                <ResultSummaryStat
+                  label={language === "en" ? "Paid leave used" : "Congés payés utilisés"}
+                  value={`${computation?.usedBudget ?? 0}`}
+                />
+                <ResultSummaryStat
+                  label={language === "en" ? "Saved options" : "Options classées"}
+                  value={`${computation?.periods.length ?? 0}`}
+                />
+                <ResultSummaryStat
+                  label={language === "en" ? "Current month" : "Mois courant"}
+                  value={formatMonthYear(safeMonth, safeYear, language)}
+                />
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => shiftMonth(-1)}
+                  className="rounded-full border border-ink bg-white px-5 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                >
+                  {language === "en" ? "Previous month" : "Mois précédent"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => shiftMonth(1)}
+                  className="rounded-full border border-ink bg-white px-5 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                >
+                  {language === "en" ? "Next month" : "Mois suivant"}
+                </button>
+              </div>
+              <p className="mt-4 text-sm leading-6 text-ink/72">
+                {language === "en"
+                  ? "Keep the planner simple: pick the month, then refine only when you need more exact dates."
+                  : "Gardez le simulateur simple : choisissez le mois, puis affinez seulement si vous avez besoin de dates plus précises."}
+              </p>
+            </aside>
+          </div>
+
+          <div className="space-y-6">
+            {loading ? (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            ) : computation && computation.periods.length > 0 ? (
+              <div className="grid gap-6 lg:grid-cols-2">
+                {visiblePeriods.map((period, index) => (
                   <div
                     key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}-${index}`}
+                    className={index === 0 ? "lg:col-span-2" : ""}
                   >
                     <ResultCard
                       language={language}
@@ -864,61 +875,62 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       highlighted={index === 0}
                     />
                   </div>
-                ))
-              ) : (
-                <div className="rounded-4xl border border-dashed border-line bg-white p-8 text-center shadow-card">
-                  <p className="text-2xl font-black text-ink">
-                    {language === "en"
-                      ? "No useful bridge found for this month."
-                      : "Aucun pont utile trouvé pour ce mois."}
-                  </p>
-                  <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-ink/80">
-                    {language === "en"
-                      ? "Try another month or increase the budget. If your settings are strict, the planner can still surface close suggestions."
-                      : "Essayez un autre mois ou augmentez le budget. Si vos réglages sont stricts, le simulateur peut encore faire remonter des suggestions proches."}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {hasHiddenPeriods ? (
-              <div className="mt-8 flex justify-center">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setVisibleResultCount((current) =>
-                      Math.min(current + 5, computation?.periods.length ?? current),
-                    )
-                  }
-                  className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
-                >
-                  {language === "en" ? "Show 5 more" : "Voir 5 de plus"}
-                </button>
+                ))}
               </div>
-            ) : null}
+            ) : (
+              <div className="rounded-4xl border border-dashed border-line bg-white p-8 text-center shadow-card">
+                <p className="text-2xl font-black text-ink">
+                  {language === "en"
+                    ? "No useful bridge found for this month."
+                    : "Aucun pont utile trouvé pour ce mois."}
+                </p>
+                <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-ink/80">
+                  {language === "en"
+                    ? "Try another month or increase the budget. If your settings are strict, the planner can still surface close suggestions."
+                    : "Essayez un autre mois ou augmentez le budget. Si vos réglages sont stricts, le simulateur peut encore faire remonter des suggestions proches."}
+                </p>
+              </div>
+            )}
+          </div>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
-              >
-                {language === "en" ? "Back to top" : "Retour en haut"}
-              </button>
+          {hasHiddenPeriods ? (
+            <div className="flex justify-center">
               <button
                 type="button"
                 onClick={() =>
-                  document.getElementById(plannerIntroId)?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  })
+                  setVisibleResultCount((current) =>
+                    Math.min(current + 5, computation?.periods.length ?? current),
+                  )
                 }
-                className="rounded-full border border-line bg-paper px-6 py-3 font-bold text-ink transition hover:border-coral hover:text-coral"
+                className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
               >
-                {language === "en" ? "Edit this simulation" : "Modifier la simulation"}
+                {language === "en" ? "Show 5 more" : "Voir 5 de plus"}
               </button>
             </div>
-          </section>
+          ) : null}
+
+          <div className="flex flex-wrap justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+            >
+              {language === "en" ? "Back to top" : "Retour en haut"}
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById(plannerIntroId)?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                })
+              }
+              className="rounded-full border border-line bg-paper px-6 py-3 font-bold text-ink transition hover:border-coral hover:text-coral"
+            >
+              {language === "en" ? "Edit this simulation" : "Modifier la simulation"}
+            </button>
+          </div>
+        </section>
       ) : null}
 
     </div>
@@ -946,6 +958,15 @@ function LegendItem({ color, label }: { color: string; label: string }) {
       <span className={`h-2.5 w-2.5 rounded-full ${color}`} />
       {label}
     </span>
+  );
+}
+
+function ResultSummaryStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[1.35rem] border border-line/80 bg-white p-4">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">{label}</p>
+      <p className="mt-3 text-2xl font-black tracking-tight text-ink">{value}</p>
+    </div>
   );
 }
 
@@ -983,13 +1004,5 @@ function ModeButton({
     >
       {label}
     </button>
-  );
-}
-
-function CounterPill({ value, suffix }: { value: number; suffix: string }) {
-  return (
-    <span className="rounded-full bg-mint px-5 py-3 text-sm font-bold text-emerald-800">
-      {value} {suffix}
-    </span>
   );
 }
