@@ -84,10 +84,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const zoneSelectionLocked = state.schoolHolidayPreference === "avoid";
 
   useEffect(() => {
-    if (!hasSearchedOnce) {
-      return;
-    }
-
     let cancelled = false;
 
     async function loadData() {
@@ -176,7 +172,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     return () => {
       cancelled = true;
     };
-  }, [hasSearchedOnce, safeYear, state.schoolZone]);
+  }, [safeYear, state.schoolZone]);
 
   const computation = useMemo(() => {
     if (!hasSearchedOnce || !dataReady || holidays.length === 0) {
@@ -232,6 +228,48 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   }, [
     dataReady,
     hasSearchedOnce,
+    holidays,
+    safeMonth,
+    safeMonthlyRtt,
+    safePaidLeaveBudget,
+    safeYear,
+    schoolHolidayPeriods,
+    state.allowSchoolHolidayOverlap,
+    state.mode,
+    state.schoolHolidayPreference,
+  ]);
+
+  const previewComputation = useMemo(() => {
+    if (!dataReady || holidays.length === 0) {
+      return null;
+    }
+
+    const periods =
+      state.mode === "distributed"
+        ? DateOptimizer.findBestDistributedPeriods({
+            holidays,
+            vacationDaysToUse: safePaidLeaveBudget,
+            availableRttDays: safeMonthlyRtt,
+            year: safeYear,
+            month: safeMonth,
+            schoolHolidayPeriods,
+            schoolHolidayPreference: state.schoolHolidayPreference,
+            allowSchoolHolidayOverlap: state.allowSchoolHolidayOverlap,
+          })
+        : DateOptimizer.findFlexiblePeriods({
+            holidays,
+            vacationDaysToUse: safePaidLeaveBudget,
+            availableRttDays: safeMonthlyRtt,
+            year: safeYear,
+            month: safeMonth,
+            schoolHolidayPeriods,
+            schoolHolidayPreference: state.schoolHolidayPreference,
+            allowSchoolHolidayOverlap: state.allowSchoolHolidayOverlap,
+          });
+
+    return periods[0] ?? null;
+  }, [
+    dataReady,
     holidays,
     safeMonth,
     safeMonthlyRtt,
@@ -377,37 +415,103 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   return (
     <div className="space-y-8">
       <Reveal>
-        <section className="space-y-5 text-left">
-          <div className="max-w-4xl space-y-5">
-            <h2 className="text-5xl font-black tracking-tight text-ink sm:text-6xl">
-              {language === "en"
-                ? "Find the best bridge days for your leave budget"
-                : "Simulateur de ponts et congés 2026"}
-            </h2>
-            <p id={plannerIntroId} className="max-w-[44rem] text-lg leading-8 text-ink/80">
-              {language === "en"
-                ? "Pick a month, your leave budget, and see the bridge ideas that give you the most days off first."
-                : "Choisissez un mois, un budget, puis voyez d’abord les ponts qui vous donnent le plus de jours de repos."}
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href={prefixForLanguage(routes.annualPlannerYear(safeYear), language)}
-                onClick={() =>
-                  trackEvent("annual_plan_click", {
-                    language,
-                    source: "planner_hero",
-                    year: safeYear,
-                  })
-                }
-                className="rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-              >
-                {language === "en" ? "See the yearly plan" : "Voir le plan annuel"}
-              </Link>
-              <span className="rounded-full border border-line bg-white px-5 py-3 text-sm font-semibold text-ink/72">
+        <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr] xl:items-stretch">
+          <div className="space-y-5 rounded-[2.2rem] border border-line bg-white p-6 sm:p-8">
+            <div className="max-w-4xl space-y-5">
+              <h2 className="max-w-3xl text-5xl font-black tracking-tight text-ink sm:text-6xl">
                 {language === "en"
-                  ? "No account, official dates, exportable results"
-                  : "Pas de compte, dates officielles, résultats exportables"}
-              </span>
+                  ? "Find the best bridge days for your leave budget"
+                  : "Simulateur de ponts et congés 2026"}
+              </h2>
+              <p id={plannerIntroId} className="max-w-[44rem] text-lg leading-8 text-ink/80">
+                {language === "en"
+                  ? "Pick a month, your leave budget, and see the bridge ideas that give you the most days off first."
+                  : "Choisissez un mois, un budget, puis voyez d’abord les ponts qui vous donnent le plus de jours de repos."}
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href={prefixForLanguage(routes.annualPlannerYear(safeYear), language)}
+                  onClick={() =>
+                    trackEvent("annual_plan_click", {
+                      language,
+                      source: "planner_hero",
+                      year: safeYear,
+                    })
+                  }
+                  className="rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+                >
+                  {language === "en" ? "See the yearly plan" : "Voir le plan annuel"}
+                </Link>
+                <span className="rounded-full border border-line bg-white px-5 py-3 text-sm font-semibold text-ink/72">
+                  {language === "en"
+                    ? "No account, official dates, exportable results"
+                    : "Pas de compte, dates officielles, résultats exportables"}
+                </span>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <article className="rounded-3xl border border-line bg-paper p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                  {language === "en" ? "Year" : "Année"}
+                </p>
+                <p className="mt-3 text-2xl font-black tracking-tight text-ink">{safeYear}</p>
+              </article>
+              <article className="rounded-3xl border border-line bg-paper p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                  {language === "en" ? "Start month" : "Mois de départ"}
+                </p>
+                <p className="mt-3 text-2xl font-black tracking-tight text-ink">
+                  {formatMonthYear(safeMonth, safeYear, language)}
+                </p>
+              </article>
+              <article className="rounded-3xl border border-line bg-paper p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                  {language === "en" ? "Zone" : "Zone"}
+                </p>
+                <p className="mt-3 text-2xl font-black tracking-tight text-ink">A / B / C</p>
+              </article>
+            </div>
+          </div>
+
+          <div className="rounded-[2.2rem] border border-[#4f6e8f] bg-[#5f7f9b] p-6 text-white shadow-card sm:p-8">
+            <div className="flex h-full flex-col justify-between gap-8">
+              <div className="space-y-4">
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10">
+                  <span className="text-lg">✦</span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/72">
+                    {language === "en" ? "Quick result" : "Aperçu rapide"}
+                  </p>
+                  <p className="mt-4 text-5xl font-black tracking-tight text-white">
+                    {dataReady && previewComputation ? `${previewComputation.totalDaysOff}` : "—"}{" "}
+                    {language === "en" ? "Days" : "Jours"}
+                  </p>
+                  <p className="mt-3 max-w-sm text-base leading-7 text-white/80">
+                    {dataReady && previewComputation
+                      ? language === "en"
+                        ? `Total potential days off found for ${formatMonthYear(safeMonth, safeYear, language)}.`
+                        : `Jours de repos potentiels trouvés pour ${formatMonthYear(safeMonth, safeYear, language)}.`
+                      : language === "en"
+                        ? "Loading the first useful preview."
+                        : "Chargement du premier aperçu utile."}
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={submit}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#d55a1d] px-6 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#c94f18]"
+                >
+                  {language === "en" ? "Get my best bridges" : "Voir mes meilleurs ponts"}
+                </button>
+                <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                  {language === "en"
+                    ? "Powered by official public dates"
+                    : "Alimenté par les dates officielles"}
+                </p>
+              </div>
             </div>
           </div>
         </section>
