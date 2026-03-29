@@ -3,7 +3,7 @@ import { SchoolHolidaysFamily2026Page } from "@/components/pages/school-holidays
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "School holidays 2026 and bridges",
+  title: "School holidays 2026, zones A/B/C and family bridge ideas",
   description: "The family-focused guide to combine 2026 school holidays, zones A/B/C and useful bridge ideas before switching back to the planner.",
   path: "/vacances-scolaires-2026-ponts",
   enPath: "/en/vacances-scolaires-2026-ponts",

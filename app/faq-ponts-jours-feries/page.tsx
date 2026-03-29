@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = buildMetadata({
-  title: "FAQ ponts et jours fériés 2026 : toutes les réponses",
+  title: "FAQ ponts et jours fériés 2026 : réponses rapides avant de poser ses congés",
   description: "Questions fréquentes sur les ponts, jours fériés, employeur, secteur privé/public et règles à vérifier avant de poser ses congés.",
   path: "/faq-ponts-jours-feries",
   enPath: "/en/faq-ponts-jours-feries",

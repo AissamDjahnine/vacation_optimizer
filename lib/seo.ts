@@ -154,7 +154,7 @@ export function buildArticleSchema({
       name: "Ponts Malins",
     },
     datePublished: "2026-03-15T17:20:14.401Z",
-    dateModified: "2026-03-15T18:45:00.000Z",
+    dateModified: "2026-03-30T12:00:00.000Z",
   };
 }
 

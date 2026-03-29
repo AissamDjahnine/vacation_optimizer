@@ -4,7 +4,7 @@ import { getHolidaysForYear } from "@/lib/page-data";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "1 November 2026 bridge",
+  title: "1 November 2026 bridge: All Saints’ Day or 11 November?",
   description: "Is the 1 November 2026 bridge worth testing, and when 11 November is the stronger autumn option.",
   path: "/pont-1er-novembre-2026",
   enPath: "/en/pont-1er-novembre-2026",

@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Bridge and public holiday FAQ",
+  title: "Bridge and public holiday FAQ: quick answers before booking leave",
   description: "Frequently asked questions about bridge days, public holidays, employer rules, public/private sector differences and what to verify before booking leave.",
   path: "/faq-ponts-jours-feries",
   enPath: "/en/faq-ponts-jours-feries",

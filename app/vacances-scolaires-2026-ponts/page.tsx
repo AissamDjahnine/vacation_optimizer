@@ -3,8 +3,8 @@ import { SchoolHolidaysFamily2026Page } from "@/components/pages/school-holidays
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Vacances scolaires 2026 et ponts",
-  description: "Le guide familles pour croiser vacances scolaires 2026, zones A/B/C et ponts utiles avant de revenir au simulateur.",
+  title: "Vacances scolaires 2026, zones A/B/C et ponts familiaux",
+  description: "Le guide familles pour croiser les vacances scolaires 2026, les zones A/B/C et les ponts utiles avant de revenir au simulateur.",
   path: "/vacances-scolaires-2026-ponts",
   enPath: "/en/vacances-scolaires-2026-ponts",
 });
