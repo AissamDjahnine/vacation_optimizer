@@ -5,12 +5,12 @@ export const leaveGuide2026Content: GuideContent & {
   scenarios: LeaveGuideScenario[];
 } = {
   title: {
-    fr: "Comment bien poser ses congés en 2026",
-    en: "How to plan your leave well in 2026",
+    fr: "Comment poser ses congés 2026 : meilleurs mois et ponts à tester",
+    en: "How to book leave in 2026: best months and bridge days to test",
   },
   subtitle: {
-    fr: "Les meilleurs mois, les ponts qui valent le coup, et quelques scénarios concrets pour transformer un budget limité en vraie coupure.",
-    en: "The best months, the bridge opportunities that matter, and a few practical scenarios to turn a limited leave budget into a real break.",
+    fr: "Commencez par les mois qui reviennent le plus dans les recherches, puis comparez les ponts utiles selon votre budget réel.",
+    en: "Start with the months people search for most, then compare the useful bridge opportunities against your real budget.",
   },
   sections: [
     {

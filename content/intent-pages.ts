@@ -3,12 +3,12 @@ import { routes } from "@/lib/routes";
 
 export const ascension2026Content: GuideContent = {
   title: {
-    fr: "Pont de l’Ascension 2026 : comment en profiter vraiment",
-    en: "Ascension bridge 2026: how to make the most of it",
+    fr: "Pont de l’Ascension 2026 : le cas à tester en premier",
+    en: "Ascension bridge 2026: the first case to test",
   },
   subtitle: {
-    fr: "Le cas le plus scruté de l’année : ce qu’il faut regarder, ce qui change pour les familles et comment le tester proprement dans Ponts Malins.",
-    en: "The most watched case of the year: what to look at, what changes for families, and how to test it cleanly in Ponts Malins.",
+    fr: "Le cas le plus recherché de l’année : ce qu’il faut regarder, ce qui change pour les familles et comment le tester proprement dans Ponts Malins.",
+    en: "The most searched case of the year: what to look at, what changes for families, and how to test it cleanly in Ponts Malins.",
   },
   sections: [
     {
@@ -53,12 +53,12 @@ export const ascension2026Content: GuideContent = {
 
 export const mayBridges2026Content: GuideContent = {
   title: {
-    fr: "Ponts de mai 2026 : les meilleurs cas à ouvrir d’abord",
-    en: "May 2026 bridges: the first cases worth opening",
+    fr: "Ponts de mai 2026 : les meilleurs cas à tester d’abord",
+    en: "May 2026 bridges: the first cases worth testing",
   },
   subtitle: {
-    fr: "Mai 2026 concentre plusieurs cas utiles. L’objectif n’est pas de tout tester au hasard, mais de savoir par où commencer selon votre budget.",
-    en: "May 2026 concentrates several useful cases. The goal is not to test everything randomly, but to know where to start depending on your budget.",
+    fr: "Mai 2026 concentre plusieurs cas utiles. L’objectif n’est pas de tout tester au hasard, mais de savoir par où commencer selon votre budget réel.",
+    en: "May 2026 concentrates several useful cases. The goal is not to test everything randomly, but to know where to start depending on your real budget.",
   },
   sections: [
     {
@@ -90,11 +90,11 @@ export const mayBridges2026Content: GuideContent = {
 
 export const assumption2026Content: GuideContent = {
   title: {
-    fr: "Pont du 15 août 2026 : faut-il vraiment le tester ?",
-    en: "15 August 2026 bridge: is it really worth testing?",
+    fr: "Pont du 15 août 2026 : le cas à vérifier avant de perdre du temps",
+    en: "15 August 2026 bridge: the case to check before wasting time",
   },
   subtitle: {
-    fr: "Le 15 août 2026 tombe un samedi. Cette page aide à voir si le week-end reste exploitable et quand il vaut mieux passer à d’autres mois.",
+    fr: "Le 15 août 2026 tombe un samedi. Cette page aide à voir si le week-end reste exploitable et quand il vaut mieux passer à un autre mois.",
     en: "15 August 2026 falls on a Saturday. This page helps you see whether the weekend is still usable and when another month is the better bet.",
   },
   sections: [
@@ -125,12 +125,12 @@ export const assumption2026Content: GuideContent = {
 
 export const allSaints2026Content: GuideContent = {
   title: {
-    fr: "Pont du 1er novembre 2026 : la Toussaint vaut-elle le détour ?",
-    en: "1 November 2026 bridge: is All Saints’ Day worth a look?",
+    fr: "Pont du 1er novembre 2026 : la Toussaint ou le 11 novembre ?",
+    en: "1 November 2026 bridge: All Saints’ Day or 11 November?",
   },
   subtitle: {
-    fr: "La Toussaint 2026 tombe un dimanche. Cette page sert à comprendre vite pourquoi le 11 novembre est souvent un meilleur cas d’automne.",
-    en: "All Saints’ Day 2026 falls on a Sunday. This page helps you understand quickly why 11 November is often the better autumn case.",
+    fr: "La Toussaint 2026 tombe un dimanche. Cette page sert à comprendre vite pourquoi le 11 novembre reste souvent le meilleur cas d’automne.",
+    en: "All Saints’ Day 2026 falls on a Sunday. This page helps you understand quickly why 11 November often remains the better autumn case.",
   },
   sections: [
     {
@@ -160,8 +160,8 @@ export const allSaints2026Content: GuideContent = {
 
 export const armistice2026Content: GuideContent = {
   title: {
-    fr: "Pont du 11 novembre 2026 : le bon cas d’automne à tester",
-    en: "11 November 2026 bridge: the autumn case worth testing",
+    fr: "Pont du 11 novembre 2026 : le meilleur cas d’automne à tester",
+    en: "11 November 2026 bridge: the autumn case worth testing first",
   },
   subtitle: {
     fr: "Si vous cherchez un pont propre hors mai, le 11 novembre 2026 est souvent le premier cas à ouvrir.",
@@ -195,7 +195,7 @@ export const armistice2026Content: GuideContent = {
 
 export const yearEnd2026Content: GuideContent = {
   title: {
-    fr: "Pont de Noël et fin d’année 2026 : ce qu’il reste à jouer",
+    fr: "Pont de Noël et fin d’année 2026 : ce qui vaut encore le coup",
     en: "Christmas and late-year 2026 bridge: what is still worth testing",
   },
   subtitle: {
@@ -231,8 +231,8 @@ export const yearEnd2026Content: GuideContent = {
 export function buildSchoolZone2026Content(zone: "A" | "B" | "C"): GuideContent {
   return {
     title: {
-      fr: `Vacances scolaires 2026 zone ${zone}`,
-      en: `School holidays 2026 zone ${zone}`,
+      fr: `Vacances scolaires 2026 zone ${zone} : lire le calendrier et tester les ponts`,
+      en: `School holidays 2026 zone ${zone}: read the calendar and test bridge ideas`,
     },
     subtitle: {
       fr: `Une page simple pour lire vite les périodes utiles de la zone ${zone}, puis voir quand un pont familial mérite un vrai test.`,

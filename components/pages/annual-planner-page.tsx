@@ -25,12 +25,12 @@ export function AnnualPlannerPage({
       <ContentHero
         badge={{ fr: "Plan annuel", en: "Annual plan" }}
         title={{
-          fr: `Planifier ses congés ${year} sur l’année`,
-          en: `Plan your ${year} leave across the full year`,
+          fr: `Planifier ses congés ${year} sur l’année : mois et ponts à tester`,
+          en: `Plan your ${year} leave across the full year: months and bridge days to test`,
         }}
         subtitle={{
-          fr: "Une vue plus stratégique : répartir votre budget sur plusieurs mois, comparer les approches, puis exporter les meilleurs blocs retenus.",
-          en: "A more strategic view: spread your budget across several months, compare approaches, then export the best retained breaks.",
+          fr: "Une vue plus stratégique pour repérer les meilleurs mois, comparer les approches et exporter les meilleurs blocs retenus.",
+          en: "A more strategic view to spot the best months, compare approaches, and export the strongest retained breaks.",
         }}
         language={language}
       />

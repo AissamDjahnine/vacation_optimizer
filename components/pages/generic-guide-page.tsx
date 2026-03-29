@@ -59,6 +59,12 @@ export function GenericGuidePage({
                   ? "These pages are meant to answer one concrete planning question fast. The planner remains the place where your budget, RTT and school-holiday settings actually decide."
                   : "Ces pages sont là pour répondre vite à une question concrète. Le simulateur reste l’endroit où votre budget, vos RTT et vos réglages vacances scolaires décident vraiment."}
               </p>
+              <Link
+                href={prefixForLanguage(routes.home, language)}
+                className="mt-5 inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+              >
+                {language === "en" ? "Open the planner now" : "Ouvrir le simulateur maintenant"}
+              </Link>
             </div>
           </div>
         </section>
@@ -88,7 +94,7 @@ export function GenericGuidePage({
               href={prefixForLanguage(routes.home, language)}
               className="rounded-full bg-coral px-6 py-3 text-lg font-bold text-white transition hover:-translate-y-0.5"
             >
-              {language === "en" ? "Use the planner" : "Utiliser le simulateur"}
+              {language === "en" ? "Open the planner now" : "Ouvrir le simulateur maintenant"}
             </Link>
           </div>
         </div>

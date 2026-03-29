@@ -11,8 +11,8 @@ export const faqBridgesHolidaysContent: GuideContent & {
     en: "FAQ – Bridges, public holidays, and leave",
   },
   subtitle: {
-    fr: "Les réponses courtes à ce qu’on cherche le plus souvent avant de poser des jours. Puis, si besoin, le simulateur prend le relais.",
-    en: "Short answers to the most common questions people ask before booking leave. Then, if needed, the planner takes over.",
+    fr: "Les réponses courtes aux questions les plus cherchées avant de poser des jours, puis le simulateur prend le relais si nécessaire.",
+    en: "Short answers to the questions people search for most before booking leave, then the planner takes over when needed.",
   },
   sections: [
     {

@@ -5,12 +5,12 @@ export const schoolHolidaysFamily2026Content: GuideContent & {
   examples: FamilyPlanningExample[];
 } = {
   title: {
-    fr: "Vacances scolaires 2026 et ponts",
-    en: "School holidays 2026 and bridge ideas",
+    fr: "Vacances scolaires 2026, zones A/B/C et ponts familiaux",
+    en: "School holidays 2026, zones A/B/C and family bridge ideas",
   },
   subtitle: {
-    fr: "Une vue pensée pour les familles : repérez la bonne zone, les périodes déjà chargées, puis utilisez le simulateur pour voir où un pont ajoute un vrai gain.",
-    en: "A family-oriented view: find the right zone, spot the busy periods, then use the planner to see where a bridge actually adds value.",
+    fr: "Une vue pensée pour les familles : repérez la bonne zone, les périodes déjà chargées, puis testez où un pont ajoute un vrai gain.",
+    en: "A family-oriented view: find the right zone, spot the busy periods, then test where a bridge actually adds value.",
   },
   sections: [
     {

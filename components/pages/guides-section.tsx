@@ -84,12 +84,12 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
     <section className="rounded-[2.1rem] border border-line bg-white p-6 shadow-card sm:p-8">
       <div className="space-y-3">
         <h2 className="text-3xl font-black tracking-tight text-ink">
-          {language === "en" ? "Useful guides" : "Guides utiles"}
+          {language === "en" ? "Useful guides for planning faster" : "Guides utiles pour planifier plus vite"}
         </h2>
         <p className="section-subtitle max-w-none">
           {language === "en"
-            ? "Start with these four pages, then open the wider guide hub only if you need more context."
-            : "Commencez par ces quatre pages, puis ouvrez le hub complet seulement si vous avez besoin de plus de contexte."}
+            ? "Start with these pages people actually search for, then use the planner when you are ready to decide."
+            : "Commencez par les pages que les gens recherchent vraiment, puis ouvrez le simulateur quand vous êtes prêt à décider."}
         </p>
       </div>
       <div className="mt-8 grid gap-4 xl:grid-cols-3">
