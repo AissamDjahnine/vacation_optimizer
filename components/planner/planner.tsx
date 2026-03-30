@@ -791,33 +791,30 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       {hasSearchedOnce ? (
         <section ref={resultsRef} className="space-y-6">
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="site-card p-6 sm:p-8">
+            <div className="overflow-hidden rounded-[2rem] border border-line bg-white p-6 sm:p-8">
               <p className="editorial-kicker">
                 {language === "en" ? "Results" : "Résultats"}
               </p>
-              <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-                <div className="space-y-2">
-                  <h2 className="text-4xl font-black tracking-tight text-ink sm:text-5xl">
-                    {language === "en" ? "Your suggested bridge plans" : "Vos ponts recommandés"}
-                  </h2>
-                  <p className="max-w-3xl text-base leading-7 text-ink/72">
-                    {language === "en"
-                      ? "We ranked the best windows for this month and kept the strongest match at the top."
-                      : "Nous avons classé les meilleures fenêtres du mois et gardé la meilleure en premier."}
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="chip">{formatMonthYear(safeMonth, safeYear, language)}</span>
-                  <span className="chip">
-                    {language === "en" ? "Budget" : "Budget"}: {safePaidLeaveBudget}{" "}
-                    {language === "en" ? "days" : "jours"}
+              <div className="mt-3 flex flex-wrap items-end gap-x-4 gap-y-3">
+                <h2 className="text-4xl font-black tracking-tight text-ink sm:text-5xl">
+                  {language === "en" ? "Your suggested" : "Vos"}
+                  <span className="text-coral">
+                    {" "}
+                    {language === "en" ? "bridge plans" : "ponts recommandés"}
                   </span>
-                  <span className="chip">
-                    {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
-                  </span>
-                </div>
+                </h2>
+                <span className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
+                  {formatMonthYear(safeMonth, safeYear, language)}
+                </span>
+                <span className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
+                  {language === "en" ? "Budget" : "Budget"}: {safePaidLeaveBudget}{" "}
+                  {language === "en" ? "days" : "jours"}
+                </span>
+                <span className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
+                  {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
+                </span>
               </div>
-              <p className="mt-6 max-w-3xl text-base leading-7 text-ink/72">
+              <p className="mt-5 max-w-3xl text-base leading-7 text-ink/72">
                 {computation?.exact
                   ? language === "en"
                     ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
@@ -846,41 +843,55 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </div>
             </div>
 
-            <aside className="site-card-soft p-6 sm:p-8">
-              <p className="editorial-kicker">
+            <aside className="overflow-hidden rounded-[2rem] border border-[#244a79] bg-[#274c7c] p-6 text-white shadow-card sm:p-8">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/72">
                 {language === "en" ? "Quick view" : "Aperçu rapide"}
               </p>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+              <div className="mt-4 flex items-end gap-2">
+                <p className="text-5xl font-black tracking-tight">
+                  {computation?.periods[0]?.totalDaysOff ?? 0}
+                </p>
+                <span className="pb-2 text-lg font-bold">{language === "en" ? "days" : "jours"}</span>
+              </div>
+              <p className="mt-3 max-w-sm text-base leading-7 text-white/80">
+                {language === "en"
+                  ? "Potential days off found in one window."
+                  : "Jours de repos potentiels trouvés sur une seule fenêtre."}
+              </p>
+              <div className="mt-6 space-y-0 text-sm leading-6">
                 <ResultSummaryStat
-                  label={language === "en" ? "Total days off" : "Jours de repos"}
-                  value={`${computation?.periods[0]?.totalDaysOff ?? 0}`}
-                />
-                <ResultSummaryStat
-                  label={language === "en" ? "Paid leave used" : "Congés payés utilisés"}
+                  label={language === "en" ? "Leave to book" : "Congé à poser"}
                   value={`${computation?.usedBudget ?? 0}`}
+                  dark
                 />
                 <ResultSummaryStat
                   label={language === "en" ? "Top score" : "Meilleur score"}
                   value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
+                  dark
+                />
+                <ResultSummaryStat
+                  label={language === "en" ? "Ranked options" : "Options classées"}
+                  value={`${computation?.periods.length ?? 0}`}
+                  dark
                 />
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   type="button"
                   onClick={() => shiftMonth(-1)}
-                  className="rounded-full border border-ink bg-white px-5 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                  className="rounded-full border border-white/15 bg-white/10 px-5 py-3 font-bold text-white transition hover:bg-white/15"
                 >
                   {language === "en" ? "Previous month" : "Mois précédent"}
                 </button>
                 <button
                   type="button"
                   onClick={() => shiftMonth(1)}
-                  className="rounded-full border border-ink bg-white px-5 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                  className="rounded-full border border-white/15 bg-white/10 px-5 py-3 font-bold text-white transition hover:bg-white/15"
                 >
                   {language === "en" ? "Next month" : "Mois suivant"}
                 </button>
               </div>
-              <p className="mt-4 text-sm leading-6 text-ink/72">
+              <p className="mt-4 text-sm leading-6 text-white/72">
                 {language === "en"
                   ? "Pick a month first. Refine only if you want different dates or a different budget."
                   : "Choisissez d’abord un mois. Affinez seulement si vous voulez d’autres dates ou un autre budget."}
@@ -994,11 +1005,31 @@ function LegendItem({ color, label }: { color: string; label: string }) {
   );
 }
 
-function ResultSummaryStat({ label, value }: { label: string; value: string }) {
+function ResultSummaryStat({
+  label,
+  value,
+  dark = false,
+}: {
+  label: string;
+  value: string;
+  dark?: boolean;
+}) {
   return (
-    <div className="rounded-[1.35rem] border border-line/80 bg-white p-4">
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">{label}</p>
-      <p className="mt-3 text-2xl font-black tracking-tight text-ink">{value}</p>
+    <div
+      className={`rounded-[1.35rem] border p-4 ${
+        dark ? "border-white/14 bg-white/8" : "border-line/80 bg-white"
+      }`}
+    >
+      <p
+        className={`text-xs font-bold uppercase tracking-[0.18em] ${
+          dark ? "text-white/68" : "text-slate-500"
+        }`}
+      >
+        {label}
+      </p>
+      <p className={`mt-3 text-2xl font-black tracking-tight ${dark ? "text-white" : "text-ink"}`}>
+        {value}
+      </p>
     </div>
   );
 }
