@@ -40,7 +40,7 @@ export function GenericGuidePage({
       />
       <ContentHero badge={badge} title={content.title} subtitle={content.subtitle} language={language} />
       <Reveal>
-        <section className="editorial-panel">
+        <section className="site-card p-6 sm:p-8">
           <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
               <p className="editorial-kicker">
@@ -52,13 +52,19 @@ export function GenericGuidePage({
                   : "Commencez par les exemples et les cas mis en avant. Dès qu’une situation ressemble à la vôtre, repassez dans le simulateur pour valider les dates exactes."}
               </p>
             </div>
-            <div className="rounded-4xl border border-line bg-paper p-6">
+            <div className="site-card-soft p-6">
               <p className="editorial-kicker">{language === "en" ? "Search intent" : "Intention de recherche"}</p>
               <p className="mt-4 text-base leading-7 text-ink/74">
                 {language === "en"
                   ? "These pages are meant to answer one concrete planning question fast. The planner remains the place where your budget, RTT and school-holiday settings actually decide."
                   : "Ces pages sont là pour répondre vite à une question concrète. Le simulateur reste l’endroit où votre budget, vos RTT et vos réglages vacances scolaires décident vraiment."}
               </p>
+              <Link
+                href={prefixForLanguage(routes.home, language)}
+                className="mt-5 inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+              >
+                {language === "en" ? "Open the planner now" : "Ouvrir le simulateur maintenant"}
+              </Link>
             </div>
           </div>
         </section>
@@ -72,7 +78,7 @@ export function GenericGuidePage({
         />
       ))}
       <Reveal>
-        <div className="editorial-panel">
+        <div className="site-card p-6 sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>
               <p className="editorial-kicker">
@@ -86,9 +92,9 @@ export function GenericGuidePage({
             </div>
             <Link
               href={prefixForLanguage(routes.home, language)}
-              className="rounded-full bg-coral px-6 py-3 text-lg font-bold text-white transition hover:-translate-y-0.5"
+              className="rounded-full bg-coral px-6 py-3 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-coral/90"
             >
-              {language === "en" ? "Use the planner" : "Utiliser le simulateur"}
+              {language === "en" ? "Open the planner now" : "Ouvrir le simulateur maintenant"}
             </Link>
           </div>
         </div>

@@ -9,5 +9,5 @@ export function ContentChip({
   value: LocalizedText;
   language: AppLanguage;
 }) {
-  return <span className="chip">{t(value, language)}</span>;
+  return <span className="chip rounded-full bg-white px-3 py-1.5 text-xs font-semibold">{t(value, language)}</span>;
 }

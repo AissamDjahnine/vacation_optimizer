@@ -149,7 +149,7 @@ export function ZoneLookupPanel({
           {result.matched && result.zone && actionHrefTemplate ? (
             <Link
               href={prefixForLanguage(actionHrefTemplate.replace("{zone}", result.zone), language)}
-              className="mt-4 inline-flex text-sm font-bold text-coral"
+              className="mt-4 inline-flex text-sm font-bold text-[#1f4471]"
             >
               {actionLabel ?? (language === "en" ? "Use this zone" : "Utiliser cette zone")}
             </Link>

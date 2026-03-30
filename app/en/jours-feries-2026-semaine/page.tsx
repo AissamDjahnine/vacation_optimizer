@@ -4,7 +4,7 @@ import { getHolidaysForYear } from "@/lib/page-data";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Public holidays 2026 on weekdays",
+  title: "Public holidays 2026 on weekdays: the best bridge opportunities",
   description: "The 2026 public holidays that fall on weekdays and create the best bridge opportunities.",
   path: "/jours-feries-2026-semaine",
   enPath: "/en/jours-feries-2026-semaine",

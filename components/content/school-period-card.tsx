@@ -10,7 +10,7 @@ export function SchoolPeriodCard({
   language: AppLanguage;
 }) {
   return (
-    <article className="rounded-4xl border border-line bg-white p-6 shadow-card">
+    <article className="site-card p-6">
       <div className="space-y-3">
         <p className="editorial-kicker">
           {language === "en" ? "School break" : "Période scolaire"}

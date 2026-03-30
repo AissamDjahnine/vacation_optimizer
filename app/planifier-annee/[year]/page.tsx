@@ -19,7 +19,7 @@ export async function generateMetadata({
     return buildNotFoundMetadata("fr");
   }
   return buildMetadata({
-    title: `Planifier ses congés ${year} sur l’année`,
+    title: `Planifier ses congés ${year} sur l’année : mois et ponts à tester`,
     description: `Construisez un plan annuel de ponts et de congés ${year}, répartissez votre budget et exportez vos meilleurs blocs.`,
     path: `/planifier-annee/${year}`,
     enPath: `/en/plan-year/${year}`,

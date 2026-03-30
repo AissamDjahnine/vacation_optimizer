@@ -81,15 +81,15 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
   const featuredGuides = guides.slice(0, 4);
 
   return (
-    <section className="rounded-[2.1rem] border border-line bg-white p-6 shadow-card sm:p-8">
+    <section className="site-card p-6 sm:p-8">
       <div className="space-y-3">
         <h2 className="text-3xl font-black tracking-tight text-ink">
-          {language === "en" ? "Useful guides" : "Guides utiles"}
+          {language === "en" ? "Useful guides for planning faster" : "Guides utiles pour planifier plus vite"}
         </h2>
         <p className="section-subtitle max-w-none">
           {language === "en"
-            ? "Start with these four pages, then open the wider guide hub only if you need more context."
-            : "Commencez par ces quatre pages, puis ouvrez le hub complet seulement si vous avez besoin de plus de contexte."}
+            ? "Start with these pages people actually search for, then use the planner when you are ready to decide."
+            : "Commencez par les pages que les gens recherchent vraiment, puis ouvrez le simulateur quand vous êtes prêt à décider."}
         </p>
       </div>
       <div className="mt-8 grid gap-4 xl:grid-cols-3">
@@ -104,7 +104,7 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
                 destination: guide.href,
               })
             }
-            className="flex h-full flex-col rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
+            className="flex h-full flex-col rounded-[1.7rem] border border-line/80 bg-slate-50/80 p-5 transition hover:-translate-y-1 hover:border-[#1f4471] hover:bg-white"
           >
             <p className="text-2xl font-black tracking-tight text-ink">
               {language === "en" ? guide.enTitle : guide.frTitle}
@@ -112,7 +112,7 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
             <p className="mt-4 flex-1 text-base leading-7 text-ink/70">
               {language === "en" ? guide.enBody : guide.frBody}
             </p>
-            <span className="mt-6 text-lg font-bold text-coral">
+            <span className="mt-6 text-lg font-bold text-[#1f4471]">
               {language === "en" ? "Open" : "Ouvrir"}
             </span>
           </a>
@@ -128,7 +128,7 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
               destination: routes.faq,
             })
           }
-          className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+          className="inline-flex items-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-[#1f4471] hover:text-[#1f4471]"
         >
           {language === "en" ? "Open the FAQ and more guides" : "Ouvrir la FAQ et plus de guides"}
         </a>

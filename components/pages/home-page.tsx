@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
-import { GuidesSection } from "@/components/pages/guides-section";
-import { HomeTrustStrip } from "@/components/pages/home-trust-strip";
+import { HomePromos } from "@/components/pages/home-promos";
 import type { AppLanguage } from "@/lib/i18n";
 
 const Planner = dynamic(
@@ -18,8 +17,7 @@ export function HomePage({
   return (
     <div className="container-shell space-y-8 py-12 sm:py-16">
       <Planner language={language} />
-      <HomeTrustStrip language={language} />
-      <GuidesSection language={language} />
+      <HomePromos language={language} />
     </div>
   );
 }

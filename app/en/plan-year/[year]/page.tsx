@@ -19,7 +19,7 @@ export async function generateMetadata({
     return buildNotFoundMetadata("en");
   }
   return buildMetadata({
-    title: `Plan your ${year} leave across the full year`,
+    title: `Plan your ${year} leave across the full year: months and bridge days to test`,
     description: `Build a yearly leave and bridge plan for ${year}, spread your budget, and export the best breaks.`,
     path: `/planifier-annee/${year}`,
     enPath: `/en/plan-year/${year}`,

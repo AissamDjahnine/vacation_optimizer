@@ -15,7 +15,7 @@ export function RelatedLinks({
 }) {
   return (
     <Reveal>
-      <section className="editorial-panel">
+      <section className="site-card p-6 sm:p-8">
         <p className="editorial-kicker">{language === "en" ? "Next step" : "Étape suivante"}</p>
         <h2 className="mt-3 text-2xl font-black tracking-tight text-ink">{title}</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -23,7 +23,7 @@ export function RelatedLinks({
             <Link
               key={link.href}
               href={prefixForLanguage(link.href, language)}
-              className="rounded-3xl border border-line bg-paper px-5 py-4 text-base font-semibold text-ink transition hover:-translate-y-0.5 hover:border-coral hover:bg-white hover:text-coral"
+              className="rounded-3xl border border-line bg-slate-50/70 px-5 py-4 text-base font-semibold text-ink transition hover:-translate-y-0.5 hover:border-[#1f4471] hover:bg-white hover:text-[#1f4471]"
             >
               {t(link.label, language)}
             </Link>

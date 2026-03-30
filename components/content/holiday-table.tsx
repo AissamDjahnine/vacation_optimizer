@@ -12,10 +12,10 @@ export function HolidayTable({
   showWeekendColumn?: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-4xl border border-line bg-white shadow-card">
-      <table className="min-w-full divide-y divide-line">
-        <thead className="bg-paper">
-          <tr className="text-left text-sm font-bold uppercase tracking-[0.18em] text-ink/56">
+    <div className="overflow-hidden rounded-[1.8rem] border border-line/80 bg-white shadow-sm">
+      <table className="min-w-full divide-y divide-line/70">
+        <thead className="bg-slate-50/80">
+          <tr className="text-left text-xs font-bold uppercase tracking-[0.2em] text-ink/54">
             <th className="px-5 py-4">{language === "en" ? "Date" : "Date"}</th>
             <th className="px-5 py-4">{language === "en" ? "Holiday" : "Jour férié"}</th>
             {showWeekendColumn ? (
@@ -23,7 +23,7 @@ export function HolidayTable({
             ) : null}
           </tr>
         </thead>
-        <tbody className="divide-y divide-line text-sm text-ink/78">
+        <tbody className="divide-y divide-line/70 text-sm text-ink/74">
           {holidays.map((holiday) => {
             const weekday = holiday.date.getDay();
             const workingPlacement =
@@ -36,7 +36,7 @@ export function HolidayTable({
                   : "Semaine";
 
             return (
-              <tr key={`${holiday.localName}-${holiday.date.toISOString()}`}>
+              <tr key={`${holiday.localName}-${holiday.date.toISOString()}`} className="transition hover:bg-slate-50/60">
                 <td className="px-5 py-4 font-semibold text-ink">
                   {formatFullDate(holiday.date, language)}
                 </td>

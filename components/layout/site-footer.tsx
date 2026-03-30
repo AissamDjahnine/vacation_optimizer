@@ -24,7 +24,7 @@ export function SiteFooter({
     germanyHost && germanyLocale === "en"
       ? {
           title: "Ponts Malins Germany",
-          summary: "Bridge days, public holidays and school holidays in Germany with visible official sources.",
+          summary: "Bridge days, public holidays and school holidays in Germany with clear official sources.",
           product: "Germany home",
           privacy: "No account and no stored personal planning data.",
           guides: "Useful entries",
@@ -96,12 +96,12 @@ export function SiteFooter({
         };
 
   return (
-    <footer className="mt-24 border-t border-slate-200 bg-[#1d2433] py-12 text-white">
+    <footer className="mt-24 border-t border-line/70 bg-white py-14 text-ink">
       <div className="container-shell space-y-8">
         {showTrustStrip ? (
-          <div className="grid gap-3 rounded-[1.75rem] border border-white/8 bg-white/[0.03] p-4 md:grid-cols-3">
-            <div className="rounded-[1.25rem] border border-white/8 bg-white/[0.04] p-4">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
+          <div className="grid gap-4 rounded-[1.75rem] border border-line/70 bg-slate-50/80 p-4 md:grid-cols-3">
+            <div className="rounded-[1.25rem] border border-line/70 bg-white p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/46">
                 {germanyHost
                   ? germanyLocale === "en"
                     ? "Public data"
@@ -110,111 +110,126 @@ export function SiteFooter({
                     ? "Public data"
                     : "Données publiques"}
               </p>
-              <p className="mt-3 text-sm leading-6 text-white/74">
+              <p className="mt-3 text-sm leading-6 text-ink/68">
                 {germanyHost
                   ? germanyLocale === "en"
                     ? "Public-holiday and school-holiday references are surfaced with clear official sourcing."
                     : "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
                   : language === "de"
-                  ? "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
-                  : language === "en"
-                  ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
-                  : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
+                    ? "Feiertage und Schulferien werden als nutzbare Orientierung mit klaren offiziellen Quellen aufbereitet."
+                    : language === "en"
+                      ? "Public holidays and school-calendar references are surfaced with product guidance, not hidden behind generic copy."
+                      : "Les jours fériés et le calendrier scolaire sont reliés à des repères produit utiles, pas noyés dans un texte générique."}
               </p>
             </div>
-            <div className="rounded-[1.25rem] border border-white/8 bg-white/[0.04] p-4">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-                {germanyHost ? (germanyLocale === "en" ? "No account" : "Ohne Konto") : language === "en" ? "No account" : "Sans compte"}
-              </p>
-              <p className="mt-3 text-sm leading-6 text-white/74">{copy.privacy}</p>
-            </div>
-            <div className="rounded-[1.25rem] border border-white/8 bg-white/[0.04] p-4">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/58">
-                {germanyHost ? (germanyLocale === "en" ? "Editorial framing" : "Offizielle Einordnung") : language === "en" ? "Calendar export" : "Export agenda"}
-              </p>
-              <p className="mt-3 text-sm leading-6 text-white/74">
+            <div className="rounded-[1.25rem] border border-line/70 bg-white p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/46">
                 {germanyHost
                   ? germanyLocale === "en"
-                    ? "The Germany pages are intentionally editorial first: context and official sources first, then the right next pages for each state."
+                    ? "No account"
+                    : "Ohne Konto"
+                  : language === "en"
+                    ? "No account"
+                    : "Sans compte"}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-ink/68">{copy.privacy}</p>
+            </div>
+            <div className="rounded-[1.25rem] border border-line/70 bg-white p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/46">
+                {germanyHost
+                  ? germanyLocale === "en"
+                    ? "Editorial framing"
+                    : "Offizielle Einordnung"
+                  : language === "en"
+                    ? "Calendar export"
+                    : "Export agenda"}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-ink/68">
+                {germanyHost
+                  ? germanyLocale === "en"
+                    ? "The Germany pages are editorial first: context and official sources first, then the next pages for each state."
                     : "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
                   : language === "de"
-                  ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
-                  : language === "en"
-                  ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
-                  : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
+                    ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
+                    : language === "en"
+                      ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
+                      : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
               </p>
             </div>
           </div>
         ) : null}
 
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-black">{copy.title}</h2>
-          <p className="max-w-sm text-sm leading-6 text-white/74">{copy.summary}</p>
-          <p className="max-w-sm text-sm leading-6 text-white/58">{copy.note}</p>
-        </div>
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
-            {germanyHost ? (germanyLocale === "en" ? "Product" : "Produkt") : language === "en" ? "Product" : "Produit"}
-          </h3>
-          <Link href={germanyHost ? germanyPath(deRoutes.home) : prefixForLanguage(routes.home, language)} className="block text-white/84 transition hover:text-white">
-            {copy.product}
-          </Link>
-          {!germanyHost ? (
+          <div className="space-y-4">
+            <p className="site-badge w-fit">{copy.product}</p>
+            <h2 className="text-2xl font-black tracking-tight text-ink">{copy.title}</h2>
+            <p className="max-w-sm text-sm leading-6 text-ink/68">{copy.summary}</p>
+            <p className="max-w-sm text-sm leading-6 text-ink/52">{copy.note}</p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-ink/46">
+              {germanyHost ? (germanyLocale === "en" ? "Product" : "Produkt") : language === "en" ? "Product" : "Produit"}
+            </h3>
             <Link
-              href={language === "en" ? "https://de.pontsmalins.com/en" : "https://de.pontsmalins.com/"}
-              target="_blank"
-              rel="noreferrer"
-              className="block text-white/84 transition hover:text-white"
+              href={germanyHost ? germanyPath(deRoutes.home) : prefixForLanguage(routes.home, language)}
+              className="block text-ink/74 transition hover:text-ink"
             >
-              {copy.international}
+              {copy.product}
             </Link>
-          ) : null}
-          <p className="text-white/64">{copy.privacy}</p>
-        </div>
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
-            {copy.guides}
-          </h3>
-          {copy.links.map((link) => (
+            {!germanyHost ? (
+              <Link
+                href={language === "en" ? "https://de.pontsmalins.com/en" : "https://de.pontsmalins.com/"}
+                target="_blank"
+                rel="noreferrer"
+                className="block text-ink/74 transition hover:text-ink"
+              >
+                {copy.international}
+              </Link>
+            ) : null}
+            <p className="text-ink/58">{copy.privacy}</p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-ink/46">{copy.guides}</h3>
+            {copy.links.map((link) => (
+              <Link
+                key={link.href}
+                href={germanyHost ? germanyPath(link.href) : prefixForLanguage(link.href, language)}
+                className="block text-ink/74 transition hover:text-ink"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-ink/46">{copy.trust}</h3>
             <Link
-              key={link.href}
-              href={germanyHost ? germanyPath(link.href) : prefixForLanguage(link.href, language)}
-              className="block text-white/84 transition hover:text-white"
+              href={germanyHost ? germanyPath(deRoutes.sources) : prefixForLanguage(routes.sources, language)}
+              className="block text-ink/74 transition hover:text-ink"
             >
-              {link.label}
+              {copy.sources}
             </Link>
-          ))}
+            <Link
+              href={germanyHost ? germanyPath(deRoutes.legal) : prefixForLanguage(routes.legal, language)}
+              className="block text-ink/74 transition hover:text-ink"
+            >
+              {copy.legal}
+            </Link>
+            <Link
+              href={germanyHost ? germanyPath(deRoutes.privacy) : prefixForLanguage(routes.privacy, language)}
+              className="block text-ink/74 transition hover:text-ink"
+            >
+              {copy.privacyPage}
+            </Link>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-ink/46">Contact</h3>
+            <ProtectedEmailLink
+              user="contact"
+              domain="pontsmalins.com"
+              className="text-ink/74 transition hover:text-ink"
+            />
+          </div>
         </div>
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">
-            {copy.trust}
-          </h3>
-          <Link
-            href={germanyHost ? germanyPath(deRoutes.sources) : prefixForLanguage(routes.sources, language)}
-            className="block text-white/84 transition hover:text-white"
-          >
-            {copy.sources}
-          </Link>
-          <Link href={germanyHost ? germanyPath(deRoutes.legal) : prefixForLanguage(routes.legal, language)} className="block text-white/84 transition hover:text-white">
-            {copy.legal}
-          </Link>
-          <Link
-            href={germanyHost ? germanyPath(deRoutes.privacy) : prefixForLanguage(routes.privacy, language)}
-            className="block text-white/84 transition hover:text-white"
-          >
-            {copy.privacyPage}
-          </Link>
-        </div>
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-white/64">Contact</h3>
-          <ProtectedEmailLink
-            user="contact"
-            domain="pontsmalins.com"
-            className="text-white/84 transition hover:text-white"
-          />
-        </div>
-      </div>
       </div>
     </footer>
   );

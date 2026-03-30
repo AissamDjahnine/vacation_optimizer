@@ -42,38 +42,38 @@ const pages = [
 ];
 
 const lastModifiedByPath: Partial<Record<string, string>> = {
-  [routes.home]: "2026-03-15T18:00:00.000Z",
-  [routes.annualPlannerYear(2026)]: "2026-03-15T18:10:00.000Z",
-  [routes.annualPlannerYear(2027)]: "2026-03-15T18:10:00.000Z",
-  [routes.annualPlannerYear(2028)]: "2026-03-15T18:10:00.000Z",
-  [routes.annualPlannerYear(2029)]: "2026-03-15T18:10:00.000Z",
-  [routes.bridgesYear(2026)]: "2026-03-15T18:15:00.000Z",
-  [routes.bridgesYear(2027)]: "2026-03-15T18:15:00.000Z",
-  [routes.bridgesYear(2028)]: "2026-03-15T18:15:00.000Z",
-  [routes.bridgesYear(2029)]: "2026-03-15T18:15:00.000Z",
-  [routes.holidaysYear(2026)]: "2026-03-15T18:18:00.000Z",
-  [routes.holidaysYear(2027)]: "2026-03-15T18:18:00.000Z",
-  [routes.holidaysYear(2028)]: "2026-03-15T18:18:00.000Z",
-  [routes.holidaysYear(2029)]: "2026-03-15T18:18:00.000Z",
-  [routes.schoolHolidaysBridgesYear(2026)]: "2026-03-15T18:22:00.000Z",
-  [routes.schoolHolidaysBridgesYear(2027)]: "2026-03-15T18:22:00.000Z",
-  [routes.schoolHolidaysBridgesYear(2028)]: "2026-03-15T18:22:00.000Z",
-  [routes.schoolHolidaysBridgesYear(2029)]: "2026-03-15T18:22:00.000Z",
-  [routes.faq]: "2026-03-15T18:20:00.000Z",
-  [routes.leaveGuide2026]: "2026-03-15T18:40:00.000Z",
-  [routes.schoolHolidaysFamily2026]: "2026-03-15T18:30:00.000Z",
-  [routes.weekdayHolidays2026]: "2026-03-15T18:35:00.000Z",
-  [routes.schoolHolidaysZone2026("A")]: "2026-03-15T18:35:00.000Z",
-  [routes.schoolHolidaysZone2026("B")]: "2026-03-15T18:35:00.000Z",
-  [routes.schoolHolidaysZone2026("C")]: "2026-03-15T18:35:00.000Z",
-  [routes.leaveBudget5Guide2026]: "2026-03-15T18:45:00.000Z",
-  [routes.leaveBudget10Guide2026]: "2026-03-15T18:45:00.000Z",
-  [routes.ascension2026]: "2026-03-15T18:50:00.000Z",
-  [routes.mayBridges2026]: "2026-03-15T18:50:00.000Z",
-  [routes.assumption2026]: "2026-03-15T18:50:00.000Z",
-  [routes.allSaints2026]: "2026-03-15T18:50:00.000Z",
-  [routes.armistice2026]: "2026-03-15T18:50:00.000Z",
-  [routes.yearEnd2026]: "2026-03-15T18:50:00.000Z",
+  [routes.home]: "2026-03-30T12:00:00.000Z",
+  [routes.annualPlannerYear(2026)]: "2026-03-30T12:00:00.000Z",
+  [routes.annualPlannerYear(2027)]: "2026-03-30T12:00:00.000Z",
+  [routes.annualPlannerYear(2028)]: "2026-03-30T12:00:00.000Z",
+  [routes.annualPlannerYear(2029)]: "2026-03-30T12:00:00.000Z",
+  [routes.bridgesYear(2026)]: "2026-03-30T12:00:00.000Z",
+  [routes.bridgesYear(2027)]: "2026-03-30T12:00:00.000Z",
+  [routes.bridgesYear(2028)]: "2026-03-30T12:00:00.000Z",
+  [routes.bridgesYear(2029)]: "2026-03-30T12:00:00.000Z",
+  [routes.holidaysYear(2026)]: "2026-03-30T12:00:00.000Z",
+  [routes.holidaysYear(2027)]: "2026-03-30T12:00:00.000Z",
+  [routes.holidaysYear(2028)]: "2026-03-30T12:00:00.000Z",
+  [routes.holidaysYear(2029)]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysBridgesYear(2026)]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysBridgesYear(2027)]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysBridgesYear(2028)]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysBridgesYear(2029)]: "2026-03-30T12:00:00.000Z",
+  [routes.faq]: "2026-03-30T12:00:00.000Z",
+  [routes.leaveGuide2026]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysFamily2026]: "2026-03-30T12:00:00.000Z",
+  [routes.weekdayHolidays2026]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysZone2026("A")]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysZone2026("B")]: "2026-03-30T12:00:00.000Z",
+  [routes.schoolHolidaysZone2026("C")]: "2026-03-30T12:00:00.000Z",
+  [routes.leaveBudget5Guide2026]: "2026-03-30T12:00:00.000Z",
+  [routes.leaveBudget10Guide2026]: "2026-03-30T12:00:00.000Z",
+  [routes.ascension2026]: "2026-03-30T12:00:00.000Z",
+  [routes.mayBridges2026]: "2026-03-30T12:00:00.000Z",
+  [routes.assumption2026]: "2026-03-30T12:00:00.000Z",
+  [routes.allSaints2026]: "2026-03-30T12:00:00.000Z",
+  [routes.armistice2026]: "2026-03-30T12:00:00.000Z",
+  [routes.yearEnd2026]: "2026-03-30T12:00:00.000Z",
 };
 
 function getPriority(path: string): number {
@@ -121,7 +121,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const frUrl = `${baseUrl}${path}`;
     const enPath = prefixForLanguage(path, "en");
     const enUrl = `${baseUrl}${enPath}`;
-    const lastModified = new Date(lastModifiedByPath[path] ?? "2026-03-15T17:20:14.401Z");
+    const lastModified = new Date(lastModifiedByPath[path] ?? "2026-03-30T12:00:00.000Z");
     const priority = getPriority(path);
     const changeFrequency = getChangeFrequency(path);
 

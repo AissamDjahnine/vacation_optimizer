@@ -17,8 +17,8 @@ export function Breadcrumbs({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <nav aria-label="Breadcrumb" className="editorial-panel !py-4">
-        <ol className="flex flex-wrap items-center gap-2 text-sm text-ink/62">
+      <nav aria-label="Breadcrumb" className="site-card !py-4 px-5">
+        <ol className="flex flex-wrap items-center gap-2 text-sm text-ink/60">
           {items.map((item, index) => {
             const isLast = index === items.length - 1;
             return (
@@ -26,7 +26,7 @@ export function Breadcrumbs({
                 {isLast ? (
                   <span className="font-semibold text-ink">{item.name}</span>
                 ) : (
-                  <Link href={item.url} className="transition hover:text-coral">
+                  <Link href={item.url} className="transition hover:text-ink">
                     {item.name}
                   </Link>
                 )}

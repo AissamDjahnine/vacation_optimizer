@@ -14,7 +14,7 @@ import type {
   SchoolHolidayPreference,
 } from "@/lib/domain/types";
 import { plannerYears } from "@/lib/constants";
-import { formatMonthYear } from "@/lib/formatting";
+import { formatMonthYear, formatShortRange } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
 import { prefixForLanguage } from "@/lib/i18n";
 import {
@@ -26,8 +26,11 @@ import {
 import { plannerConfigFromUrlSearchParams } from "@/lib/search-params";
 import { routes } from "@/lib/routes";
 import { Reveal } from "@/components/motion/reveal";
+import { GoogleCalendarButton } from "@/components/planner/google-calendar-button";
+import { IcsExportButton } from "@/components/planner/ics-export-button";
 import { ResultCard } from "@/components/planner/result-card";
 import { SkeletonCard } from "@/components/planner/skeleton-card";
+import { buildGoogleCalendarUrl, buildPeriodCalendarBundle } from "@/lib/calendar-export";
 import { trackEvent } from "@/lib/analytics";
 
 const holidayCache = new Map<number, Holiday[]>();
@@ -55,7 +58,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const [loading, setLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
   const [visibleResultCount, setVisibleResultCount] = useState(5);
-  const [showMobileAdvancedSettings, setShowMobileAdvancedSettings] = useState(false);
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const resultsRef = useRef<HTMLElement | null>(null);
   const lastTrackedResultsKeyRef = useRef<string | null>(null);
 
@@ -84,10 +87,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const zoneSelectionLocked = state.schoolHolidayPreference === "avoid";
 
   useEffect(() => {
-    if (!hasSearchedOnce) {
-      return;
-    }
-
     let cancelled = false;
 
     async function loadData() {
@@ -176,7 +175,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     return () => {
       cancelled = true;
     };
-  }, [hasSearchedOnce, safeYear, state.schoolZone]);
+  }, [safeYear, state.schoolZone]);
 
   const computation = useMemo(() => {
     if (!hasSearchedOnce || !dataReady || holidays.length === 0) {
@@ -222,7 +221,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
     const periods = exactResults.length > 0 ? exactResults : fallbackResults;
     const exact = exactResults.length > 0;
-    const usedBudget = periods.reduce((sum, period) => sum + period.paidLeaveDaysUsed, 0);
+    const usedBudget = periods[0]?.paidLeaveDaysUsed ?? 0;
 
     return {
       exact,
@@ -232,6 +231,66 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   }, [
     dataReady,
     hasSearchedOnce,
+    holidays,
+    safeMonth,
+    safeMonthlyRtt,
+    safePaidLeaveBudget,
+    safeYear,
+    schoolHolidayPeriods,
+    state.allowSchoolHolidayOverlap,
+    state.mode,
+    state.schoolHolidayPreference,
+  ]);
+
+  const primaryPeriod = computation?.periods[0];
+  const primaryBundle = primaryPeriod
+    ? buildPeriodCalendarBundle({
+        period: primaryPeriod,
+        language,
+        year: safeYear,
+      })
+    : null;
+  const primaryGoogleCalendarUrl = primaryBundle
+    ? buildGoogleCalendarUrl(primaryBundle.events[0])
+    : null;
+  const previewPeriods = computation?.periods.slice(0, 3) ?? [];
+
+  const previewComputation = useMemo(() => {
+    if (!dataReady || holidays.length === 0) {
+      return null;
+    }
+
+    const periods =
+      state.mode === "distributed"
+        ? DateOptimizer.findBestDistributedPeriods({
+            holidays,
+            vacationDaysToUse: safePaidLeaveBudget,
+            availableRttDays: safeMonthlyRtt,
+            year: safeYear,
+            month: safeMonth,
+            schoolHolidayPeriods,
+            schoolHolidayPreference: state.schoolHolidayPreference,
+            allowSchoolHolidayOverlap: state.allowSchoolHolidayOverlap,
+          })
+        : DateOptimizer.findFlexiblePeriods({
+            holidays,
+            vacationDaysToUse: safePaidLeaveBudget,
+            availableRttDays: safeMonthlyRtt,
+            year: safeYear,
+            month: safeMonth,
+            schoolHolidayPeriods,
+            schoolHolidayPreference: state.schoolHolidayPreference,
+            allowSchoolHolidayOverlap: state.allowSchoolHolidayOverlap,
+          });
+
+    if (state.mode === "distributed") {
+      const total = periods.reduce((sum, p) => sum + p.totalDaysOff, 0);
+      return total > 0 ? { totalDaysOff: total } : null;
+    }
+
+    return periods[0] ?? null;
+  }, [
+    dataReady,
     holidays,
     safeMonth,
     safeMonthlyRtt,
@@ -263,6 +322,22 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       allow_school_holiday_overlap: state.allowSchoolHolidayOverlap,
     });
     setHasSearchedOnce(true);
+    setVisibleResultCount(5);
+  };
+
+  const shiftResultMonth = (delta: number) => {
+    setState((current) => {
+      const nextDate = new Date(current.year, current.month - 1 + delta, 1);
+      if (!plannerYears.includes(nextDate.getFullYear())) {
+        return current;
+      }
+
+      return {
+        ...current,
+        year: nextDate.getFullYear(),
+        month: nextDate.getMonth() + 1,
+      };
+    });
     setVisibleResultCount(5);
   };
 
@@ -342,19 +417,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
   const visiblePeriods = computation ? computation.periods.slice(0, visibleResultCount) : [];
   const hasHiddenPeriods = computation ? computation.periods.length > visibleResultCount : false;
-  const selectedSchoolHolidayPreferenceLabel =
-    state.schoolHolidayPreference === "favor"
-      ? language === "en"
-        ? "Favor"
-        : "Favoriser"
-      : state.schoolHolidayPreference === "avoid"
-        ? language === "en"
-          ? "Avoid"
-          : "Éviter"
-        : language === "en"
-          ? "Neutral"
-          : "Neutre";
-
   const shiftMonth = (direction: -1 | 1) => {
     setState((current) => {
       const currentYear = plannerYears.includes(current.year) ? current.year : defaultPlannerState.year;
@@ -377,419 +439,573 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   return (
     <div className="space-y-8">
       <Reveal>
-        <section className="space-y-5 text-center">
-          <h2 className="text-5xl font-black tracking-tight text-ink sm:text-6xl">
-            {language === "en"
-              ? "French leave planner and bridge ideas"
-              : "Simulateur de ponts et congés 2026"}
-          </h2>
-          <p id={plannerIntroId} className="mx-auto max-w-3xl max-w-[44rem] text-lg leading-8 text-ink/80">
-            {language === "en"
-              ? "Pick a month, your leave budget, and compare the bridge ideas that give you the most days off."
-              : "Choisissez un mois, un budget, puis regardez quelles dates vous donnent le plus de jours de repos."}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href={prefixForLanguage(routes.annualPlannerYear(safeYear), language)}
-              onClick={() =>
-                trackEvent("annual_plan_click", {
-                  language,
-                  source: "planner_hero",
-                  year: safeYear,
-                })
-              }
-              className="rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-            >
-              {language === "en" ? "Plan the full year" : "Planifier toute l’année"}
-            </Link>
+        <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr] xl:items-stretch">
+          <div className="space-y-5 rounded-[2.2rem] border border-line bg-white p-6 sm:p-8">
+            <div className="max-w-4xl space-y-5">
+              <h2 className="max-w-3xl text-5xl font-black tracking-tight text-ink sm:text-6xl">
+                {language === "en"
+                  ? "Find the best bridge days for your leave budget"
+                  : "Simulateur de ponts et congés 2026"}
+              </h2>
+              <p id={plannerIntroId} className="max-w-[44rem] text-lg leading-8 text-ink/80">
+                {language === "en"
+                  ? "Pick a month, your leave budget, and see the bridge ideas that give you the most days off first."
+                  : "Choisissez un mois, un budget, puis voyez d’abord les ponts qui vous donnent le plus de jours de repos."}
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href={prefixForLanguage(routes.annualPlannerYear(safeYear), language)}
+                  onClick={() =>
+                    trackEvent("annual_plan_click", {
+                      language,
+                      source: "planner_hero",
+                      year: safeYear,
+                    })
+                  }
+                  className="rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+                >
+                  {language === "en" ? "See the yearly plan" : "Voir le plan annuel"}
+                </Link>
+                <span className="rounded-full border border-line bg-white px-5 py-3 text-sm font-semibold text-ink/72">
+                  {language === "en"
+                    ? "No account, official dates, exportable results"
+                    : "Pas de compte, dates officielles, résultats exportables"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[2.2rem] border border-[#4f6e8f] bg-[#5f7f9b] p-6 text-white shadow-card sm:p-8">
+            <div className="flex h-full flex-col justify-between gap-8">
+              <div className="space-y-4">
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10">
+                  <span className="text-lg">✦</span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/72">
+                    {language === "en" ? "Quick result" : "Aperçu rapide"}
+                  </p>
+                  <p className="mt-4 text-5xl font-black tracking-tight text-white">
+                    {dataReady && previewComputation ? `${previewComputation.totalDaysOff}` : "—"}{" "}
+                    {language === "en" ? "Days" : "Jours"}
+                  </p>
+                  <p className="mt-3 max-w-sm text-base leading-7 text-white/80">
+                    {dataReady && previewComputation
+                      ? language === "en"
+                        ? `Total potential days off found for ${formatMonthYear(safeMonth, safeYear, language)}.`
+                        : `Jours de repos potentiels trouvés pour ${formatMonthYear(safeMonth, safeYear, language)}.`
+                      : language === "en"
+                        ? "Loading the first useful preview."
+                        : "Chargement du premier aperçu utile."}
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={submit}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-coral px-6 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-coral/90"
+                >
+                  {language === "en" ? "Get my best bridges" : "Voir mes meilleurs ponts"}
+                </button>
+                <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                  {language === "en"
+                    ? "Powered by official public dates"
+                    : "Alimenté par les dates officielles"}
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </Reveal>
 
       <Reveal>
-        <section className="glass-panel rounded-[2.2rem] p-5 sm:p-8">
-          <div className="grid gap-6 xl:grid-cols-[1fr_auto]">
-            <div className="space-y-6">
-              <div className="flex justify-center">
-                <div className="inline-flex rounded-full border border-ink bg-white p-1">
-                  <ModeButton
-                    active={state.mode === "single"}
-                    onClick={() => setState((current) => ({ ...current, mode: "single" }))}
-                    label={language === "en" ? "Long bridge" : "Gros pont"}
-                  />
-                  <ModeButton
-                    active={state.mode === "distributed"}
-                    onClick={() => setState((current) => ({ ...current, mode: "distributed" }))}
-                    label={language === "en" ? "Multiple bridges" : "Plusieurs ponts"}
-                  />
-                </div>
-              </div>
-
-              <div className="rounded-4xl border border-line bg-white p-5">
-                <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr_1fr] xl:items-start">
-                  <Field label={language === "en" ? "Year" : "Année"}>
-                    <select
-                      aria-label={language === "en" ? "Select year" : "Choisir l’année"}
-                      value={safeYear}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          year: Number(event.target.value),
-                        }))
-                      }
-                      className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                    >
-                      {plannerYears.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                  <Field label={language === "en" ? "Month" : "Mois"}>
-                    <select
-                      aria-label={language === "en" ? "Select month" : "Choisir le mois"}
-                      value={safeMonth}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          month: Number(event.target.value),
-                        }))
-                      }
-                      className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                    >
-                      {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
-                        <option key={month} value={month}>
-                          {formatMonthYear(month, safeYear, language)}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                </div>
-
-                <div className="mt-4 rounded-3xl border border-dashed border-line bg-paper/70 p-4 md:hidden">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="chip">Zone {state.schoolZone}</span>
-                    <span className="chip">RTT {safeMonthlyRtt}</span>
-                    <span className="chip">
-                      {language === "en" ? "School holidays" : "Vacances scolaires"}:{" "}
-                      {selectedSchoolHolidayPreferenceLabel}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowMobileAdvancedSettings((current) => !current)}
-                    className="mt-4 inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-                  >
-                    {showMobileAdvancedSettings
-                      ? language === "en"
-                        ? "Hide advanced settings"
-                        : "Masquer les réglages avancés"
-                      : language === "en"
-                        ? "Show advanced settings"
-                        : "Afficher les réglages avancés"}
-                  </button>
-                </div>
-
-                <div className={`${showMobileAdvancedSettings ? "mt-5 block" : "mt-5 hidden"} md:mt-5 md:block`}>
-                  <ZoneLookupPanel
-                    language={language}
-                    disabled={zoneSelectionLocked}
-                    onZoneResolved={(zone) =>
-                      setState((current) => ({
-                        ...current,
-                        schoolZone: zone,
-                      }))
-                    }
-                    title={
-                      language === "en"
-                        ? "Don't know your zone yet?"
-                        : "Vous ne connaissez pas encore votre zone ?"
-                    }
-                    subtitle={
-                      language === "en"
-                        ? "A department code, department name, or academy is enough. The planner will keep the manual A/B/C toggle afterwards."
-                        : "Un numéro de département, un nom de département ou une académie suffit. Le simulateur garde ensuite le réglage manuel A/B/C."
-                    }
-                    className="mb-5 bg-paper shadow-none"
-                  />
-
-                  <div className="grid gap-4 xl:grid-cols-[1fr_auto_1.25fr] xl:items-start">
-                    <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
-                      <select
-                        aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
-                        value={safeMonthlyRtt}
-                        onChange={(event) =>
-                          setState((current) => ({
-                            ...current,
-                            monthlyRtt: Number(event.target.value),
-                          }))
-                        }
-                        className="h-12 w-full rounded-2xl border border-line bg-paper px-4 font-semibold text-ink"
-                      >
-                        {[0, 1, 2, 3].map((value) => (
-                          <option key={value} value={value}>
-                            {value === 0
-                              ? language === "en"
-                                ? "No RTT"
-                                : "Sans RTT"
-                              : language === "en"
-                                ? `${value} RTT day${value > 1 ? "s" : ""}`
-                                : `${value} RTT par mois`}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field
-                      label={
-                        language === "en" ? "French school zone (A, B or C)" : "Zone scolaire"
-                      }
-                    >
-                      <div
-                        aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
-                        role="group"
-                        className={`inline-flex rounded-full border border-ink bg-white p-1 ${
-                          zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
-                        }`}
-                      >
-                        {(["A", "B", "C"] as const).map((zone) => (
-                          <ModeButton
-                            key={zone}
-                            active={state.schoolZone === zone}
-                            disabled={zoneSelectionLocked}
-                            onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
-                            label={zone}
-                          />
-                        ))}
-                      </div>
-                    </Field>
-                    <Field label={language === "en" ? "School holidays" : "Vacances scolaires"}>
-                      <div
-                        aria-label={
-                          language === "en"
-                            ? "Choose school holiday preference"
-                            : "Choisir la préférence vacances scolaires"
-                        }
-                        role="group"
-                        className="grid w-full grid-cols-3 rounded-full border border-ink bg-white p-1"
-                      >
-                        {[
-                          { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
-                          { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
-                          { value: "avoid" as const, label: language === "en" ? "Avoid" : "Éviter" },
-                        ].map((item) => (
-                          <ModeButton
-                            key={item.value}
-                            active={state.schoolHolidayPreference === item.value}
-                            onClick={() => updateSchoolPreference(item.value)}
-                            label={item.label}
-                            className="w-full px-2"
-                          />
-                        ))}
-                      </div>
-                    </Field>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setState((current) =>
-                        current.schoolHolidayPreference === "avoid"
-                          ? current
-                          : {
-                              ...current,
-                              allowSchoolHolidayOverlap: !current.allowSchoolHolidayOverlap,
-                            },
-                      )
-                    }
-                    disabled={state.schoolHolidayPreference === "avoid"}
-                    className={`mt-4 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition ${
-                      state.schoolHolidayPreference === "avoid"
-                        ? "cursor-not-allowed border border-line bg-paper text-ink/40"
-                        : state.allowSchoolHolidayOverlap
-                          ? "bg-ink text-white"
-                          : "border border-line bg-white text-ink"
-                    }`}
-                  >
-                    {state.allowSchoolHolidayOverlap ? "✓ " : ""}
-                    {language === "en"
-                      ? "Allow overlap with school holidays"
-                      : "Autoriser le chevauchement avec les vacances scolaires"}
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-4xl border border-line bg-white p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-lg font-bold text-ink">
-                      {language === "en" ? "Paid leave budget" : "Budget de congés payés"}
-                    </p>
-                    <p className="mt-3 text-4xl font-black tracking-tight text-ink">
-                      {safePaidLeaveBudget}{" "}
-                      {language === "en"
-                        ? `day${safePaidLeaveBudget > 1 ? "s" : ""} available`
-                        : `jour${safePaidLeaveBudget > 1 ? "s" : ""} disponible${safePaidLeaveBudget > 1 ? "s" : ""}`}
-                    </p>
-                    <p className="mt-3 text-sm leading-7 text-ink/82">
-                      {language === "en"
-                        ? "Maximum number of working days to book. RTT is used first when enabled."
-                        : "Maximum de jours ouvrés à poser. Les RTT, si activés, sont utilisés avant."}
-                    </p>
-                  </div>
-                  <div className="rounded-full border border-line bg-paper px-4 py-2 text-lg font-bold text-ink">
-                    {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
-                  </div>
-                </div>
-                <div className="mt-5 flex justify-end">
-                  <label className="flex items-center gap-3 text-sm font-semibold text-ink/82">
-                    <span>{language === "en" ? "Direct input" : "Saisie directe"}</span>
-                    <input
-                      type="number"
-                      min={1}
-                      max={20}
-                      value={safePaidLeaveBudget}
-                      onChange={(event) =>
-                        setState((current) => ({
-                          ...current,
-                          paidLeaveBudget: Math.max(
-                            1,
-                            Math.min(20, Number.parseInt(event.target.value || "1", 10)),
-                          ),
-                        }))
-                      }
-                      className="h-11 w-24 rounded-2xl border border-line bg-paper px-3 text-center font-bold text-ink"
-                    />
-                  </label>
-                </div>
-                <input
-                  aria-label={
-                    language === "en" ? "Paid leave budget slider" : "Curseur du budget de congés payés"
-                  }
-                  type="range"
-                  min={1}
-                  max={20}
-                  value={safePaidLeaveBudget}
+        <section className="site-card p-5 sm:p-8">
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <Field label={language === "en" ? "Year" : "Année"}>
+                <select
+                  aria-label={language === "en" ? "Select year" : "Choisir l’année"}
+                  value={safeYear}
                   onChange={(event) =>
                     setState((current) => ({
                       ...current,
-                      paidLeaveBudget: Number(event.target.value),
+                      year: Number(event.target.value),
                     }))
                   }
-                  className="mt-8 h-2 w-full accent-coral"
+                  className="h-12 w-full rounded-2xl border border-line bg-slate-50 px-4 font-semibold text-ink"
+                >
+                  {plannerYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label={language === "en" ? "Month" : "Mois"}>
+                <select
+                  aria-label={language === "en" ? "Select month" : "Choisir le mois"}
+                  value={safeMonth}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      month: Number(event.target.value),
+                    }))
+                  }
+                  className="h-12 w-full rounded-2xl border border-line bg-slate-50 px-4 font-semibold text-ink"
+                >
+                  {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
+                    <option key={month} value={month}>
+                      {formatMonthYear(month, safeYear, language)}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label={language === "en" ? "Monthly RTT" : "RTT mensuel"}>
+                <select
+                  aria-label={language === "en" ? "Select monthly RTT" : "Choisir le RTT mensuel"}
+                  value={safeMonthlyRtt}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      monthlyRtt: Number(event.target.value),
+                    }))
+                  }
+                  className="h-12 w-full rounded-2xl border border-line bg-slate-50 px-4 font-semibold text-ink"
+                >
+                  {[0, 1, 2, 3].map((value) => (
+                    <option key={value} value={value}>
+                      {value === 0
+                        ? language === "en"
+                          ? "No RTT"
+                          : "Sans RTT"
+                        : language === "en"
+                          ? `${value} RTT day${value > 1 ? "s" : ""}`
+                          : `${value} RTT par mois`}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <div className="inline-flex rounded-full border border-line bg-white p-1">
+                <ModeButton
+                  active={state.mode === "single"}
+                  onClick={() => setState((current) => ({ ...current, mode: "single" }))}
+                  label={language === "en" ? "Long bridge" : "Gros pont"}
+                />
+                <ModeButton
+                  active={state.mode === "distributed"}
+                  onClick={() => setState((current) => ({ ...current, mode: "distributed" }))}
+                  label={language === "en" ? "Multiple bridges" : "Plusieurs ponts"}
                 />
               </div>
+            </div>
 
-              <div className="flex justify-center">
+            <div className="site-card p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-lg font-bold text-ink">
+                    {language === "en" ? "Paid leave budget" : "Budget de congés payés"}
+                  </p>
+                  <p className="mt-3 text-4xl font-black tracking-tight text-ink">
+                    {safePaidLeaveBudget}{" "}
+                    {language === "en"
+                      ? `day${safePaidLeaveBudget > 1 ? "s" : ""} available`
+                      : `jour${safePaidLeaveBudget > 1 ? "s" : ""} disponible${safePaidLeaveBudget > 1 ? "s" : ""}`}
+                  </p>
+                  <p className="mt-3 text-sm leading-7 text-ink/82">
+                    {language === "en"
+                      ? "Maximum number of working days to book. RTT is used first when enabled."
+                      : "Maximum de jours ouvrés à poser. Les RTT, si activés, sont utilisés avant."}
+                  </p>
+                </div>
+                <div className="rounded-full border border-line bg-paper px-4 py-2 text-lg font-bold text-ink">
+                  {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
+                </div>
+              </div>
+              <div className="mt-5 flex justify-end">
+                <label className="flex items-center gap-3 text-sm font-semibold text-ink/82">
+                  <span>{language === "en" ? "Direct input" : "Saisie directe"}</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={safePaidLeaveBudget}
+                    onChange={(event) =>
+                      setState((current) => ({
+                        ...current,
+                        paidLeaveBudget: Math.max(
+                          1,
+                          Math.min(20, Number.parseInt(event.target.value || "1", 10)),
+                        ),
+                      }))
+                    }
+                    className="h-11 w-24 rounded-2xl border border-line bg-paper px-3 text-center font-bold text-ink"
+                  />
+                </label>
+              </div>
+              <input
+                aria-label={
+                  language === "en" ? "Paid leave budget slider" : "Curseur du budget de congés payés"
+                }
+                type="range"
+                min={1}
+                max={20}
+                value={safePaidLeaveBudget}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    paidLeaveBudget: Number(event.target.value),
+                  }))
+                }
+                className="mt-8 h-2 w-full accent-coral"
+              />
+              <div className="mt-8 flex justify-center">
                 <button
                   type="button"
                   onClick={submit}
-                  className="rounded-full bg-coral px-10 py-4 text-lg font-bold text-white shadow-card transition hover:-translate-y-0.5 hover:shadow-soft"
+                  className="rounded-full bg-coral px-10 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-coral/90"
                 >
                   {language === "en" ? "Calculate my best bridges" : "Calculer mes meilleurs ponts"}
                 </button>
               </div>
             </div>
+
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAdvancedOptions((current) => !current)}
+                aria-expanded={showAdvancedOptions}
+                className="rounded-full border border-line bg-white px-6 py-3 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
+              >
+                {showAdvancedOptions
+                  ? language === "en"
+                    ? "Hide advanced options"
+                    : "Masquer les options avancées"
+                  : language === "en"
+                    ? "Show advanced options"
+                    : "Afficher les options avancées"}
+              </button>
+            </div>
+
+            {showAdvancedOptions ? (
+              <div className="space-y-5 rounded-[1.8rem] border border-line/80 bg-slate-50/70 p-5">
+                <ZoneLookupPanel
+                  language={language}
+                  disabled={zoneSelectionLocked}
+                  onZoneResolved={(zone) =>
+                    setState((current) => ({
+                      ...current,
+                      schoolZone: zone,
+                    }))
+                  }
+                  title={
+                    language === "en"
+                      ? "Don't know your zone yet?"
+                      : "Vous ne connaissez pas encore votre zone ?"
+                  }
+                  subtitle={
+                    language === "en"
+                      ? "A department code, department name, or academy is enough."
+                      : "Un numéro de département, un nom de département ou une académie suffit."
+                  }
+                  className="bg-white shadow-none"
+                />
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-ink/72">
+                      {language === "en" ? "School holidays" : "Vacances scolaires"}
+                    </p>
+                    <div
+                      aria-label={
+                        language === "en"
+                          ? "Choose school holiday preference"
+                          : "Choisir la préférence vacances scolaires"
+                      }
+                      role="group"
+                      className="grid w-full grid-cols-3 rounded-full border border-line bg-white p-1"
+                    >
+                      {[
+                        { value: "neutral" as const, label: language === "en" ? "Neutral" : "Neutre" },
+                        { value: "favor" as const, label: language === "en" ? "Favor" : "Favoriser" },
+                        { value: "avoid" as const, label: language === "en" ? "Avoid" : "Éviter" },
+                      ].map((item) => (
+                        <ModeButton
+                          key={item.value}
+                          active={state.schoolHolidayPreference === item.value}
+                          onClick={() => updateSchoolPreference(item.value)}
+                          label={item.label}
+                          className="w-full px-2"
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-ink/72">
+                      {language === "en" ? "Overlap rule" : "Chevauchement"}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setState((current) =>
+                          current.schoolHolidayPreference === "avoid"
+                            ? current
+                            : {
+                                ...current,
+                                allowSchoolHolidayOverlap: !current.allowSchoolHolidayOverlap,
+                              },
+                        )
+                      }
+                      disabled={state.schoolHolidayPreference === "avoid"}
+                      aria-label={language === "en" ? "Overlap rule" : "Chevauchement"}
+                      className={`inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition ${
+                        state.schoolHolidayPreference === "avoid"
+                          ? "cursor-not-allowed border border-line bg-white text-ink/40"
+                          : state.allowSchoolHolidayOverlap
+                            ? "bg-coral text-white"
+                            : "border border-line bg-white text-ink"
+                      }`}
+                    >
+                      {state.allowSchoolHolidayOverlap ? "✓ " : ""}
+                      {language === "en"
+                        ? "Allow overlap with school holidays"
+                        : "Autoriser le chevauchement avec les vacances scolaires"}
+                    </button>
+                  </div>
+                </div>
+                <Field label={language === "en" ? "School zone" : "Zone scolaire"}>
+                  <div
+                    aria-label={language === "en" ? "Choose school zone" : "Choisir la zone scolaire"}
+                    role="group"
+                    className={`inline-flex rounded-full border border-line bg-white p-1 ${
+                      zoneSelectionLocked ? "cursor-not-allowed opacity-60" : ""
+                    }`}
+                  >
+                    {(["A", "B", "C"] as const).map((zone) => (
+                      <ModeButton
+                        key={zone}
+                        active={state.schoolZone === zone}
+                        disabled={zoneSelectionLocked}
+                        onClick={() => setState((current) => ({ ...current, schoolZone: zone }))}
+                        label={zone}
+                      />
+                    ))}
+                  </div>
+                </Field>
+              </div>
+            ) : null}
           </div>
         </section>
       </Reveal>
 
       {hasSearchedOnce ? (
-        <section ref={resultsRef} className="glass-panel rounded-[2.25rem] p-6 sm:p-8">
-            <div className="space-y-4">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="section-title">
-                    {language === "en" ? "Recommended bridges" : "Ponts recommandés"}
-                  </h2>
-                  <CounterPill value={computation?.periods.length ?? 0} suffix={language === "en" ? "options ranked" : "options classées"} />
-                  <span className="chip">{formatMonthYear(safeMonth, safeYear, language)}</span>
-                  <span className="chip">
-                    {language === "en" ? "Budget" : "Budget"} : {safePaidLeaveBudget}{" "}
+        <section ref={resultsRef} className="space-y-6">
+          <div className="overflow-hidden rounded-[2rem] border border-line bg-white p-6 sm:p-8">
+            <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+              <div className="space-y-4">
+                <p className="editorial-kicker">
+                  {language === "en" ? "Results" : "Résultats"}
+                </p>
+                <h2 className="max-w-3xl text-4xl font-black tracking-tight text-ink sm:text-5xl">
+                  {language === "en" ? (
+                    <>
+                      Your <span className="text-coral">recommended</span> bridges
+                    </>
+                  ) : (
+                    <>
+                      Vos <span className="text-coral">ponts</span> recommandés
+                    </>
+                  )}
+                </h2>
+                <p className="max-w-3xl text-lg leading-8 text-ink/72">
+                  {language === "en"
+                    ? `${computation?.exact ? "Exact" : "Estimated"} results for ${formatMonthYear(safeMonth, safeYear, language)}.`
+                    : `Résultats ${computation?.exact ? "exacts" : "estimés"} pour ${formatMonthYear(safeMonth, safeYear, language)}.`}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                    {formatMonthYear(safeMonth, safeYear, language)}
+                  </span>
+                  <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                    {language === "en"
+                      ? `Budget: ${safePaidLeaveBudget} days`
+                      : `Budget : ${safePaidLeaveBudget} jours`}
+                  </span>
+                  <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                    {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-4 pt-2 text-sm font-medium text-ink/70">
+                  <LegendItem color="bg-[#fff0d8]" label={language === "en" ? "Holiday" : "Férié"} />
+                  <LegendItem color="bg-[#dff0e5]" label={language === "en" ? "Weekend" : "Week-end"} />
+                  <LegendItem color="bg-[#e9ecff]" label="RTT" />
+                  <LegendItem color="bg-[#f9dfd2]" label={language === "en" ? "Leave" : "Congé payé"} />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                {primaryBundle && primaryGoogleCalendarUrl ? (
+                  <>
+                    <GoogleCalendarButton
+                      href={primaryGoogleCalendarUrl}
+                      label={language === "en" ? "Add to Google Calendar" : "Ajouter à Google Calendar"}
+                      analyticsContext="planner_result"
+                      className="h-14 border-[#d55a1d] bg-coral px-6 text-base text-white shadow-[0_10px_24px_rgba(213,90,29,0.24)] hover:border-[#d55a1d] hover:bg-coral/95 hover:text-white"
+                    />
+                    <IcsExportButton
+                      bundle={primaryBundle}
+                      label={language === "en" ? "Export .ics" : "Exporter .ics"}
+                      analyticsContext="planner_result"
+                      className="h-14 border-line/80 bg-white px-6 text-base text-ink shadow-sm hover:border-ink/20 hover:bg-paper"
+                    />
+                  </>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
+              <div className="rounded-[1.6rem] border border-line/80 bg-[#f7f9fc] p-4 sm:p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
+                  {language === "en" ? "Efficiency pulse" : "Rythme d’efficacité"}
+                </p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <ResultSummaryStat
+                    label={language === "en" ? "Total rest" : "Repos total"}
+                    value={`${computation?.periods[0]?.totalDaysOff ?? 0} ${language === "en" ? "days" : "jours"}`}
+                  />
+                  <ResultSummaryStat
+                    label={language === "en" ? "Leave used" : "Congé utilisé"}
+                    value={`${computation?.usedBudget ?? 0} ${language === "en" ? "days" : "jours"}`}
+                  />
+                  <ResultSummaryStat
+                    label={language === "en" ? "Public holidays" : "Fériés"}
+                    value={`${primaryPeriod?.includedHolidays.length ?? 0} ${language === "en" ? "days" : "jours"}`}
+                  />
+                  <ResultSummaryStat
+                    label={language === "en" ? "Efficiency score" : "Score"}
+                    value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
+                  />
+                </div>
+
+                <div className="mt-4 rounded-[1.35rem] bg-white p-4 shadow-[0_10px_28px_rgba(31,68,113,0.04)]">
+                  <p className="text-sm leading-6 text-ink/70">
+                    {language === "en"
+                      ? "By bridging these dates, you unlock the full rest window while keeping the leave budget under control."
+                      : "En posant ces dates, vous débloquez la fenêtre complète tout en gardant le budget sous contrôle."}
+                  </p>
+                </div>
+
+                {previewPeriods.length > 0 ? (
+                  <div className="mt-4">
+                    <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
+                      {language === "en" ? "Top windows" : "Meilleures fenêtres"}
+                    </p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {previewPeriods.map((period, index) => (
+                        <article
+                          key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                          className="rounded-[1.2rem] border border-line/80 bg-white p-4 shadow-[0_8px_20px_rgba(31,68,113,0.03)]"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="inline-flex h-8 items-center justify-center rounded-full bg-ink px-2.5 text-xs font-black text-white">
+                              #{index + 1}
+                            </span>
+                            <span className="rounded-full border border-line/80 bg-paper px-2 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-ink/68">
+                              {period.totalDaysOff} {language === "en" ? "days" : "jours"}
+                            </span>
+                          </div>
+                          <p className="mt-3 text-sm font-bold text-ink">
+                            {formatShortRange(period.startDate, period.endDate, language)}
+                          </p>
+                          <p className="mt-2 text-xs leading-5 text-ink/68">
+                            {language === "en"
+                              ? `${period.paidLeaveDaysUsed} leave day${period.paidLeaveDaysUsed > 1 ? "s" : ""} • score ${period.worthScore.toFixed(1)}`
+                              : `${period.paidLeaveDaysUsed} jour${period.paidLeaveDaysUsed > 1 ? "s" : ""} posé${period.paidLeaveDaysUsed > 1 ? "s" : ""} • score ${period.worthScore.toFixed(1)}`}
+                          </p>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="rounded-[1.6rem] bg-[#2f5686] p-4 text-white shadow-[0_18px_40px_rgba(47,86,134,0.16)] sm:p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/72">
+                  {language === "en" ? "Quick preview" : "Aperçu rapide"}
+                </p>
+                <div className="mt-3 flex items-end gap-2">
+                  <p className="text-5xl font-black tracking-tight text-white">
+                    {computation?.periods[0]?.totalDaysOff ?? 0}
+                  </p>
+                  <span className="pb-1.5 text-lg font-bold text-white/92">
                     {language === "en" ? "days" : "jours"}
                   </span>
                 </div>
+                <p className="mt-3 max-w-sm text-sm leading-6 text-white/80">
+                  {language === "en"
+                    ? "Potential days off found on a single window."
+                    : "Jours de repos potentiels trouvés sur une seule fenêtre."}
+                </p>
+
+                <div className="mt-4 grid gap-2.5">
+                  <ResultSummaryStat
+                    dark
+                    label={language === "en" ? "Leave to book" : "Congé à poser"}
+                    value={`${computation?.periods[0]?.paidLeaveDaysUsed ?? 0}`}
+                  />
+                  <ResultSummaryStat
+                    dark
+                    label={language === "en" ? "RTT used" : "RTT utilisés"}
+                    value={`${computation?.periods[0]?.rttDaysUsed ?? 0}`}
+                  />
+                  <ResultSummaryStat
+                    dark
+                    label={language === "en" ? "Score" : "Score"}
+                    value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
+                  />
                 </div>
 
-                <div className="flex shrink-0 flex-wrap justify-end gap-3">
+                <div className="mt-4 flex flex-wrap gap-2.5">
                   <button
                     type="button"
-                    onClick={() => shiftMonth(-1)}
-                    className="rounded-full border border-ink px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                    onClick={() => shiftResultMonth(-1)}
+                    className="rounded-full border border-white/18 bg-white/10 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/15"
                   >
                     {language === "en" ? "Previous month" : "Mois précédent"}
                   </button>
                   <button
                     type="button"
-                    onClick={() => shiftMonth(1)}
-                    className="rounded-full border border-ink px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+                    onClick={() => shiftResultMonth(1)}
+                    className="rounded-full border border-white/18 bg-white/10 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/15"
                   >
                     {language === "en" ? "Next month" : "Mois suivant"}
                   </button>
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <p className="text-lg text-ink/82">
-                  {computation?.exact
-                    ? language === "en"
-                      ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
-                      : `Résultats exacts pour ${formatMonthYear(safeMonth, safeYear, language)}.`
-                    : language === "en"
-                      ? `No exact bridge uses the full budget. Here are the closest useful suggestions for ${formatMonthYear(
-                          safeMonth,
-                          safeYear,
-                          language,
-                        )}.`
-                      : `Aucun pont exact n’utilise tout le budget. Voici les suggestions utiles les plus proches pour ${formatMonthYear(
-                          safeMonth,
-                          safeYear,
-                          language,
-                        )}.`}
-                </p>
-                <p className="font-semibold text-ink/80">
+                <p className="mt-4 text-sm leading-6 text-white/70">
                   {language === "en"
-                    ? `If you kept every displayed suggestion, the cumulative total would be ${computation?.usedBudget ?? 0} paid leave day${(computation?.usedBudget ?? 0) > 1 ? "s" : ""}.`
-                    : `Si vous gardiez toutes les suggestions affichées, le total cumulé serait de ${computation?.usedBudget ?? 0} jour${(computation?.usedBudget ?? 0) > 1 ? "s" : ""} de congé payé.`}
+                    ? "Choose a month first. Refine only if you want different dates or a different budget."
+                    : "Choisissez d’abord un mois. Affinez seulement si vous voulez d’autres dates ou un autre budget."}
                 </p>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-ink">
-                  <LegendItem color="bg-sand" label={language === "en" ? "Public holiday" : "Férié"} />
-                  <LegendItem color="bg-mint" label={language === "en" ? "Weekend" : "Week-end"} />
-                  <LegendItem color="bg-lavender" label="RTT" />
-                  <LegendItem color="bg-peach" label={language === "en" ? "Paid leave" : "Congé payé"} />
-                  <LegendItem
-                    color="bg-violet-400"
-                    label={language === "en" ? "School holidays" : "Vacances scolaires"}
-                  />
-                <div className="group relative inline-flex items-center">
-                  <button
-                    type="button"
-                    aria-label={language === "en" ? "Score explanation" : "Explication du score"}
-                    className="inline-flex h-8 items-center justify-center rounded-full border border-mint-strong/20 bg-mint px-3 text-sm font-bold text-mint-strong transition hover:border-mint-strong/35 hover:bg-mint/80"
-                  >
-                    Score ?
-                  </button>
-                    <div className="pointer-events-none absolute bottom-full right-0 z-20 mb-3 w-64 rounded-2xl border border-line bg-white p-3 text-left text-xs font-medium leading-5 text-ink opacity-0 shadow-card transition duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-                      {language === "en"
-                        ? "Score compares the total days off to the paid leave days you actually book."
-                        : "Le score compare le nombre total de jours de repos aux jours de congé payé réellement posés."}
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
+          </div>
 
-            <div className="mt-8 space-y-6">
-              {loading ? (
-                <>
-                  <SkeletonCard />
-                  <SkeletonCard />
-                </>
-              ) : computation && computation.periods.length > 0 ? (
-                visiblePeriods.map((period, index) => (
+          <div className="space-y-6">
+            {loading ? (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            ) : computation && computation.periods.length > 0 ? (
+              <div className="grid gap-6 lg:grid-cols-2">
+                {visiblePeriods.map((period, index) => (
                   <div
                     key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}-${index}`}
+                    className={index === 0 ? "lg:col-span-2" : ""}
                   >
                     <ResultCard
                       language={language}
@@ -798,61 +1014,62 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                       highlighted={index === 0}
                     />
                   </div>
-                ))
-              ) : (
-                <div className="rounded-4xl border border-dashed border-line bg-white p-8 text-center shadow-card">
-                  <p className="text-2xl font-black text-ink">
-                    {language === "en"
-                      ? "No useful bridge found for this month."
-                      : "Aucun pont utile trouvé pour ce mois."}
-                  </p>
-                  <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-ink/80">
-                    {language === "en"
-                      ? "Try another month or increase the budget. If your settings are strict, the planner can still surface close suggestions."
-                      : "Essayez un autre mois ou augmentez le budget. Si vos réglages sont stricts, le simulateur peut encore faire remonter des suggestions proches."}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {hasHiddenPeriods ? (
-              <div className="mt-8 flex justify-center">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setVisibleResultCount((current) =>
-                      Math.min(current + 5, computation?.periods.length ?? current),
-                    )
-                  }
-                  className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
-                >
-                  {language === "en" ? "Show 5 more" : "Voir 5 de plus"}
-                </button>
+                ))}
               </div>
-            ) : null}
+            ) : (
+              <div className="rounded-4xl border border-dashed border-line bg-white p-8 text-center shadow-card">
+                <p className="text-2xl font-black text-ink">
+                  {language === "en"
+                    ? "No useful bridge found for this month."
+                    : "Aucun pont utile trouvé pour ce mois."}
+                </p>
+                <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-ink/80">
+                  {language === "en"
+                    ? "Try another month or increase the budget. If your settings are strict, the planner can still surface close suggestions."
+                    : "Essayez un autre mois ou augmentez le budget. Si vos réglages sont stricts, le simulateur peut encore faire remonter des suggestions proches."}
+                </p>
+              </div>
+            )}
+          </div>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
-              >
-                {language === "en" ? "Back to top" : "Retour en haut"}
-              </button>
+          {hasHiddenPeriods ? (
+            <div className="flex justify-center">
               <button
                 type="button"
                 onClick={() =>
-                  document.getElementById(plannerIntroId)?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  })
+                  setVisibleResultCount((current) =>
+                    Math.min(current + 5, computation?.periods.length ?? current),
+                  )
                 }
-                className="rounded-full border border-line bg-paper px-6 py-3 font-bold text-ink transition hover:border-coral hover:text-coral"
+                className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
               >
-                {language === "en" ? "Edit this simulation" : "Modifier la simulation"}
+                {language === "en" ? "Show 5 more" : "Voir 5 de plus"}
               </button>
             </div>
-          </section>
+          ) : null}
+
+          <div className="flex flex-wrap justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="rounded-full border border-ink bg-white px-6 py-3 font-bold text-ink transition hover:bg-ink hover:text-white"
+            >
+              {language === "en" ? "Back to top" : "Retour en haut"}
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById(plannerIntroId)?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                })
+              }
+              className="rounded-full border border-line bg-paper px-6 py-3 font-bold text-ink transition hover:border-coral hover:text-coral"
+            >
+              {language === "en" ? "Edit this simulation" : "Modifier la simulation"}
+            </button>
+          </div>
+        </section>
       ) : null}
 
     </div>
@@ -883,6 +1100,35 @@ function LegendItem({ color, label }: { color: string; label: string }) {
   );
 }
 
+function ResultSummaryStat({
+  label,
+  value,
+  dark = false,
+}: {
+  label: string;
+  value: string;
+  dark?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-[1.25rem] border p-3.5 ${
+        dark ? "border-white/14 bg-white/8" : "border-line/80 bg-white"
+      }`}
+    >
+      <p
+        className={`text-xs font-bold uppercase tracking-[0.18em] ${
+          dark ? "text-white/68" : "text-slate-500"
+        }`}
+      >
+        {label}
+      </p>
+      <p className={`mt-2.5 text-xl font-black tracking-tight ${dark ? "text-white" : "text-ink"}`}>
+        {value}
+      </p>
+    </div>
+  );
+}
+
 function ModeButton({
   active,
   onClick,
@@ -908,7 +1154,7 @@ function ModeButton({
       className={`inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-center text-sm font-bold leading-tight transition ${
         disabled
           ? active
-            ? "bg-coral/75 text-white"
+            ? "bg-coral/80 text-white"
             : "cursor-not-allowed text-ink/35"
           : active
             ? "bg-coral text-white"
@@ -917,13 +1163,5 @@ function ModeButton({
     >
       {label}
     </button>
-  );
-}
-
-function CounterPill({ value, suffix }: { value: number; suffix: string }) {
-  return (
-    <span className="rounded-full bg-mint px-5 py-3 text-sm font-bold text-emerald-800">
-      {value} {suffix}
-    </span>
   );
 }

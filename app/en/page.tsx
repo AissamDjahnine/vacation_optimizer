@@ -4,9 +4,9 @@ import { HomePage } from "@/components/pages/home-page";
 import { buildWebApplicationSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "French leave planner and bridge ideas",
+  title: "French leave planner and bridge ideas | Find your best break days",
   description:
-    "Plan French public-holiday bridges, compare leave ideas, find the right school zone and build your 2026 leave plan.",
+    "Find the best French bridge days fast, compare the strongest leave ideas, check the right school zone and build your 2026 plan.",
   alternates: {
     canonical: "/en",
     languages: {
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "French leave planner and bridge ideas",
+    title: "French leave planner and bridge ideas | Find your best break days",
     description:
-      "Plan French public-holiday bridges, compare leave ideas and build your 2026 leave plan.",
+      "Find the best French bridge days fast, compare the strongest leave ideas and build your 2026 leave plan.",
     url: "/en",
     siteName: "Ponts Malins",
     type: "website",
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "French leave planner and bridge ideas",
+    title: "French leave planner and bridge ideas | Find your best break days",
     description:
-      "Plan French public-holiday bridges, compare leave ideas and build your 2026 leave plan.",
+      "Find the best French bridge days fast, compare the strongest leave ideas and build your 2026 leave plan.",
     images: ["/opengraph-image"],
   },
 };

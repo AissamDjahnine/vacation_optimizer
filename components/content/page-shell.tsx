@@ -9,7 +9,7 @@ export function PageShell({
 }) {
   return (
     <div className="container-shell py-10 sm:py-14">
-      <div className="mx-auto max-w-[1320px] space-y-8">
+      <div className="mx-auto max-w-[1280px] space-y-10">
         {children}
       </div>
     </div>
