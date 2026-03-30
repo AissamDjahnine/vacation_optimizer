@@ -283,6 +283,11 @@ export function Planner({ language, initialConfig }: PlannerProps) {
             allowSchoolHolidayOverlap: state.allowSchoolHolidayOverlap,
           });
 
+    if (state.mode === "distributed") {
+      const total = periods.reduce((sum, p) => sum + p.totalDaysOff, 0);
+      return total > 0 ? { totalDaysOff: total } : null;
+    }
+
     return periods[0] ?? null;
   }, [
     dataReady,
@@ -817,8 +822,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                 </h2>
                 <p className="max-w-3xl text-lg leading-8 text-ink/72">
                   {language === "en"
-                    ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
-                    : `Résultats exacts pour ${formatMonthYear(safeMonth, safeYear, language)}.`}
+                    ? `${computation?.exact ? "Exact" : "Estimated"} results for ${formatMonthYear(safeMonth, safeYear, language)}.`
+                    : `Résultats ${computation?.exact ? "exacts" : "estimés"} pour ${formatMonthYear(safeMonth, safeYear, language)}.`}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">

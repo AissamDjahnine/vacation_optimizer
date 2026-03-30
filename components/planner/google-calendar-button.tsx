@@ -26,7 +26,7 @@ export function GoogleCalendarButton({
         })
       }
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-5 text-sm font-bold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[#1f4471] hover:text-[#1f4471]",
+        "inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-5 text-sm font-bold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-gcal hover:text-gcal",
         className,
       )}
     >

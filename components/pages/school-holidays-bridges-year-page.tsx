@@ -46,6 +46,7 @@ export function SchoolHolidaysBridgesYearPage({
     day: "numeric",
     month: "long",
     year: "numeric",
+    timeZone: "UTC",
   }).format(new Date("2026-03-25T00:00:00.000Z"));
 
   return (

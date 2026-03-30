@@ -19,6 +19,7 @@ const config: Config = {
         lavender: "#ece8ff",
         sand: "#fff4dd",
         peach: "#ffe5da",
+        gcal: "#1f4471",
       },
       boxShadow: {
         soft: "0 16px 60px rgba(24,59,103,0.08)",

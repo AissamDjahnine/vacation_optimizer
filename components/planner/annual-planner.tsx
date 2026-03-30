@@ -593,21 +593,6 @@ function ModeButton({
   );
 }
 
-function SummaryCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <article className="site-card h-full min-h-[138px] p-5">
-      <p className="editorial-kicker">{label}</p>
-      <p className="mt-3 text-4xl font-black tracking-tight text-ink">{value}</p>
-    </article>
-  );
-}
-
 function StatCard({
   label,
   value,
