@@ -14,7 +14,7 @@ import type {
   SchoolHolidayPreference,
 } from "@/lib/domain/types";
 import { plannerYears } from "@/lib/constants";
-import { formatMonthYear } from "@/lib/formatting";
+import { formatMonthYear, formatShortRange } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
 import { prefixForLanguage } from "@/lib/i18n";
 import {
@@ -221,7 +221,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
     const periods = exactResults.length > 0 ? exactResults : fallbackResults;
     const exact = exactResults.length > 0;
-    const usedBudget = periods.reduce((sum, period) => sum + period.paidLeaveDaysUsed, 0);
+    const usedBudget = periods[0]?.paidLeaveDaysUsed ?? 0;
 
     return {
       exact,
@@ -253,6 +253,7 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   const primaryGoogleCalendarUrl = primaryBundle
     ? buildGoogleCalendarUrl(primaryBundle.events[0])
     : null;
+  const previewPeriods = computation?.periods.slice(0, 3) ?? [];
 
   const previewComputation = useMemo(() => {
     if (!dataReady || holidays.length === 0) {
@@ -466,30 +467,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                     : "Pas de compte, dates officielles, résultats exportables"}
                 </span>
               </div>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <article className="rounded-3xl border border-line bg-paper p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                  {language === "en" ? "Year" : "Année"}
-                </p>
-                <p className="mt-3 text-2xl font-black tracking-tight text-ink">{safeYear}</p>
-              </article>
-              <article className="rounded-3xl border border-line bg-paper p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                  {language === "en" ? "Start month" : "Mois de départ"}
-                </p>
-                <p className="mt-3 text-2xl font-black tracking-tight text-ink">
-                  {formatMonthYear(safeMonth, safeYear, language)}
-                </p>
-              </article>
-              <article className="rounded-3xl border border-line bg-paper p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                  {language === "en" ? "Budget" : "Budget"}
-                </p>
-                <p className="mt-3 text-2xl font-black tracking-tight text-ink">
-                  {safePaidLeaveBudget} {language === "en" ? "days" : "jours"}
-                </p>
-              </article>
             </div>
           </div>
 
@@ -884,12 +861,12 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
-              <div className="rounded-[1.8rem] border border-line/80 bg-[#f7f9fc] p-5 sm:p-6">
+            <div className="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
+              <div className="rounded-[1.6rem] border border-line/80 bg-[#f7f9fc] p-4 sm:p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
                   {language === "en" ? "Efficiency pulse" : "Rythme d’efficacité"}
                 </p>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <ResultSummaryStat
                     label={language === "en" ? "Total rest" : "Repos total"}
                     value={`${computation?.periods[0]?.totalDaysOff ?? 0} ${language === "en" ? "days" : "jours"}`}
@@ -908,34 +885,67 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   />
                 </div>
 
-                <div className="mt-6 rounded-[1.5rem] bg-white p-5 shadow-[0_10px_28px_rgba(31,68,113,0.04)]">
-                  <p className="text-sm font-semibold text-ink/70">
+                <div className="mt-4 rounded-[1.35rem] bg-white p-4 shadow-[0_10px_28px_rgba(31,68,113,0.04)]">
+                  <p className="text-sm leading-6 text-ink/70">
                     {language === "en"
                       ? "By bridging these dates, you unlock the full rest window while keeping the leave budget under control."
                       : "En posant ces dates, vous débloquez la fenêtre complète tout en gardant le budget sous contrôle."}
                   </p>
                 </div>
+
+                {previewPeriods.length > 0 ? (
+                  <div className="mt-4">
+                    <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
+                      {language === "en" ? "Top windows" : "Meilleures fenêtres"}
+                    </p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {previewPeriods.map((period, index) => (
+                        <article
+                          key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                          className="rounded-[1.2rem] border border-line/80 bg-white p-4 shadow-[0_8px_20px_rgba(31,68,113,0.03)]"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="inline-flex h-8 items-center justify-center rounded-full bg-ink px-2.5 text-xs font-black text-white">
+                              #{index + 1}
+                            </span>
+                            <span className="rounded-full border border-line/80 bg-paper px-2 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-ink/68">
+                              {period.totalDaysOff} {language === "en" ? "days" : "jours"}
+                            </span>
+                          </div>
+                          <p className="mt-3 text-sm font-bold text-ink">
+                            {formatShortRange(period.startDate, period.endDate, language)}
+                          </p>
+                          <p className="mt-2 text-xs leading-5 text-ink/68">
+                            {language === "en"
+                              ? `${period.paidLeaveDaysUsed} leave day${period.paidLeaveDaysUsed > 1 ? "s" : ""} • score ${period.worthScore.toFixed(1)}`
+                              : `${period.paidLeaveDaysUsed} jour${period.paidLeaveDaysUsed > 1 ? "s" : ""} posé${period.paidLeaveDaysUsed > 1 ? "s" : ""} • score ${period.worthScore.toFixed(1)}`}
+                          </p>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
-              <div className="rounded-[1.8rem] bg-[#2f5686] p-5 text-white shadow-[0_18px_40px_rgba(47,86,134,0.16)] sm:p-6">
+              <div className="rounded-[1.6rem] bg-[#2f5686] p-4 text-white shadow-[0_18px_40px_rgba(47,86,134,0.16)] sm:p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/72">
                   {language === "en" ? "Quick preview" : "Aperçu rapide"}
                 </p>
-                <div className="mt-4 flex items-end gap-2">
-                  <p className="text-6xl font-black tracking-tight text-white">
+                <div className="mt-3 flex items-end gap-2">
+                  <p className="text-5xl font-black tracking-tight text-white">
                     {computation?.periods[0]?.totalDaysOff ?? 0}
                   </p>
-                  <span className="pb-2 text-xl font-bold text-white/92">
+                  <span className="pb-1.5 text-lg font-bold text-white/92">
                     {language === "en" ? "days" : "jours"}
                   </span>
                 </div>
-                <p className="mt-4 max-w-sm text-base leading-7 text-white/80">
+                <p className="mt-3 max-w-sm text-sm leading-6 text-white/80">
                   {language === "en"
                     ? "Potential days off found on a single window."
                     : "Jours de repos potentiels trouvés sur une seule fenêtre."}
                 </p>
 
-                <div className="mt-6 grid gap-3">
+                <div className="mt-4 grid gap-2.5">
                   <ResultSummaryStat
                     dark
                     label={language === "en" ? "Leave to book" : "Congé à poser"}
@@ -953,24 +963,24 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   />
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-3">
+                <div className="mt-4 flex flex-wrap gap-2.5">
                   <button
                     type="button"
                     onClick={() => shiftResultMonth(-1)}
-                    className="rounded-full border border-white/18 bg-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/15"
+                    className="rounded-full border border-white/18 bg-white/10 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/15"
                   >
                     {language === "en" ? "Previous month" : "Mois précédent"}
                   </button>
                   <button
                     type="button"
                     onClick={() => shiftResultMonth(1)}
-                    className="rounded-full border border-white/18 bg-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/15"
+                    className="rounded-full border border-white/18 bg-white/10 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/15"
                   >
                     {language === "en" ? "Next month" : "Mois suivant"}
                   </button>
                 </div>
 
-                <p className="mt-6 text-sm leading-7 text-white/70">
+                <p className="mt-4 text-sm leading-6 text-white/70">
                   {language === "en"
                     ? "Choose a month first. Refine only if you want different dates or a different budget."
                     : "Choisissez d’abord un mois. Affinez seulement si vous voulez d’autres dates ou un autre budget."}
@@ -1096,7 +1106,7 @@ function ResultSummaryStat({
 }) {
   return (
     <div
-      className={`rounded-[1.35rem] border p-4 ${
+      className={`rounded-[1.25rem] border p-3.5 ${
         dark ? "border-white/14 bg-white/8" : "border-line/80 bg-white"
       }`}
     >
@@ -1107,7 +1117,7 @@ function ResultSummaryStat({
       >
         {label}
       </p>
-      <p className={`mt-3 text-2xl font-black tracking-tight ${dark ? "text-white" : "text-ink"}`}>
+      <p className={`mt-2.5 text-xl font-black tracking-tight ${dark ? "text-white" : "text-ink"}`}>
         {value}
       </p>
     </div>

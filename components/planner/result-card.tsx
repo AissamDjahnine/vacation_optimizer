@@ -147,7 +147,7 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
     <article
       className={`overflow-hidden rounded-[2rem] border p-5 transition sm:p-6 ${accentTone}`}
     >
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_18rem] xl:items-start">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_18rem] xl:items-stretch">
         <div className="space-y-5">
           <div className="flex flex-wrap items-center gap-2">
             {highlighted ? (
@@ -222,29 +222,15 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <IcsExportButton
-              bundle={calendarBundle}
-              label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
-              analyticsContext="planner_result"
-              className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
-            />
-            <GoogleCalendarButton
-              href={googleCalendarUrl}
-              label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
-              analyticsContext="planner_result"
-              className="h-11 border-ink/10 bg-ink px-4 text-sm text-white shadow-sm hover:border-ink hover:bg-ink/92 hover:text-white"
-            />
-          </div>
         </div>
 
         <aside
-          className={`relative overflow-hidden rounded-[1.6rem] border p-4 sm:p-5 ${sideTone}`}
+          className={`relative h-full overflow-hidden rounded-[1.6rem] border p-4 sm:p-5 ${sideTone}`}
         >
           {highlighted ? (
             <div className="absolute inset-x-0 bottom-0 h-28 bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.15),transparent_38%)]" />
           ) : null}
-          <div className="relative space-y-4">
+          <div className="relative flex h-full flex-col space-y-4">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-current/68">
               {language === "en" ? "Quick view" : "Aperçu rapide"}
             </p>
@@ -284,19 +270,6 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
                 dark={highlighted}
               />
             </div>
-
-            <div
-              className={`rounded-[1.2rem] border px-4 py-3 text-sm font-semibold ${
-                highlighted
-                  ? "border-white/15 bg-white/10 text-white/88"
-                  : "border-line/80 bg-white text-ink/72"
-              }`}
-            >
-              {language === "en"
-                ? "Export or share this result once you are happy with the month."
-                : "Exportez ou partagez ce résultat une fois le mois validé."}
-            </div>
-
             <div
               className={`rounded-[1.2rem] border px-4 py-3 text-xs leading-5 ${
                 highlighted
@@ -305,6 +278,29 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
               }`}
             >
               {scoreTooltip}
+            </div>
+
+            <div className="mt-auto space-y-2 pt-1">
+              <GoogleCalendarButton
+                href={googleCalendarUrl}
+                label={language === "en" ? "Add to Google Calendar" : "Ajouter à Google Calendar"}
+                analyticsContext="planner_result"
+                className={`h-11 w-full px-4 text-sm shadow-sm ${
+                  highlighted
+                    ? "border-white/10 bg-white text-ink hover:bg-white/92 hover:text-ink"
+                    : "border-ink/10 bg-ink text-white hover:border-ink hover:bg-ink/92 hover:text-white"
+                }`}
+              />
+              <IcsExportButton
+                bundle={calendarBundle}
+                label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
+                analyticsContext="planner_result"
+                className={`h-11 w-full px-4 text-sm shadow-sm ${
+                  highlighted
+                    ? "border-white/15 bg-white/10 text-white hover:bg-white/15"
+                    : "border-ink/10 bg-white hover:border-ink/20 hover:bg-paper"
+                }`}
+              />
             </div>
           </div>
         </aside>

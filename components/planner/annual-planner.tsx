@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { IcsExportButton } from "@/components/planner/ics-export-button";
 import { ResultCard } from "@/components/planner/result-card";
 import { DateOptimizer } from "@/lib/domain/date-optimizer";
@@ -11,6 +11,7 @@ import type {
 } from "@/lib/domain/types";
 import { getHolidaySnapshot, getSchoolHolidaySnapshot } from "@/lib/data-snapshots";
 import { plannerYears } from "@/lib/constants";
+import { formatMonthYear } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
 import { buildAnnualPlanCalendarBundle } from "@/lib/calendar-export";
 import { defaultPlannerState, applySchoolHolidayPreference } from "@/lib/planner-config";
@@ -46,6 +47,7 @@ export function AnnualPlanner({
     strategy: "max-efficiency",
   });
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
+  const resultsRef = useRef<HTMLElement | null>(null);
 
   const holidays = useMemo(() => getHolidaySnapshot(state.year) ?? [], [state.year]);
   const schoolHolidayPeriods = useMemo(
@@ -77,6 +79,7 @@ export function AnnualPlanner({
       state.year,
     ],
   );
+  const previewSegments = plan.segments.slice(0, 3);
 
   const updatePreference = (preference: SchoolHolidayPreference) => {
     setState((current) => ({
@@ -315,23 +318,183 @@ export function AnnualPlanner({
         ) : null}
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <SummaryCard
-          label={language === "en" ? "Segments retained" : "Ponts retenus"}
-          value={String(plan.segments.length)}
-        />
-        <SummaryCard
-          label={language === "en" ? "Paid leave used" : "Congés payés utilisés"}
-          value={`${plan.totalPaidLeaveUsed} ${language === "en" ? "days" : "jours"}`}
-        />
-        <SummaryCard
-          label={language === "en" ? "Days off total" : "Jours de repos au total"}
-          value={`${plan.totalDaysOff}`}
-        />
-        <SummaryCard
-          label={language === "en" ? "Budget left" : "Budget restant"}
-          value={`${plan.remainingBudget} ${language === "en" ? "days" : "jours"}`}
-        />
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() =>
+            resultsRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            })
+          }
+          className="rounded-full bg-coral px-10 py-4 text-lg font-bold text-white shadow-[0_10px_24px_rgba(213,90,29,0.24)] transition hover:-translate-y-0.5 hover:bg-coral/90"
+        >
+          {language === "en" ? "Calculate annual plan" : "Calculer le plan annuel"}
+        </button>
+      </div>
+
+      <section ref={resultsRef} className="overflow-hidden rounded-[2rem] border border-line bg-white p-6 sm:p-8">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+          <div className="space-y-4">
+            <p className="editorial-kicker">{language === "en" ? "Annual results" : "Résultats annuels"}</p>
+            <h2 className="max-w-3xl text-4xl font-black tracking-tight text-ink sm:text-5xl">
+              {language === "en" ? (
+                <>
+                  Your <span className="text-coral">annual</span> bridge plan
+                </>
+              ) : (
+                <>
+                  Votre plan <span className="text-coral">annuel</span> de ponts
+                </>
+              )}
+            </h2>
+            <p className="max-w-3xl text-lg leading-8 text-ink/72">
+              {language === "en"
+                ? `A full-year view for ${state.year}, keeping the leave budget under control.`
+                : `Une vue annuelle pour ${state.year}, tout en gardant le budget sous contrôle.`}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                {state.year}
+              </span>
+              <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                {language === "en"
+                  ? `Budget: ${state.paidLeaveBudget} days`
+                  : `Budget : ${state.paidLeaveBudget} jours`}
+              </span>
+              <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                {plan.segments.length} {language === "en" ? "ranked" : "classés"}
+              </span>
+            </div>
+          </div>
+
+          {plan.segments.length > 0 ? (
+            <IcsExportButton
+              bundle={buildAnnualPlanCalendarBundle({
+                plan,
+                language,
+                year: state.year,
+              })}
+              analyticsContext="annual_planner"
+              label={
+                language === "en"
+                  ? "Export annual plan (.ics)"
+                  : "Exporter le plan annuel (.ics)"
+              }
+            />
+          ) : null}
+        </div>
+
+        <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
+          <div className="rounded-[1.8rem] border border-line/80 bg-[#f7f9fc] p-5 sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
+              {language === "en" ? "Efficiency pulse" : "Rythme d’efficacité"}
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <StatCard
+                label={language === "en" ? "Days off total" : "Jours de repos"}
+                value={`${plan.totalDaysOff}`}
+              />
+              <StatCard
+                label={language === "en" ? "Paid leave used" : "Congés payés utilisés"}
+                value={`${plan.totalPaidLeaveUsed} ${language === "en" ? "days" : "jours"}`}
+              />
+              <StatCard
+                label={language === "en" ? "RTT used" : "RTT utilisés"}
+                value={`${plan.totalRttUsed} ${language === "en" ? "days" : "jours"}`}
+              />
+              <StatCard
+                label={language === "en" ? "Budget left" : "Budget restant"}
+                value={`${plan.remainingBudget} ${language === "en" ? "days" : "jours"}`}
+              />
+            </div>
+
+            {previewSegments.length > 0 ? (
+              <div className="mt-6">
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
+                  {language === "en" ? "Top segments" : "Meilleurs segments"}
+                </p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {previewSegments.map((segment, index) => (
+                    <article
+                      key={`${segment.period.startDate.toISOString()}-${segment.period.endDate.toISOString()}`}
+                      className="rounded-[1.4rem] border border-line/80 bg-white p-4 shadow-[0_10px_24px_rgba(31,68,113,0.03)]"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                          {formatMonthYear(segment.month, state.year, language)}
+                        </p>
+                        <span className="rounded-full border border-line bg-paper px-2.5 py-1 text-[11px] font-bold text-ink">
+                          #{index + 1}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-2xl font-black tracking-tight text-ink">
+                        {segment.period.totalDaysOff}{" "}
+                        <span className="text-sm font-bold text-ink/72">
+                          {language === "en" ? "days" : "jours"}
+                        </span>
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-ink/72">
+                        {language === "en"
+                          ? `${segment.period.paidLeaveDaysUsed} leave days • score ${segment.period.worthScore.toFixed(1)}`
+                          : `${segment.period.paidLeaveDaysUsed} jours posés • score ${segment.period.worthScore.toFixed(1)}`}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div className="mt-6 rounded-[1.5rem] bg-white p-5 shadow-[0_10px_28px_rgba(31,68,113,0.04)]">
+              <p className="text-sm font-semibold text-ink/70">
+                {language === "en"
+                  ? "This annual plan keeps the strongest segments first while preserving your budget."
+                  : "Ce plan annuel garde les meilleurs segments en premier tout en préservant votre budget."}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-[1.8rem] bg-[#2f5686] p-5 text-white shadow-[0_18px_40px_rgba(47,86,134,0.16)] sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/72">
+              {language === "en" ? "Quick preview" : "Aperçu rapide"}
+            </p>
+            <div className="mt-4 flex items-end gap-2">
+              <p className="text-6xl font-black tracking-tight text-white">{plan.totalDaysOff}</p>
+              <span className="pb-2 text-xl font-bold text-white/92">
+                {language === "en" ? "days" : "jours"}
+              </span>
+            </div>
+            <p className="mt-4 max-w-sm text-base leading-7 text-white/80">
+              {language === "en"
+                ? "Potential days off found across the whole year."
+                : "Jours de repos potentiels trouvés sur l’année entière."}
+            </p>
+
+            <div className="mt-6 grid gap-3">
+              <StatCard
+                dark
+                label={language === "en" ? "Segments retained" : "Ponts retenus"}
+                value={`${plan.segments.length}`}
+              />
+              <StatCard
+                dark
+                label={language === "en" ? "Paid leave used" : "Congés payés utilisés"}
+                value={`${plan.totalPaidLeaveUsed}`}
+              />
+              <StatCard
+                dark
+                label={language === "en" ? "Budget left" : "Budget restant"}
+                value={`${plan.remainingBudget}`}
+              />
+            </div>
+
+            <p className="mt-6 text-sm leading-7 text-white/70">
+              {language === "en"
+                ? "Tune the strategy or budget if you want a different yearly balance."
+                : "Ajustez la stratégie ou le budget si vous voulez un autre équilibre annuel."}
+            </p>
+          </div>
+        </div>
       </section>
 
       <section className="site-card p-6 sm:p-8">
@@ -349,21 +512,6 @@ export function AnnualPlanner({
                 : "Cette sélection est optimisée pour le rendement et reste dans votre budget."}
             </p>
           </div>
-          {plan.segments.length > 0 ? (
-            <IcsExportButton
-              bundle={buildAnnualPlanCalendarBundle({
-                plan,
-                language,
-                year: state.year,
-              })}
-              analyticsContext="annual_planner"
-              label={
-                language === "en"
-                  ? "Export annual plan (.ics)"
-                  : "Exporter le plan annuel (.ics)"
-              }
-            />
-          ) : null}
         </div>
 
         {plan.segments.length === 0 ? (
@@ -457,5 +605,30 @@ function SummaryCard({
       <p className="editorial-kicker">{label}</p>
       <p className="mt-3 text-4xl font-black tracking-tight text-ink">{value}</p>
     </article>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  dark = false,
+}: {
+  label: string;
+  value: string;
+  dark?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-[1.35rem] border p-4 ${
+        dark ? "border-white/14 bg-white/8" : "border-line/80 bg-white"
+      }`}
+    >
+      <p className={`text-xs font-bold uppercase tracking-[0.18em] ${dark ? "text-white/68" : "text-slate-500"}`}>
+        {label}
+      </p>
+      <p className={`mt-3 text-2xl font-black tracking-tight ${dark ? "text-white" : "text-ink"}`}>
+        {value}
+      </p>
+    </div>
   );
 }
