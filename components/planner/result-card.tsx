@@ -147,7 +147,7 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
     <article
       className={`overflow-hidden rounded-[2rem] border p-5 transition sm:p-6 ${accentTone}`}
     >
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_18rem] xl:items-stretch">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.18fr)_20rem] xl:items-stretch">
         <div className="space-y-5">
           <div className="flex flex-wrap items-center gap-2">
             {highlighted ? (
