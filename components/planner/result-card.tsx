@@ -40,6 +40,109 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
     ? "bg-[#274c7c] text-white border-[#244a79]"
     : "bg-[#eff5fb] text-ink border-line/80";
 
+  if (!highlighted) {
+    return (
+      <article className="overflow-hidden rounded-[1.8rem] border border-line/80 bg-white p-4 sm:p-5">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_16rem] xl:items-start">
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex h-10 items-center justify-center rounded-full bg-ink px-3 text-sm font-black text-white">
+                #{rank}
+              </span>
+              <span className="rounded-full border border-line/80 bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
+                {language === "en" ? "Score" : "Score"} {period.worthScore.toFixed(1)}
+              </span>
+              <span className="rounded-full border border-line/80 bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
+                {formatShortRange(period.startDate, period.endDate, language)}
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="max-w-3xl text-2xl font-black tracking-tight text-ink sm:text-[2rem]">
+                {language === "en"
+                  ? `${period.totalDaysOff} days off in a row`
+                  : `${period.totalDaysOff} jours de repos d’affilée`}
+              </h3>
+              <p className="text-sm font-semibold text-ink/78 sm:text-base">
+                {formatShortRange(period.startDate, period.endDate, language)}
+              </p>
+              <p className="max-w-2xl text-sm leading-7 text-ink/72">
+                {language === "en"
+                  ? `Use ${period.paidLeaveDaysUsed} leave day${period.paidLeaveDaysUsed > 1 ? "s" : ""} and ${period.rttDaysUsed} RTT day${period.rttDaysUsed > 1 ? "s" : ""}.`
+                  : `Utilise ${period.paidLeaveDaysUsed} jour${period.paidLeaveDaysUsed > 1 ? "s" : ""} de congé payé et ${period.rttDaysUsed} RTT.`}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2.5">
+              <span className="rounded-full border border-line/80 bg-paper px-3 py-1.5 text-sm font-semibold text-ink/78">
+                {language === "en" ? "To book" : "À poser"}: {period.paidLeaveDaysUsed}
+              </span>
+              {period.rttDaysUsed > 0 ? (
+                <span className="rounded-full border border-line/80 bg-paper px-3 py-1.5 text-sm font-semibold text-ink/78">
+                  RTT: {period.rttDaysUsed}
+                </span>
+              ) : null}
+              <span className="rounded-full border border-line/80 bg-paper px-3 py-1.5 text-sm font-semibold text-ink/78">
+                {language === "en" ? "Public holidays" : "Fériés"}: {period.includedHolidays.length}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <IcsExportButton
+                bundle={calendarBundle}
+                label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
+                analyticsContext="planner_result"
+                className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
+              />
+              <GoogleCalendarButton
+                href={googleCalendarUrl}
+                label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
+                analyticsContext="planner_result"
+                className="h-11 border-ink/10 bg-ink px-4 text-sm text-white shadow-sm hover:border-ink hover:bg-ink/92 hover:text-white"
+              />
+            </div>
+          </div>
+
+          <aside className="rounded-[1.4rem] border border-line/80 bg-[#eff5fb] p-4">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/68">
+              {language === "en" ? "Quick view" : "Aperçu rapide"}
+            </p>
+            <div className="mt-4 flex items-end gap-2">
+              <p className="text-4xl font-black tracking-tight text-ink">
+                {period.totalDaysOff}
+              </p>
+              <span className="pb-2 text-base font-bold text-ink">
+                {language === "en" ? "days" : "jours"}
+              </span>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-ink/78">
+              {language === "en"
+                ? "Potential days off found in one window."
+                : "Jours de repos potentiels trouvés sur une seule fenêtre."}
+            </p>
+            <div className="mt-4 space-y-3 text-sm leading-6">
+              <SummaryRow
+                label={language === "en" ? "Leave to book" : "Congé à poser"}
+                value={`${period.paidLeaveDaysUsed}`}
+                dark={false}
+              />
+              <SummaryRow
+                label={language === "en" ? "RTT used" : "RTT utilisés"}
+                value={`${period.rttDaysUsed}`}
+                dark={false}
+              />
+              <SummaryRow
+                label={language === "en" ? "Public holidays" : "Fériés"}
+                value={`${period.includedHolidays.length}`}
+                dark={false}
+              />
+            </div>
+          </aside>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article
       className={`overflow-hidden rounded-[2rem] border p-5 transition sm:p-6 ${accentTone}`}
@@ -274,8 +377,8 @@ function buildTimelineDays(period: BestVacationPeriod) {
     return {
       date,
       label: {
-        fr: weekdayShort(date, "fr"),
-        en: weekdayShort(date, "en"),
+        fr: "Week-end",
+        en: "Weekend",
       },
       className: `${dayStyles.weekend} ${school ? dayStyles.school : ""}`,
     };
