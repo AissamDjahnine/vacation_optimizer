@@ -26,8 +26,11 @@ import {
 import { plannerConfigFromUrlSearchParams } from "@/lib/search-params";
 import { routes } from "@/lib/routes";
 import { Reveal } from "@/components/motion/reveal";
+import { GoogleCalendarButton } from "@/components/planner/google-calendar-button";
+import { IcsExportButton } from "@/components/planner/ics-export-button";
 import { ResultCard } from "@/components/planner/result-card";
 import { SkeletonCard } from "@/components/planner/skeleton-card";
+import { buildGoogleCalendarUrl, buildPeriodCalendarBundle } from "@/lib/calendar-export";
 import { trackEvent } from "@/lib/analytics";
 
 const holidayCache = new Map<number, Holiday[]>();
@@ -239,6 +242,18 @@ export function Planner({ language, initialConfig }: PlannerProps) {
     state.schoolHolidayPreference,
   ]);
 
+  const primaryPeriod = computation?.periods[0];
+  const primaryBundle = primaryPeriod
+    ? buildPeriodCalendarBundle({
+        period: primaryPeriod,
+        language,
+        year: safeYear,
+      })
+    : null;
+  const primaryGoogleCalendarUrl = primaryBundle
+    ? buildGoogleCalendarUrl(primaryBundle.events[0])
+    : null;
+
   const previewComputation = useMemo(() => {
     if (!dataReady || holidays.length === 0) {
       return null;
@@ -301,6 +316,22 @@ export function Planner({ language, initialConfig }: PlannerProps) {
       allow_school_holiday_overlap: state.allowSchoolHolidayOverlap,
     });
     setHasSearchedOnce(true);
+    setVisibleResultCount(5);
+  };
+
+  const shiftResultMonth = (delta: number) => {
+    setState((current) => {
+      const nextDate = new Date(current.year, current.month - 1 + delta, 1);
+      if (!plannerYears.includes(nextDate.getFullYear())) {
+        return current;
+      }
+
+      return {
+        ...current,
+        year: nextDate.getFullYear(),
+        month: nextDate.getMonth() + 1,
+      };
+    });
     setVisibleResultCount(5);
   };
 
@@ -790,113 +821,162 @@ export function Planner({ language, initialConfig }: PlannerProps) {
 
       {hasSearchedOnce ? (
         <section ref={resultsRef} className="space-y-6">
-          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="overflow-hidden rounded-[2rem] border border-line bg-white p-6 sm:p-8">
-              <p className="editorial-kicker">
-                {language === "en" ? "Results" : "Résultats"}
-              </p>
-              <div className="mt-3 flex flex-wrap items-end gap-x-4 gap-y-3">
-                <h2 className="text-4xl font-black tracking-tight text-ink sm:text-5xl">
-                  {language === "en" ? "Your suggested" : "Vos"}
-                  <span className="text-coral">
-                    {" "}
-                    {language === "en" ? "bridge plans" : "ponts recommandés"}
-                  </span>
+          <div className="overflow-hidden rounded-[2rem] border border-line bg-white p-6 sm:p-8">
+            <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+              <div className="space-y-4">
+                <p className="editorial-kicker">
+                  {language === "en" ? "Results" : "Résultats"}
+                </p>
+                <h2 className="max-w-3xl text-4xl font-black tracking-tight text-ink sm:text-5xl">
+                  {language === "en" ? (
+                    <>
+                      Your <span className="text-coral">recommended</span> bridges
+                    </>
+                  ) : (
+                    <>
+                      Vos <span className="text-coral">ponts</span> recommandés
+                    </>
+                  )}
                 </h2>
-                <span className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
-                  {formatMonthYear(safeMonth, safeYear, language)}
-                </span>
-                <span className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
-                  {language === "en" ? "Budget" : "Budget"}: {safePaidLeaveBudget}{" "}
-                  {language === "en" ? "days" : "jours"}
-                </span>
-                <span className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-ink/78">
-                  {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
-                </span>
-              </div>
-              <p className="mt-5 max-w-3xl text-base leading-7 text-ink/72">
-                {computation?.exact
-                  ? language === "en"
+                <p className="max-w-3xl text-lg leading-8 text-ink/72">
+                  {language === "en"
                     ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
-                    : `Résultats exacts pour ${formatMonthYear(safeMonth, safeYear, language)}.`
-                  : language === "en"
-                    ? `No exact bridge uses the full budget. Here are the closest useful suggestions for ${formatMonthYear(
-                        safeMonth,
-                        safeYear,
-                        language,
-                      )}.`
-                    : `Aucun pont exact n’utilise tout le budget. Voici les suggestions utiles les plus proches pour ${formatMonthYear(
-                        safeMonth,
-                        safeYear,
-                        language,
-                      )}.`}
-              </p>
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-ink">
-                <LegendItem color="bg-sand" label={language === "en" ? "Public holiday" : "Férié"} />
-                <LegendItem color="bg-mint" label={language === "en" ? "Weekend" : "Week-end"} />
-                <LegendItem color="bg-lavender" label="RTT" />
-                <LegendItem color="bg-peach" label={language === "en" ? "Paid leave" : "Congé payé"} />
-                <LegendItem
-                  color="bg-violet-400"
-                  label={language === "en" ? "School holidays" : "Vacances scolaires"}
-                />
+                    : `Résultats exacts pour ${formatMonthYear(safeMonth, safeYear, language)}.`}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                    {formatMonthYear(safeMonth, safeYear, language)}
+                  </span>
+                  <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                    {language === "en"
+                      ? `Budget: ${safePaidLeaveBudget} days`
+                      : `Budget : ${safePaidLeaveBudget} jours`}
+                  </span>
+                  <span className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-bold text-ink">
+                    {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-4 pt-2 text-sm font-medium text-ink/70">
+                  <LegendItem color="bg-[#fff0d8]" label={language === "en" ? "Holiday" : "Férié"} />
+                  <LegendItem color="bg-[#dff0e5]" label={language === "en" ? "Weekend" : "Week-end"} />
+                  <LegendItem color="bg-[#e9ecff]" label="RTT" />
+                  <LegendItem color="bg-[#f9dfd2]" label={language === "en" ? "Leave" : "Congé payé"} />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                {primaryBundle && primaryGoogleCalendarUrl ? (
+                  <>
+                    <GoogleCalendarButton
+                      href={primaryGoogleCalendarUrl}
+                      label={language === "en" ? "Add to Google Calendar" : "Ajouter à Google Calendar"}
+                      analyticsContext="planner_result"
+                      className="h-14 border-[#d55a1d] bg-coral px-6 text-base text-white shadow-[0_10px_24px_rgba(213,90,29,0.24)] hover:border-[#d55a1d] hover:bg-coral/95 hover:text-white"
+                    />
+                    <IcsExportButton
+                      bundle={primaryBundle}
+                      label={language === "en" ? "Export .ics" : "Exporter .ics"}
+                      analyticsContext="planner_result"
+                      className="h-14 border-line/80 bg-white px-6 text-base text-ink shadow-sm hover:border-ink/20 hover:bg-paper"
+                    />
+                  </>
+                ) : null}
               </div>
             </div>
 
-            <aside className="overflow-hidden rounded-[2rem] border border-[#244a79] bg-[#274c7c] p-6 text-white shadow-card sm:p-8">
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/72">
-                {language === "en" ? "Quick view" : "Aperçu rapide"}
-              </p>
-              <div className="mt-4 flex items-end gap-2">
-                <p className="text-5xl font-black tracking-tight">
-                  {computation?.periods[0]?.totalDaysOff ?? 0}
+            <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-start">
+              <div className="rounded-[1.8rem] border border-line/80 bg-[#f7f9fc] p-5 sm:p-6">
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-ink/55">
+                  {language === "en" ? "Efficiency pulse" : "Rythme d’efficacité"}
                 </p>
-                <span className="pb-2 text-lg font-bold">{language === "en" ? "days" : "jours"}</span>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <ResultSummaryStat
+                    label={language === "en" ? "Total rest" : "Repos total"}
+                    value={`${computation?.periods[0]?.totalDaysOff ?? 0} ${language === "en" ? "days" : "jours"}`}
+                  />
+                  <ResultSummaryStat
+                    label={language === "en" ? "Leave used" : "Congé utilisé"}
+                    value={`${computation?.usedBudget ?? 0} ${language === "en" ? "days" : "jours"}`}
+                  />
+                  <ResultSummaryStat
+                    label={language === "en" ? "Public holidays" : "Fériés"}
+                    value={`${primaryPeriod?.includedHolidays.length ?? 0} ${language === "en" ? "days" : "jours"}`}
+                  />
+                  <ResultSummaryStat
+                    label={language === "en" ? "Efficiency score" : "Score"}
+                    value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
+                  />
+                </div>
+
+                <div className="mt-6 rounded-[1.5rem] bg-white p-5 shadow-[0_10px_28px_rgba(31,68,113,0.04)]">
+                  <p className="text-sm font-semibold text-ink/70">
+                    {language === "en"
+                      ? "By bridging these dates, you unlock the full rest window while keeping the leave budget under control."
+                      : "En posant ces dates, vous débloquez la fenêtre complète tout en gardant le budget sous contrôle."}
+                  </p>
+                </div>
               </div>
-              <p className="mt-3 max-w-sm text-base leading-7 text-white/80">
-                {language === "en"
-                  ? "Potential days off found in one window."
-                  : "Jours de repos potentiels trouvés sur une seule fenêtre."}
-              </p>
-              <div className="mt-6 space-y-0 text-sm leading-6">
-                <ResultSummaryStat
-                  label={language === "en" ? "Leave to book" : "Congé à poser"}
-                  value={`${computation?.usedBudget ?? 0}`}
-                  dark
-                />
-                <ResultSummaryStat
-                  label={language === "en" ? "Top score" : "Meilleur score"}
-                  value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
-                  dark
-                />
-                <ResultSummaryStat
-                  label={language === "en" ? "Ranked options" : "Options classées"}
-                  value={`${computation?.periods.length ?? 0}`}
-                  dark
-                />
+
+              <div className="rounded-[1.8rem] bg-[#2f5686] p-5 text-white shadow-[0_18px_40px_rgba(47,86,134,0.16)] sm:p-6">
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/72">
+                  {language === "en" ? "Quick preview" : "Aperçu rapide"}
+                </p>
+                <div className="mt-4 flex items-end gap-2">
+                  <p className="text-6xl font-black tracking-tight text-white">
+                    {computation?.periods[0]?.totalDaysOff ?? 0}
+                  </p>
+                  <span className="pb-2 text-xl font-bold text-white/92">
+                    {language === "en" ? "days" : "jours"}
+                  </span>
+                </div>
+                <p className="mt-4 max-w-sm text-base leading-7 text-white/80">
+                  {language === "en"
+                    ? "Potential days off found on a single window."
+                    : "Jours de repos potentiels trouvés sur une seule fenêtre."}
+                </p>
+
+                <div className="mt-6 grid gap-3">
+                  <ResultSummaryStat
+                    dark
+                    label={language === "en" ? "Leave to book" : "Congé à poser"}
+                    value={`${computation?.periods[0]?.paidLeaveDaysUsed ?? 0}`}
+                  />
+                  <ResultSummaryStat
+                    dark
+                    label={language === "en" ? "RTT used" : "RTT utilisés"}
+                    value={`${computation?.periods[0]?.rttDaysUsed ?? 0}`}
+                  />
+                  <ResultSummaryStat
+                    dark
+                    label={language === "en" ? "Score" : "Score"}
+                    value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
+                  />
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => shiftResultMonth(-1)}
+                    className="rounded-full border border-white/18 bg-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/15"
+                  >
+                    {language === "en" ? "Previous month" : "Mois précédent"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => shiftResultMonth(1)}
+                    className="rounded-full border border-white/18 bg-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/15"
+                  >
+                    {language === "en" ? "Next month" : "Mois suivant"}
+                  </button>
+                </div>
+
+                <p className="mt-6 text-sm leading-7 text-white/70">
+                  {language === "en"
+                    ? "Choose a month first. Refine only if you want different dates or a different budget."
+                    : "Choisissez d’abord un mois. Affinez seulement si vous voulez d’autres dates ou un autre budget."}
+                </p>
               </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={() => shiftMonth(-1)}
-                  className="rounded-full border border-white/15 bg-white/10 px-5 py-3 font-bold text-white transition hover:bg-white/15"
-                >
-                  {language === "en" ? "Previous month" : "Mois précédent"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => shiftMonth(1)}
-                  className="rounded-full border border-white/15 bg-white/10 px-5 py-3 font-bold text-white transition hover:bg-white/15"
-                >
-                  {language === "en" ? "Next month" : "Mois suivant"}
-                </button>
-              </div>
-              <p className="mt-4 text-sm leading-6 text-white/72">
-                {language === "en"
-                  ? "Pick a month first. Refine only if you want different dates or a different budget."
-                  : "Choisissez d’abord un mois. Affinez seulement si vous voulez d’autres dates ou un autre budget."}
-              </p>
-            </aside>
+            </div>
           </div>
 
           <div className="space-y-6">
