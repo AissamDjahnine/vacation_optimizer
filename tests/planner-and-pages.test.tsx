@@ -90,7 +90,7 @@ describe("planner and content pages", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Calculer mes meilleurs ponts" }));
 
-    await screen.findByRole("heading", { name: "Ponts recommandés" });
+    await screen.findByRole("heading", { name: "Vos ponts recommandés" });
 
     expect(screen.getByText("Janvier 2026")).toBeInTheDocument();
 

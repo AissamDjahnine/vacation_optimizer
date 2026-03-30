@@ -793,22 +793,31 @@ export function Planner({ language, initialConfig }: PlannerProps) {
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <div className="site-card p-6 sm:p-8">
               <p className="editorial-kicker">
-                {language === "en" ? "Result view" : "Vue des résultats"}
+                {language === "en" ? "Results" : "Résultats"}
               </p>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <h2 className="section-title">
-                  {language === "en" ? "Recommended bridges" : "Ponts recommandés"}
-                </h2>
-                <span className="chip">{formatMonthYear(safeMonth, safeYear, language)}</span>
-                <span className="chip">
-                  {language === "en" ? "Budget" : "Budget"}: {safePaidLeaveBudget}{" "}
-                  {language === "en" ? "days" : "jours"}
-                </span>
-                <span className="chip">
-                  {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
-                </span>
+              <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+                <div className="space-y-2">
+                  <h2 className="text-4xl font-black tracking-tight text-ink sm:text-5xl">
+                    {language === "en" ? "Your suggested bridge plans" : "Vos ponts recommandés"}
+                  </h2>
+                  <p className="max-w-3xl text-base leading-7 text-ink/72">
+                    {language === "en"
+                      ? "We ranked the best windows for this month and kept the strongest match at the top."
+                      : "Nous avons classé les meilleures fenêtres du mois et gardé la meilleure en premier."}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="chip">{formatMonthYear(safeMonth, safeYear, language)}</span>
+                  <span className="chip">
+                    {language === "en" ? "Budget" : "Budget"}: {safePaidLeaveBudget}{" "}
+                    {language === "en" ? "days" : "jours"}
+                  </span>
+                  <span className="chip">
+                    {computation?.periods.length ?? 0} {language === "en" ? "ranked" : "classés"}
+                  </span>
+                </div>
               </div>
-              <p className="mt-4 max-w-3xl text-base leading-7 text-ink/72">
+              <p className="mt-6 max-w-3xl text-base leading-7 text-ink/72">
                 {computation?.exact
                   ? language === "en"
                     ? `Exact results for ${formatMonthYear(safeMonth, safeYear, language)}.`
@@ -851,12 +860,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   value={`${computation?.usedBudget ?? 0}`}
                 />
                 <ResultSummaryStat
-                  label={language === "en" ? "Saved options" : "Options classées"}
-                  value={`${computation?.periods.length ?? 0}`}
-                />
-                <ResultSummaryStat
-                  label={language === "en" ? "Current month" : "Mois courant"}
-                  value={formatMonthYear(safeMonth, safeYear, language)}
+                  label={language === "en" ? "Top score" : "Meilleur score"}
+                  value={computation?.periods[0]?.worthScore.toFixed(1) ?? "0.0"}
                 />
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -877,8 +882,8 @@ export function Planner({ language, initialConfig }: PlannerProps) {
               </div>
               <p className="mt-4 text-sm leading-6 text-ink/72">
                 {language === "en"
-                  ? "Keep the planner simple: pick the month, then refine only when you need more exact dates."
-                  : "Gardez le simulateur simple : choisissez le mois, puis affinez seulement si vous avez besoin de dates plus précises."}
+                  ? "Pick a month first. Refine only if you want different dates or a different budget."
+                  : "Choisissez d’abord un mois. Affinez seulement si vous voulez d’autres dates ou un autre budget."}
               </p>
             </aside>
           </div>
