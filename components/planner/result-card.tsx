@@ -1,5 +1,6 @@
 import { IcsExportButton } from "@/components/planner/ics-export-button";
 import { GoogleCalendarButton } from "@/components/planner/google-calendar-button";
+import { TravelComparisonLinks } from "@/components/planner/travel-comparison-links";
 import { buildGoogleCalendarUrl, buildPeriodCalendarBundle } from "@/lib/calendar-export";
 import { sameDay } from "@/lib/domain/date-utils";
 import type { BestVacationPeriod } from "@/lib/domain/types";
@@ -39,6 +40,7 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
   const sideTone = highlighted
     ? "bg-[#274c7c] text-white border-[#244a79]"
     : "bg-[#eff5fb] text-ink border-line/80";
+  const showTravelLinks = period.totalDaysOff >= 3 || period.paidLeaveDaysUsed >= 1;
 
   if (!highlighted) {
     return (
@@ -87,18 +89,26 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
               </span>
             </div>
 
+            {showTravelLinks ? (
+              <TravelComparisonLinks
+                language={language}
+                startDate={period.startDate}
+                endDate={period.endDate}
+              />
+            ) : null}
+
             <div className="flex flex-wrap gap-3">
+              <GoogleCalendarButton
+                href={googleCalendarUrl}
+                label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
+                analyticsContext="planner_result"
+                className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
+              />
               <IcsExportButton
                 bundle={calendarBundle}
                 label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
                 analyticsContext="planner_result"
                 className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
-              />
-              <GoogleCalendarButton
-                href={googleCalendarUrl}
-                label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
-                analyticsContext="planner_result"
-                className="h-11 border-ink/10 bg-ink px-4 text-sm text-white shadow-sm hover:border-ink hover:bg-ink/92 hover:text-white"
               />
             </div>
           </div>
@@ -280,7 +290,15 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
               {scoreTooltip}
             </div>
 
-            <div className="mt-auto space-y-2 pt-1">
+            <div className="mt-auto space-y-3 pt-1">
+              {showTravelLinks ? (
+                <TravelComparisonLinks
+                  language={language}
+                  startDate={period.startDate}
+                  endDate={period.endDate}
+                  compact={highlighted}
+                />
+              ) : null}
               <GoogleCalendarButton
                 href={googleCalendarUrl}
                 label={language === "en" ? "Add to Google Calendar" : "Ajouter à Google Calendar"}
@@ -288,7 +306,7 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
                 className={`h-11 w-full px-4 text-sm shadow-sm ${
                   highlighted
                     ? "border-white/10 bg-white text-ink hover:bg-white/92 hover:text-ink"
-                    : "border-ink/10 bg-ink text-white hover:border-ink hover:bg-ink/92 hover:text-white"
+                    : "border-ink/10 bg-white hover:border-ink/20 hover:bg-paper"
                 }`}
               />
               <IcsExportButton

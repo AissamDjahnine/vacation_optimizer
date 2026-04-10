@@ -213,6 +213,9 @@ describe("planner and content pages", () => {
     render(<ResultCard language="fr" period={fridayHolidayPeriod} rank={1} highlighted />);
 
     expect(screen.getByText("Fête du Travail")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Google Flights" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Skyscanner" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Kayak" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Ajouter à Google Calendar" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Exporter au format .ics" })).toBeInTheDocument();
   });
