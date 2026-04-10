@@ -130,6 +130,40 @@ export function getGermanNationwideHolidayCoverage(year: number) {
   }));
 }
 
+export type GermanHolidayCoverageSummary = {
+  id: string;
+  name: string;
+  date: Date;
+  nationwide: boolean;
+  stateCodes: GermanStateCode[];
+};
+
+export function getGermanHolidayCoverageSummary(year: number): GermanHolidayCoverageSummary[] {
+  const coverage = new Map<string, GermanHolidayCoverageSummary>();
+
+  for (const state of germanStates) {
+    for (const holiday of getGermanHolidaysForState(year, state.code)) {
+      const key = `${holiday.id}-${holiday.date.toISOString()}`;
+      const current = coverage.get(key);
+
+      if (current) {
+        current.stateCodes.push(state.code);
+        continue;
+      }
+
+      coverage.set(key, {
+        id: holiday.id,
+        name: holiday.name,
+        date: holiday.date,
+        nationwide: holiday.nationwide,
+        stateCodes: [state.code],
+      });
+    }
+  }
+
+  return [...coverage.values()].sort((left, right) => left.date.getTime() - right.date.getTime());
+}
+
 export type GermanBridgeOpportunity = {
   holiday: GermanHoliday;
   vacationDaysNeeded: number;

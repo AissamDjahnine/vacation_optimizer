@@ -96,16 +96,19 @@ export function buildAbsoluteMetadata({
   title,
   description,
   canonical,
+  languages,
 }: {
   title: string;
   description: string;
   canonical: string;
+  languages?: Record<string, string>;
 }): Metadata {
   return {
     title,
     description,
     alternates: {
       canonical,
+      languages,
     },
     openGraph: {
       title,

@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { GermanyHomePage, GermanyStateBridgesPage, GermanyStateHolidaysPage, GermanyStateSchoolHolidaysPage } from "@/components/pages/germany-pages";
 import { germanYears } from "@/lib/germany/constants";
 import { buildGermanMetadata } from "@/lib/germany/seo";
-import { getGermanBridgeOpportunities, getGermanHolidaysForState } from "@/lib/germany/holidays";
+import { getGermanBridgeOpportunities, getGermanHolidayCoverageSummary, getGermanHolidaysForState } from "@/lib/germany/holidays";
 import { deRoutes, toGermanyExternalPath } from "@/lib/germany/routes";
 import { getGermanSchoolHolidayCoverage, getGermanSchoolHolidaysForState } from "@/lib/germany/school-holidays";
 import { germanStates } from "@/lib/germany/states";
@@ -61,6 +61,8 @@ describe("Germany product", () => {
     });
 
     expect(metadata.alternates?.canonical).toBe("https://de.pontsmalins.com/feiertage/bayern/2026");
+    expect(metadata.alternates?.languages?.["de-DE"]).toBe("https://de.pontsmalins.com/feiertage/bayern/2026");
+    expect(metadata.alternates?.languages?.["en-US"]).toBe("https://de.pontsmalins.com/en/feiertage/bayern/2026");
     expect(metadata.openGraph?.url).toBe("https://de.pontsmalins.com/feiertage/bayern/2026");
   });
 
@@ -72,7 +74,17 @@ describe("Germany product", () => {
     });
 
     expect(metadata.alternates?.canonical).toBe("https://de.pontsmalins.com/en/feiertage/bayern/2026");
+    expect(metadata.alternates?.languages?.["de-DE"]).toBe("https://de.pontsmalins.com/feiertage/bayern/2026");
+    expect(metadata.alternates?.languages?.["en-US"]).toBe("https://de.pontsmalins.com/en/feiertage/bayern/2026");
     expect(metadata.openGraph?.url).toBe("https://de.pontsmalins.com/en/feiertage/bayern/2026");
+  });
+
+  test("summarizes nationwide and state-specific holiday coverage for Germany year pages", () => {
+    const coverage = getGermanHolidayCoverageSummary(2027);
+
+    expect(coverage.find((holiday) => holiday.id === "new-year")?.stateCodes).toHaveLength(16);
+    expect(coverage.find((holiday) => holiday.id === "all-saints-day")?.stateCodes).toHaveLength(5);
+    expect(coverage.find((holiday) => holiday.id === "day-of-prayer-and-repentance")?.stateCodes).toEqual(["sn"]);
   });
 
   test("renders the Germany home page with country and state entries", () => {

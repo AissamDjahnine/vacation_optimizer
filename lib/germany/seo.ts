@@ -12,10 +12,19 @@ export function buildGermanMetadata({
   description: string;
   externalPath: string;
 }): Metadata {
+  const germanPath =
+    externalPath === "/en" ? "/" : externalPath.startsWith("/en/") ? externalPath.replace(/^\/en/, "") || "/" : externalPath;
+  const englishPath =
+    externalPath.startsWith("/en") ? externalPath : externalPath === "/" ? "/en" : `/en${externalPath}`;
+
   return buildAbsoluteMetadata({
     title,
     description,
     canonical: `${germanyBaseUrl}${externalPath}`,
+    languages: {
+      "de-DE": `${germanyBaseUrl}${germanPath}`,
+      "en-US": `${germanyBaseUrl}${englishPath}`,
+    },
   });
 }
 

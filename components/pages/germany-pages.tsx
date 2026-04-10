@@ -4,7 +4,7 @@ import Script from "next/script";
 import { ContentHero } from "@/components/content/content-hero";
 import { PageShell } from "@/components/content/page-shell";
 import { Reveal } from "@/components/motion/reveal";
-import type { GermanBridgeOpportunity } from "@/lib/germany/holidays";
+import { getGermanHolidayCoverageSummary, type GermanBridgeOpportunity } from "@/lib/germany/holidays";
 import type {
   GermanHoliday,
   GermanOfficialSource,
@@ -40,6 +40,10 @@ function cycleYear(year: number) {
 
 function germanyHomeLabel(locale: GermanyLocale) {
   return locale === "en" ? "Germany" : "Deutschland";
+}
+
+function joinStateNames(stateCodes: GermanStateCode[], locale: GermanyLocale) {
+  return stateCodes.map((state) => stateName(state, locale)).join(", ");
 }
 
 function OfficialSourcesBlock({
@@ -516,6 +520,9 @@ export function GermanyCountryYearPage({
     holidays: deRoutes.countryHolidaysYear(year),
     "school-holidays": deRoutes.countrySchoolHolidaysYear(year),
   } as const;
+  const holidayCoverage = kind === "holidays" ? getGermanHolidayCoverageSummary(year) : [];
+  const nationwideHolidayCount = holidayCoverage.filter((holiday) => holiday.nationwide).length;
+  const stateSpecificHolidayCount = holidayCoverage.length - nationwideHolidayCount;
 
   const related = germanStates.map((state) => ({
     href:
@@ -677,13 +684,71 @@ export function GermanyCountryYearPage({
             <article className="editorial-panel-muted">
               <p className="text-base leading-7 text-ink/74">
                 {locale === "en"
-                  ? "Each state page links directly to its sibling pages so users never hit a dead end."
-                  : "Jede Länderseite verlinkt direkt auf ihre Schwesterseiten, damit kein Nutzer in einer Sackgasse landet."}
+                  ? kind === "holidays"
+                    ? `This ${year} page already shows the nationwide holiday mix and the states where each extra holiday applies.`
+                    : "Each state page links directly to its sibling pages so users never hit a dead end."
+                  : kind === "holidays"
+                    ? `Diese ${year}-Seite zeigt bereits den bundeseinheitlichen Feiertagskern und die Länder mit zusätzlichen Feiertagen.`
+                    : "Jede Länderseite verlinkt direkt auf ihre Schwesterseiten, damit kein Nutzer in einer Sackgasse landet."}
               </p>
             </article>
           </div>
         </section>
       </Reveal>
+      {kind === "holidays" ? (
+        <Reveal>
+          <section className="editorial-panel">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="editorial-kicker">
+                  {locale === "en" ? "Holiday coverage" : "Feiertagsabdeckung"}
+                </p>
+                <h2 className="mt-3 text-3xl font-black tracking-tight text-ink">
+                  {locale === "en" ? `Public holidays across Germany in ${year}` : `Feiertage in Deutschland ${year}`}
+                </h2>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <article className="editorial-panel-muted">
+                  <p className="editorial-kicker">{locale === "en" ? "Unique holidays" : "Einzigartige Feiertage"}</p>
+                  <p className="mt-3 text-4xl font-black tracking-tight text-ink">{holidayCoverage.length}</p>
+                </article>
+                <article className="editorial-panel-muted">
+                  <p className="editorial-kicker">{locale === "en" ? "Nationwide" : "Bundesweit"}</p>
+                  <p className="mt-3 text-4xl font-black tracking-tight text-ink">{nationwideHolidayCount}</p>
+                </article>
+                <article className="editorial-panel-muted">
+                  <p className="editorial-kicker">{locale === "en" ? "State-specific" : "Landesspezifisch"}</p>
+                  <p className="mt-3 text-4xl font-black tracking-tight text-ink">{stateSpecificHolidayCount}</p>
+                </article>
+              </div>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {holidayCoverage.map((holiday) => (
+                <article key={`${holiday.id}-${holiday.date.toISOString()}`} className="rounded-4xl border border-line bg-paper p-5">
+                  <p className="editorial-kicker">
+                    {holiday.nationwide
+                      ? locale === "en"
+                        ? "Nationwide"
+                        : "Bundesweit"
+                      : locale === "en"
+                        ? `${holiday.stateCodes.length} states`
+                        : `${holiday.stateCodes.length} Bundesländer`}
+                  </p>
+                  <h3 className="mt-3 text-2xl font-black tracking-tight text-ink">{holiday.name}</h3>
+                  <p className="mt-3 text-base leading-7 text-ink/74">{formatFullDate(holiday.date, locale)}</p>
+                  <p className="mt-3 text-sm leading-7 text-ink/72">
+                    {holiday.nationwide
+                      ? locale === "en"
+                        ? "Applies in all 16 German states."
+                        : "Gilt in allen 16 Bundesländern."
+                      : joinStateNames(holiday.stateCodes, locale)}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+      ) : null}
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "All states for this year" : "Alle Bundesländer für dieses Jahr"}
