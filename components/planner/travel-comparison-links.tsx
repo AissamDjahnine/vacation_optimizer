@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { cn } from "@/components/cn";
 import { trackEvent } from "@/lib/analytics";
 import type { AppLanguage } from "@/lib/i18n";
@@ -9,7 +8,7 @@ type Provider = {
   id: "google_flights" | "skyscanner" | "kayak";
   label: string;
   href: string;
-  iconSrc: string;
+  className: string;
 };
 
 const providers: Provider[] = [
@@ -17,19 +16,22 @@ const providers: Provider[] = [
     id: "google_flights",
     label: "Google Flights",
     href: "https://www.google.com/travel/flights",
-    iconSrc: "/assets/icons/google_flights.png",
+    className:
+      "border-[#d6e8d8] bg-[linear-gradient(135deg,#ffffff_0%,#ffffff_42%,#e8f5e9_100%)] text-[#1b5e20] hover:border-[#7cb342] hover:bg-[linear-gradient(135deg,#ffffff_0%,#f1f8e9_100%)]",
   },
   {
     id: "skyscanner",
     label: "Skyscanner",
     href: "https://www.skyscanner.com",
-    iconSrc: "/assets/icons/skyscanner.png",
+    className:
+      "border-[#cfe3ff] bg-[linear-gradient(135deg,#ffffff_0%,#eef6ff_100%)] text-[#0f5fcd] hover:border-[#65a8ff] hover:bg-[linear-gradient(135deg,#ffffff_0%,#e5f0ff_100%)]",
   },
   {
     id: "kayak",
     label: "Kayak",
     href: "https://www.kayak.com/flights",
-    iconSrc: "/assets/icons/kayak.png",
+    className:
+      "border-[#ffd6bd] bg-[linear-gradient(135deg,#ffffff_0%,#fff1e8_100%)] text-[#c45700] hover:border-[#ff9f61] hover:bg-[linear-gradient(135deg,#ffffff_0%,#ffe9d9_100%)]",
   },
 ];
 
@@ -39,26 +41,30 @@ export function TravelComparisonLinks({
   endDate,
   className,
   compact = false,
+  title = true,
 }: {
   language: AppLanguage;
   startDate: Date;
   endDate: Date;
   className?: string;
   compact?: boolean;
+  title?: boolean;
 }) {
   return (
     <div className={cn("space-y-3", className)}>
-      <div className={compact ? "space-y-2" : "space-y-1"}>
-        <p className={cn("editorial-kicker", compact ? "text-white/68" : "")}>
-          {language === "en" ? "Travel comparisons" : "Comparateurs voyage"}
-        </p>
-        <p className={cn("text-sm leading-6", compact ? "text-white/78" : "text-ink/68")}>
-          {language === "en"
-            ? "Compare flights for these dates."
-            : "Comparez les vols pour ces dates."}
-        </p>
-      </div>
-      <div className="flex flex-wrap gap-2.5">
+      {title ? (
+        <div className={compact ? "space-y-2" : "space-y-1"}>
+          <p className={cn("editorial-kicker", compact ? "text-white/68" : "")}>
+            {language === "en" ? "Travel comparisons" : "Comparateurs voyage"}
+          </p>
+          <p className={cn("text-sm leading-6", compact ? "text-white/78" : "text-ink/68")}>
+            {language === "en"
+              ? "Compare flights for these dates."
+              : "Comparez les vols pour ces dates."}
+          </p>
+        </div>
+      ) : null}
+      <div className={cn("grid gap-2.5", compact ? "grid-cols-1" : "sm:grid-cols-3")}>
         {providers.map((provider) => (
           <a
             key={provider.id}
@@ -74,20 +80,10 @@ export function TravelComparisonLinks({
               })
             }
             className={cn(
-              "inline-flex h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-bold shadow-sm transition hover:-translate-y-0.5",
-              compact
-                ? "border-white/15 bg-white text-ink hover:bg-white/92"
-                : "border-ink/10 bg-ink text-white hover:border-ink hover:bg-ink/92",
+              "inline-flex h-11 w-full items-center justify-center rounded-2xl border px-4 py-2 text-sm font-bold shadow-sm transition hover:-translate-y-0.5",
+              provider.className,
             )}
           >
-            <Image
-              src={provider.iconSrc}
-              alt=""
-              aria-hidden="true"
-              width={16}
-              height={16}
-              className="h-4 w-4 rounded-sm object-contain"
-            />
             {provider.label}
           </a>
         ))}

@@ -80,13 +80,6 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
               </span>
             </div>
 
-            {showTravelLinks ? (
-              <TravelComparisonLinks
-                language={language}
-                startDate={period.startDate}
-                endDate={period.endDate}
-              />
-            ) : null}
           </div>
 
           <aside className="rounded-[1.4rem] border border-line/80 bg-[#eff5fb] p-4">
@@ -272,7 +265,7 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
                   language={language}
                   startDate={period.startDate}
                   endDate={period.endDate}
-                  compact={highlighted}
+                  compact
                 />
               ) : null}
             </div>
