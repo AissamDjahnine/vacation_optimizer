@@ -141,7 +141,7 @@ export function SiteFooter({
                     ? "Editorial framing"
                     : "Offizielle Einordnung"
                   : language === "en"
-                    ? "Calendar export"
+                    ? "Travel actions"
                     : "Export agenda"}
               </p>
               <p className="mt-3 text-sm leading-6 text-ink/68">
@@ -152,8 +152,8 @@ export function SiteFooter({
                   : language === "de"
                     ? "Die Deutschland-Seiten sind bewusst editorial aufgebaut: erst Einordnung und Quellen, dann die sinnvollen nächsten Seiten je Bundesland."
                     : language === "en"
-                      ? "Useful suggestions can be exported as .ics or sent to Google Calendar directly from the planner."
-                      : "Les suggestions utiles peuvent être exportées en .ics ou envoyées vers Google Calendar depuis le simulateur."}
+                      ? "Strong suggestions now expose travel comparison actions directly from the planner."
+                      : "Les suggestions fortes affichent maintenant des comparateurs voyage directement depuis le simulateur."}
               </p>
             </div>
           </div>

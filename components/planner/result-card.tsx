@@ -1,7 +1,4 @@
-import { IcsExportButton } from "@/components/planner/ics-export-button";
-import { GoogleCalendarButton } from "@/components/planner/google-calendar-button";
 import { TravelComparisonLinks } from "@/components/planner/travel-comparison-links";
-import { buildGoogleCalendarUrl, buildPeriodCalendarBundle } from "@/lib/calendar-export";
 import { sameDay } from "@/lib/domain/date-utils";
 import type { BestVacationPeriod } from "@/lib/domain/types";
 import type { AppLanguage } from "@/lib/i18n";
@@ -24,12 +21,6 @@ const dayStyles = {
 };
 
 export function ResultCard({ language, period, rank, highlighted = false }: ResultCardProps) {
-  const calendarBundle = buildPeriodCalendarBundle({
-    period,
-    language,
-    year: period.startDate.getFullYear(),
-  });
-  const googleCalendarUrl = buildGoogleCalendarUrl(calendarBundle.events[0]);
   const scoreTooltip =
     language === "en"
       ? "The score compares total days off to the leave days you actually need to book."
@@ -96,21 +87,6 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
                 endDate={period.endDate}
               />
             ) : null}
-
-            <div className="flex flex-wrap gap-3">
-              <GoogleCalendarButton
-                href={googleCalendarUrl}
-                label={language === "en" ? "Google Calendar" : "Ajouter à Google Calendar"}
-                analyticsContext="planner_result"
-                className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
-              />
-              <IcsExportButton
-                bundle={calendarBundle}
-                label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
-                analyticsContext="planner_result"
-                className="h-11 border-ink/10 bg-white px-4 text-sm shadow-sm hover:border-ink/20 hover:bg-paper"
-              />
-            </div>
           </div>
 
           <aside className="rounded-[1.4rem] border border-line/80 bg-[#eff5fb] p-4">
@@ -299,26 +275,6 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
                   compact={highlighted}
                 />
               ) : null}
-              <GoogleCalendarButton
-                href={googleCalendarUrl}
-                label={language === "en" ? "Add to Google Calendar" : "Ajouter à Google Calendar"}
-                analyticsContext="planner_result"
-                className={`h-11 w-full px-4 text-sm shadow-sm ${
-                  highlighted
-                    ? "border-white/10 bg-white text-ink hover:bg-white/92 hover:text-ink"
-                    : "border-ink/10 bg-white hover:border-ink/20 hover:bg-paper"
-                }`}
-              />
-              <IcsExportButton
-                bundle={calendarBundle}
-                label={language === "en" ? "Export .ics" : "Exporter au format .ics"}
-                analyticsContext="planner_result"
-                className={`h-11 w-full px-4 text-sm shadow-sm ${
-                  highlighted
-                    ? "border-white/15 bg-white/10 text-white hover:bg-white/15"
-                    : "border-ink/10 bg-white hover:border-ink/20 hover:bg-paper"
-                }`}
-              />
             </div>
           </div>
         </aside>

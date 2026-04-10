@@ -23,7 +23,7 @@ const copy = {
       },
       {
         title: "Sortie exploitable",
-        body: "Chaque suggestion peut être exportée au format .ics ou envoyée vers Google Calendar quand elle vaut vraiment le coup d’être conservée.",
+        body: "Chaque suggestion forte vous laisse comparer les options voyage directement, sans casser le flux de décision.",
         href: routes.annualPlannerYear(2026),
         cta: "Tester le plan annuel",
       },
@@ -46,7 +46,7 @@ const copy = {
       },
       {
         title: "Useful output",
-        body: "Each suggestion can be exported as .ics or sent to Google Calendar when it is actually worth keeping.",
+        body: "Strong suggestions now expose travel comparison actions directly, without breaking the decision flow.",
         href: routes.annualPlannerYear(2026),
         cta: "Try the annual plan",
       },

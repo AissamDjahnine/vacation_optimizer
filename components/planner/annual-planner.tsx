@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { IcsExportButton } from "@/components/planner/ics-export-button";
 import { ResultCard } from "@/components/planner/result-card";
 import { DateOptimizer } from "@/lib/domain/date-optimizer";
 import type {
@@ -13,7 +12,6 @@ import { getHolidaySnapshot, getSchoolHolidaySnapshot } from "@/lib/data-snapsho
 import { plannerYears } from "@/lib/constants";
 import { formatMonthYear } from "@/lib/formatting";
 import type { AppLanguage } from "@/lib/i18n";
-import { buildAnnualPlanCalendarBundle } from "@/lib/calendar-export";
 import { defaultPlannerState, applySchoolHolidayPreference } from "@/lib/planner-config";
 
 const annualBudgetOptions = [5, 10, 15, 20, 25];
@@ -367,22 +365,6 @@ export function AnnualPlanner({
               </span>
             </div>
           </div>
-
-          {plan.segments.length > 0 ? (
-            <IcsExportButton
-              bundle={buildAnnualPlanCalendarBundle({
-                plan,
-                language,
-                year: state.year,
-              })}
-              analyticsContext="annual_planner"
-              label={
-                language === "en"
-                  ? "Export annual plan (.ics)"
-                  : "Exporter le plan annuel (.ics)"
-              }
-            />
-          ) : null}
         </div>
 
         <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">

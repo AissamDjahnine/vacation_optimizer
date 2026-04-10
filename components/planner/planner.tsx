@@ -26,11 +26,8 @@ import {
 import { plannerConfigFromUrlSearchParams } from "@/lib/search-params";
 import { routes } from "@/lib/routes";
 import { Reveal } from "@/components/motion/reveal";
-import { GoogleCalendarButton } from "@/components/planner/google-calendar-button";
-import { IcsExportButton } from "@/components/planner/ics-export-button";
 import { ResultCard } from "@/components/planner/result-card";
 import { SkeletonCard } from "@/components/planner/skeleton-card";
-import { buildGoogleCalendarUrl, buildPeriodCalendarBundle } from "@/lib/calendar-export";
 import { trackEvent } from "@/lib/analytics";
 
 const holidayCache = new Map<number, Holiday[]>();
@@ -243,16 +240,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
   ]);
 
   const primaryPeriod = computation?.periods[0];
-  const primaryBundle = primaryPeriod
-    ? buildPeriodCalendarBundle({
-        period: primaryPeriod,
-        language,
-        year: safeYear,
-      })
-    : null;
-  const primaryGoogleCalendarUrl = primaryBundle
-    ? buildGoogleCalendarUrl(primaryBundle.events[0])
-    : null;
   const previewPeriods = computation?.periods.slice(0, 3) ?? [];
 
   const previewComputation = useMemo(() => {
@@ -844,25 +831,6 @@ export function Planner({ language, initialConfig }: PlannerProps) {
                   <LegendItem color="bg-[#e9ecff]" label="RTT" />
                   <LegendItem color="bg-[#f9dfd2]" label={language === "en" ? "Leave" : "Congé payé"} />
                 </div>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                {primaryBundle && primaryGoogleCalendarUrl ? (
-                  <>
-                    <GoogleCalendarButton
-                      href={primaryGoogleCalendarUrl}
-                      label={language === "en" ? "Add to Google Calendar" : "Ajouter à Google Calendar"}
-                      analyticsContext="planner_result"
-                      className="h-14 border-[#d55a1d] bg-coral px-6 text-base text-white shadow-[0_10px_24px_rgba(213,90,29,0.24)] hover:border-[#d55a1d] hover:bg-coral/95 hover:text-white"
-                    />
-                    <IcsExportButton
-                      bundle={primaryBundle}
-                      label={language === "en" ? "Export .ics" : "Exporter .ics"}
-                      analyticsContext="planner_result"
-                      className="h-14 border-line/80 bg-white px-6 text-base text-ink shadow-sm hover:border-ink/20 hover:bg-paper"
-                    />
-                  </>
-                ) : null}
               </div>
             </div>
 

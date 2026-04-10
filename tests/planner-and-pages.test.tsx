@@ -216,8 +216,8 @@ describe("planner and content pages", () => {
     expect(screen.getByRole("link", { name: "Google Flights" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Skyscanner" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Kayak" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Ajouter à Google Calendar" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Exporter au format .ics" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Ajouter à Google Calendar" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Exporter au format .ics" })).not.toBeInTheDocument();
   });
 
   test("result card supports longer holiday names in the timeline", () => {
