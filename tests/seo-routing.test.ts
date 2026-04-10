@@ -30,6 +30,17 @@ describe("SEO routing", () => {
     expect(entry?.priority).toBe(0.9);
   });
 
+  test("publishes the RTT 2027 landing page in both languages", () => {
+    const entries = sitemap();
+    const frEntry = entries.find((item) => item.url === "https://pontsmalins.com/rtt-2027");
+    const enEntry = entries.find((item) => item.url === "https://pontsmalins.com/en/rtt-2027");
+
+    expect(frEntry).toBeDefined();
+    expect(enEntry).toBeDefined();
+    expect(frEntry?.alternates?.languages?.en).toBe("https://pontsmalins.com/en/rtt-2027");
+    expect(enEntry?.alternates?.languages?.fr).toBe("https://pontsmalins.com/rtt-2027");
+  });
+
   test("does not leak the legacy english planner URL into the sitemap", () => {
     const entries = sitemap();
 

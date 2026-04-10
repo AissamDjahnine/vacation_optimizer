@@ -12,6 +12,7 @@ import {
   buildLeaveBudgetGuide2026Content,
   buildSchoolZone2026Content,
   mayBridges2026Content,
+  rtt2027Content,
   yearEnd2026Content,
   weekdayHolidays2026Content,
 } from "@/content/intent-pages";
@@ -317,6 +318,106 @@ export function WeekdayHolidays2026Page({
             <HolidayTable holidays={weekdayHolidays} language={language} showWeekendColumn />
           </div>
         </section>
+      }
+    />
+  );
+}
+
+export function Rtt2027Page({
+  language,
+  holidays,
+}: {
+  language: AppLanguage;
+  holidays: Holiday[];
+}) {
+  const strongestMonths = Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    return (
+      DateOptimizer.findFlexiblePeriods({
+        holidays,
+        vacationDaysToUse: 5,
+        availableRttDays: 1,
+        year: 2027,
+        month,
+      })[0] ?? null
+    );
+  })
+    .filter((period): period is NonNullable<typeof period> => Boolean(period))
+    .sort((left, right) => right.rankingScore - left.rankingScore)
+    .slice(0, 3);
+
+  const annualPlan = DateOptimizer.buildAnnualPlan({
+    holidays,
+    paidLeaveBudget: 10,
+    availableRttDays: 1,
+    year: 2027,
+    strategy: "balanced",
+  });
+
+  return (
+    <GenericGuidePage
+      language={language}
+      badge={{ fr: "RTT 2027", en: "RTT 2027" }}
+      content={rtt2027Content}
+      path={prefixForLanguage(routes.rtt2027, language)}
+      extraBlocks={
+        <div className="grid gap-6">
+          <section className="editorial-panel">
+            <div className="space-y-3">
+              <p className="editorial-kicker">{language === "en" ? "Top RTT openings" : "Premiers cas RTT"}</p>
+              <h2 className="text-3xl font-black tracking-tight text-ink">
+                {language === "en"
+                  ? "Three 2027 setups where one RTT changes the result"
+                  : "Trois configurations 2027 où 1 RTT change vraiment le résultat"}
+              </h2>
+              <p className="text-base leading-7 text-ink/72">
+                {language === "en"
+                  ? "These examples use 1 RTT day plus up to 5 paid leave days to show where the leverage is highest."
+                  : "Ces exemples utilisent 1 RTT plus jusqu’à 5 jours de congés payés pour montrer où le levier est le plus fort."}
+              </p>
+            </div>
+            <div className="mt-6 space-y-6">
+              {strongestMonths.map((period, index) => (
+                <ResultCard
+                  key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                  language={language}
+                  period={period}
+                  rank={index + 1}
+                  highlighted={index === 0}
+                />
+              ))}
+            </div>
+          </section>
+          <section className="editorial-panel">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="editorial-kicker">{language === "en" ? "Annual reading" : "Lecture annuelle"}</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-ink">
+                  {language === "en"
+                    ? "A balanced 2027 plan with RTT in the mix"
+                    : "Un plan 2027 équilibré avec RTT dans l’équation"}
+                </h2>
+              </div>
+              <span className="chip">
+                {annualPlan.totalDaysOff} {language === "en" ? "days off" : "jours de repos"}
+              </span>
+            </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              <article className="editorial-panel-muted">
+                <p className="editorial-kicker">{language === "en" ? "Paid leave used" : "Congés payés utilisés"}</p>
+                <p className="mt-3 text-4xl font-black tracking-tight text-ink">{annualPlan.totalPaidLeaveUsed}</p>
+              </article>
+              <article className="editorial-panel-muted">
+                <p className="editorial-kicker">{language === "en" ? "RTT used" : "RTT utilisés"}</p>
+                <p className="mt-3 text-4xl font-black tracking-tight text-ink">{annualPlan.totalRttUsed}</p>
+              </article>
+              <article className="editorial-panel-muted">
+                <p className="editorial-kicker">{language === "en" ? "Selected blocks" : "Blocs retenus"}</p>
+                <p className="mt-3 text-4xl font-black tracking-tight text-ink">{annualPlan.segments.length}</p>
+              </article>
+            </div>
+          </section>
+        </div>
       }
     />
   );

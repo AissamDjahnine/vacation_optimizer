@@ -6,6 +6,7 @@ import { AnnualPlanner } from "@/components/planner/annual-planner";
 import { ResultCard } from "@/components/planner/result-card";
 import { FaqPage } from "@/components/pages/faq-page";
 import { HolidaysYearPage } from "@/components/pages/holidays-year-page";
+import { Rtt2027Page } from "@/components/pages/intent-pages";
 import { SchoolHolidaysBridgesYearPage } from "@/components/pages/school-holidays-bridges-year-page";
 import type { BestVacationPeriod, Holiday, SchoolHolidayPeriod } from "@/lib/domain/types";
 
@@ -220,6 +221,28 @@ describe("planner and content pages", () => {
     render(<ResultCard language="fr" period={pentecostHolidayPeriod} rank={1} highlighted />);
 
     expect(screen.getByText("Lundi de Pentecôte")).toBeInTheDocument();
+  });
+
+  test("renders the RTT 2027 landing page with concrete examples", () => {
+    const holidays: Holiday[] = [
+      { localName: "Jour de l'an", date: new Date("2027-01-01T12:00:00.000Z") },
+      { localName: "Lundi de Pâques", date: new Date("2027-03-29T12:00:00.000Z") },
+      { localName: "Fête du Travail", date: new Date("2027-05-01T12:00:00.000Z") },
+      { localName: "Victoire 1945", date: new Date("2027-05-08T12:00:00.000Z") },
+      { localName: "Ascension", date: new Date("2027-05-06T12:00:00.000Z") },
+      { localName: "Lundi de Pentecôte", date: new Date("2027-05-17T12:00:00.000Z") },
+      { localName: "Fête nationale", date: new Date("2027-07-14T12:00:00.000Z") },
+      { localName: "Assomption", date: new Date("2027-08-15T12:00:00.000Z") },
+      { localName: "Toussaint", date: new Date("2027-11-01T12:00:00.000Z") },
+      { localName: "Armistice", date: new Date("2027-11-11T12:00:00.000Z") },
+      { localName: "Noël", date: new Date("2027-12-25T12:00:00.000Z") },
+    ];
+
+    render(<Rtt2027Page language="fr" holidays={holidays} />);
+
+    expect(screen.getByText(/RTT 2027 : comment les utiliser avec les jours fériés/)).toBeInTheDocument();
+    expect(screen.getByText(/Trois configurations 2027 où 1 RTT change vraiment le résultat/)).toBeInTheDocument();
+    expect(screen.getByText(/Un plan 2027 équilibré avec RTT dans l’équation/)).toBeInTheDocument();
   });
 });
 

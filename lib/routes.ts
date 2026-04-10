@@ -14,6 +14,7 @@ export type GuidePageType =
   | "vacances-scolaires-2026-zone-b"
   | "vacances-scolaires-2026-zone-c"
   | "jours-feries-2026-semaine"
+  | "rtt-2027"
   | "poser-5-jours-conges-2026"
   | "poser-10-jours-conges-2026"
   | "mentions-legales"
@@ -39,6 +40,7 @@ export const routes = {
   schoolHolidaysZone2026: (zone: "A" | "B" | "C") =>
     `/vacances-scolaires-2026-zone-${zone.toLowerCase()}`,
   weekdayHolidays2026: "/jours-feries-2026-semaine",
+  rtt2027: "/rtt-2027",
   leaveBudget5Guide2026: "/poser-5-jours-conges-2026",
   leaveBudget10Guide2026: "/poser-10-jours-conges-2026",
   legal: "/mentions-legales",

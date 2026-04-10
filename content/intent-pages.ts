@@ -295,6 +295,56 @@ export const weekdayHolidays2026Content: GuideContent = {
   ],
 };
 
+export const rtt2027Content: GuideContent = {
+  title: {
+    fr: "RTT 2027 : comment les utiliser avec les jours fériés",
+    en: "RTT 2027: how to use them with public holidays",
+  },
+  subtitle: {
+    fr: "Une page simple pour répondre à la requête la plus directe: quels RTT 2027 valent vraiment le coup, et dans quels mois commencer vos tests.",
+    en: "A simple page answering the most direct query: which 2027 RTT setups are really worth opening first, and in which months to start.",
+  },
+  sections: [
+    {
+      title: { fr: "Le bon angle pour RTT 2027", en: "The right angle for RTT 2027" },
+      accent: "orange",
+      chips: [{ fr: "RTT", en: "RTT" }, { fr: "2027", en: "2027" }, { fr: "Ponts", en: "Bridges" }],
+      body: [
+        {
+          fr: "La bonne lecture n’est pas de chercher un calendrier RTT séparé, mais de voir dans quels mois un RTT remplace un jour de congé payé sur un pont déjà prometteur.",
+          en: "The right reading is not to look for a separate RTT calendar, but to identify the months where one RTT can replace a paid leave day on an already strong bridge setup.",
+        },
+      ],
+      example: {
+        fr: "Exemple : ouvrez d’abord les mois où un jour férié tombe près d’un week-end, puis comparez le résultat avec et sans 1 RTT disponible.",
+        en: "Example: start with the months where a public holiday lands next to a weekend, then compare the outcome with and without one RTT day available.",
+      },
+      specialCase: {
+        fr: "À éviter : étaler les RTT au hasard sans regarder le rendement en jours de repos obtenus.",
+        en: "Avoid this trap: spreading RTT days randomly without checking the return in total days off.",
+      },
+    },
+    {
+      title: { fr: "Ce que cette page doit vous donner", en: "What this page should give you" },
+      accent: "blue",
+      chips: [{ fr: "Mois forts", en: "Strong months" }, { fr: "Exemples", en: "Examples" }, { fr: "Plan annuel", en: "Annual plan" }],
+      body: [
+        {
+          fr: "Le but est de sortir avec trois entrées concrètes à tester vite. Ensuite, le simulateur sert à recalculer selon votre vrai budget congés, votre RTT mensuel et vos contraintes familiales.",
+          en: "The goal is to leave with three concrete entry points to test quickly. Then the planner recalculates using your real leave budget, monthly RTT and family constraints.",
+        },
+      ],
+    },
+  ],
+  relatedLinks: [
+    { href: routes.holidaysYear(2027), label: { fr: "Jours fériés 2027", en: "Public holidays 2027" } },
+    { href: routes.bridgesYear(2027), label: { fr: "Ponts 2027", en: "Bridge ideas 2027" } },
+    { href: routes.annualPlannerYear(2027), label: { fr: "Plan annuel 2027", en: "Annual plan 2027" } },
+    { href: routes.leaveBudget10Guide2026, label: { fr: "Poser 10 jours de congés", en: "Book 10 leave days" } },
+    { href: routes.home, label: { fr: "Tester dans le simulateur", en: "Test in the planner" } },
+  ],
+};
+
 export function buildLeaveBudgetGuide2026Content(budget: 5 | 10): GuideContent {
   const higherBudget = budget === 5 ? 10 : 15;
   return {
