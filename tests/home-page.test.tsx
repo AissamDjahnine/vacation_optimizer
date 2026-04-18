@@ -17,6 +17,8 @@ describe("HomePage", () => {
 
     expect(screen.getByText("Quick links")).toBeInTheDocument();
     expect(screen.getByText("Travel smarter in 2026")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open the annual planner" })).toBeInTheDocument();
+    expect(screen.getByText("Before you go further")).toBeInTheDocument();
+    expect(screen.getByText("Useful guides for planning faster")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Open the annual planner" }).length).toBeGreaterThan(0);
   });
 });
