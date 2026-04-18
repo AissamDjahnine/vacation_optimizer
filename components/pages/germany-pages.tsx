@@ -22,6 +22,8 @@ import { deRoutes, toGermanyExternalPath } from "@/lib/germany/routes";
 import { germanyBaseUrl } from "@/lib/germany/seo";
 import { germanStateMap, germanStates } from "@/lib/germany/states";
 import { formatFullDate, formatShortRange } from "@/lib/formatting";
+import { trackEvent } from "@/lib/analytics";
+import { buildItemListSchema } from "@/lib/seo";
 
 function localizePath(path: string, locale: GermanyLocale) {
   const externalPath = toGermanyExternalPath(path);
@@ -90,20 +92,54 @@ function LinkGrid({
   title,
   links,
   initialVisibleCount,
+  schemaId,
+  source,
+  pageType,
 }: {
   locale: GermanyLocale;
   title: string;
   links: { href: string; label: string; body: string }[];
   initialVisibleCount?: number;
+  schemaId?: string;
+  source?: string;
+  pageType?: string;
 }) {
   const visibleLinks =
     typeof initialVisibleCount === "number" ? links.slice(0, initialVisibleCount) : links;
   const hiddenLinks =
     typeof initialVisibleCount === "number" ? links.slice(initialVisibleCount) : [];
+  const schema = schemaId
+    ? buildItemListSchema({
+        name: title,
+        items: links.map((link) => ({
+          name: link.label,
+          url: localizePath(link.href, locale),
+          description: link.body,
+        })),
+      })
+    : null;
+  const handleClick = (destination: string) => {
+    if (!source || !pageType) {
+      return;
+    }
+    trackEvent("guide_click", {
+      language: locale,
+      source,
+      page_type: pageType,
+      destination,
+    });
+  };
 
   return (
     <Reveal>
       <section className="editorial-panel">
+        {schema ? (
+          <Script
+            id={schemaId}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ) : null}
         <p className="editorial-kicker">
           {locale === "en" ? "Useful next pages" : "Nächste sinnvolle Seiten"}
         </p>
@@ -113,6 +149,7 @@ function LinkGrid({
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => handleClick(link.href)}
               className="rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
             >
               <h3 className="text-2xl font-black tracking-tight text-ink">{link.label}</h3>
@@ -130,6 +167,7 @@ function LinkGrid({
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => handleClick(link.href)}
                   className="rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
                 >
                   <h3 className="text-2xl font-black tracking-tight text-ink">{link.label}</h3>
@@ -218,6 +256,70 @@ function GermanyFaqSchema({
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
+}
+
+function getPeerStates(state: GermanStateCode) {
+  const current = germanStateMap[state];
+  const sameRegion = germanStates.filter(
+    (candidate) => candidate.region === current.region && candidate.code !== state,
+  );
+  const fallback = germanStates.filter(
+    (candidate) => candidate.region !== current.region && candidate.code !== state,
+  );
+
+  return [...sameRegion, ...fallback].slice(0, 3);
+}
+
+function buildStateComparisonLinks({
+  kind,
+  state,
+  year,
+  locale,
+}: {
+  kind: "bridges" | "holidays" | "school-holidays";
+  state: GermanStateCode;
+  year: number;
+  locale: GermanyLocale;
+}) {
+  const displayState = stateName(state, locale);
+
+  return getPeerStates(state).map((peer) => {
+    const peerName = stateName(peer.code, locale);
+    const href =
+      kind === "bridges"
+        ? localizePath(deRoutes.stateBridgesYear(year, peer.code), locale)
+        : kind === "holidays"
+          ? localizePath(deRoutes.stateHolidaysYear(year, peer.code), locale)
+          : localizePath(deRoutes.stateSchoolHolidaysYear(year, peer.code), locale);
+
+    return {
+      href,
+      label:
+        kind === "bridges"
+          ? locale === "en"
+            ? `Compare ${displayState} with ${peerName} bridge days`
+            : `${displayState} mit ${peerName} bei Brückentagen vergleichen`
+          : kind === "holidays"
+            ? locale === "en"
+              ? `Compare ${displayState} with ${peerName} holidays`
+              : `${displayState} mit ${peerName} bei Feiertagen vergleichen`
+            : locale === "en"
+              ? `Compare ${displayState} with ${peerName} school holidays`
+              : `${displayState} mit ${peerName} bei Schulferien vergleichen`,
+      body:
+        kind === "bridges"
+          ? locale === "en"
+            ? `${peerName} is a useful comparison state for ${year} when you want to see how regional holiday differences change bridge-day quality.`
+            : `${peerName} ist für ${year} ein sinnvoller Vergleich, wenn regionale Feiertagsunterschiede die Brückentag-Qualität sichtbar machen sollen.`
+          : kind === "holidays"
+            ? locale === "en"
+              ? `${peerName} highlights where the legal holiday base changes against ${displayState} in ${year}.`
+              : `${peerName} zeigt, wo sich die gesetzliche Feiertagsbasis im Jahr ${year} gegenüber ${displayState} verändert.`
+            : locale === "en"
+              ? `${peerName} helps families compare how the school-holiday rhythm shifts around ${displayState} in ${year}.`
+              : `${peerName} hilft Familien dabei, den Ferienrhythmus rund um ${displayState} im Jahr ${year} direkt zu vergleichen.`,
+    };
+  });
 }
 
 export function GermanyHomePage({ locale = "de" }: { locale?: GermanyLocale }) {
@@ -330,6 +432,9 @@ export function GermanyHomePage({ locale = "de" }: { locale?: GermanyLocale }) {
             ? "Start the Germany product with these entries"
             : "Mit diesen Einstiegen beginnt der Deutschland-Silo"
         }
+        source="germany_home_hub"
+        pageType="germany_home_page"
+        schemaId={`de-home-start-grid-${locale}`}
         links={[
           {
             href: localizePath(deRoutes.countryBridgesYear(2026), locale),
@@ -394,6 +499,9 @@ export function GermanyHomePage({ locale = "de" }: { locale?: GermanyLocale }) {
             ? "Jump directly to a state"
             : "Direkt in ein Bundesland springen"
         }
+        source="germany_home_states"
+        pageType="germany_home_page"
+        schemaId={`de-home-states-grid-${locale}`}
         links={links}
         initialVisibleCount={6}
       />
@@ -460,6 +568,9 @@ export function GermanyGuidePage({
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "Useful next pages" : "Sinnvolle nächste Seiten"}
+        source="germany_guide_hub"
+        pageType="germany_guide_page"
+        schemaId={`de-guide-hub-${locale}-${path.replace(/\W+/g, "-")}`}
         links={[
           {
             href: localizePath(deRoutes.countryBridgesYear(2026), locale),
@@ -796,6 +907,9 @@ export function GermanyCountryYearPage({
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "All states for this year" : "Alle Bundesländer für dieses Jahr"}
+        source={`germany_country_${kind}_states`}
+        pageType={`germany_country_${kind}`}
+        schemaId={`de-country-states-${locale}-${kind}-${year}`}
         links={related}
       />
       <OfficialSourcesBlock locale={locale} sources={sources} />
@@ -985,6 +1099,9 @@ export function GermanyStateHolidaysPage({
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "Useful next pages" : "Nächste sinnvolle Seiten"}
+        source="germany_state_holidays_hub"
+        pageType="germany_state_holidays"
+        schemaId={`de-state-holidays-hub-${locale}-${state}-${year}`}
         links={[
           {
             href: localizePath(deRoutes.stateBridgesYear(year, state), locale),
@@ -1014,6 +1131,23 @@ export function GermanyStateHolidaysPage({
                 : "Das Folgejahr direkt mit derselben Länderlogik vergleichen.",
           },
         ]}
+      />
+      <LinkGrid
+        locale={locale}
+        title={
+          locale === "en"
+            ? `Compare ${displayState} with nearby state calendars`
+            : `${displayState} mit naheliegenden Länderkalendern vergleichen`
+        }
+        source="germany_state_holidays_compare"
+        pageType="germany_state_holidays"
+        schemaId={`de-state-holidays-compare-${locale}-${state}-${year}`}
+        links={buildStateComparisonLinks({
+          kind: "holidays",
+          state,
+          year,
+          locale,
+        })}
       />
     </PageShell>
   );
@@ -1175,6 +1309,9 @@ export function GermanyStateBridgesPage({
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "Useful next pages" : "Nächste sinnvolle Seiten"}
+        source="germany_state_bridges_hub"
+        pageType="germany_state_bridges"
+        schemaId={`de-state-bridges-hub-${locale}-${state}-${year}`}
         links={[
           {
             href: localizePath(deRoutes.stateHolidaysYear(year, state), locale),
@@ -1204,6 +1341,23 @@ export function GermanyStateBridgesPage({
                 : "Das Folgejahr direkt mit derselben Länderlogik vergleichen.",
           },
         ]}
+      />
+      <LinkGrid
+        locale={locale}
+        title={
+          locale === "en"
+            ? `Compare bridge-day quality around ${displayState}`
+            : `Brückentag-Qualität rund um ${displayState} vergleichen`
+        }
+        source="germany_state_bridges_compare"
+        pageType="germany_state_bridges"
+        schemaId={`de-state-bridges-compare-${locale}-${state}-${year}`}
+        links={buildStateComparisonLinks({
+          kind: "bridges",
+          state,
+          year,
+          locale,
+        })}
       />
     </PageShell>
   );
@@ -1389,6 +1543,9 @@ export function GermanyStateSchoolHolidaysPage({
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "Useful next pages" : "Nächste sinnvolle Seiten"}
+        source="germany_state_school_hub"
+        pageType="germany_state_school"
+        schemaId={`de-state-school-hub-${locale}-${state}-${year}`}
         links={[
           {
             href: localizePath(deRoutes.stateBridgesYear(year, state), locale),
@@ -1418,6 +1575,23 @@ export function GermanyStateSchoolHolidaysPage({
                 : "Das Folgejahr ohne Produktwechsel vergleichen.",
           },
         ]}
+      />
+      <LinkGrid
+        locale={locale}
+        title={
+          locale === "en"
+            ? `Compare family calendars near ${displayState}`
+            : `Familienkalender rund um ${displayState} vergleichen`
+        }
+        source="germany_state_school_compare"
+        pageType="germany_state_school"
+        schemaId={`de-state-school-compare-${locale}-${state}-${year}`}
+        links={buildStateComparisonLinks({
+          kind: "school-holidays",
+          state,
+          year,
+          locale,
+        })}
       />
     </PageShell>
   );

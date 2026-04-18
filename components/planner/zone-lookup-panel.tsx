@@ -37,6 +37,10 @@ export function ZoneLookupPanel({
     () => lookupSchoolZone(submittedQuery, language),
     [language, submittedQuery],
   );
+  const resolvedActionHref =
+    result.matched && result.zone && actionHrefTemplate
+      ? actionHrefTemplate.replace("{zone}", result.zone)
+      : null;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -156,15 +160,15 @@ export function ZoneLookupPanel({
             <p className="text-sm leading-7 text-ink/78">{t(result.message, language)}</p>
           )}
 
-          {result.matched && result.zone && actionHrefTemplate ? (
+          {resolvedActionHref ? (
             <Link
-              href={prefixForLanguage(actionHrefTemplate.replace("{zone}", result.zone), language)}
+              href={prefixForLanguage(resolvedActionHref, language)}
               onClick={() =>
                 trackEvent("guide_click", {
                   language,
                   source,
                   page_type: "zone_lookup",
-                  destination: actionHrefTemplate.replace("{zone}", result.zone),
+                  destination: resolvedActionHref,
                   zone: result.zone,
                 })
               }
