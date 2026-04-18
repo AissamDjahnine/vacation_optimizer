@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/components/cn";
+import { trackEvent } from "@/lib/analytics";
 import type { AppLanguage } from "@/lib/i18n";
 import { prefixForLanguage, t } from "@/lib/i18n";
 import { lookupSchoolZone, zoneLookupSourceNote } from "@/lib/zone-lookup";
@@ -16,6 +17,7 @@ export function ZoneLookupPanel({
   actionLabel,
   className,
   disabled = false,
+  source = "zone_lookup_panel",
 }: {
   language: AppLanguage;
   onZoneResolved?: (zone: "A" | "B" | "C") => void;
@@ -25,6 +27,7 @@ export function ZoneLookupPanel({
   actionLabel?: string;
   className?: string;
   disabled?: boolean;
+  source?: string;
 }) {
   const [query, setQuery] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
@@ -48,6 +51,13 @@ export function ZoneLookupPanel({
     }
     setEmptyError(false);
     setSubmittedQuery(nextQuery);
+    trackEvent("guide_click", {
+      language,
+      source,
+      page_type: "zone_lookup",
+      destination: "zone_lookup_submit",
+      lookup_query: nextQuery,
+    });
     const nextResult = lookupSchoolZone(nextQuery, language);
     if (nextResult.matched && nextResult.zone && onZoneResolved) {
       onZoneResolved(nextResult.zone);
@@ -149,6 +159,15 @@ export function ZoneLookupPanel({
           {result.matched && result.zone && actionHrefTemplate ? (
             <Link
               href={prefixForLanguage(actionHrefTemplate.replace("{zone}", result.zone), language)}
+              onClick={() =>
+                trackEvent("guide_click", {
+                  language,
+                  source,
+                  page_type: "zone_lookup",
+                  destination: actionHrefTemplate.replace("{zone}", result.zone),
+                  zone: result.zone,
+                })
+              }
               className="mt-4 inline-flex text-sm font-bold text-[#1f4471]"
             >
               {actionLabel ?? (language === "en" ? "Use this zone" : "Utiliser cette zone")}

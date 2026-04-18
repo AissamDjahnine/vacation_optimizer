@@ -102,6 +102,8 @@ export function SchoolHolidaysBridgesYearPage({
           source="school_holidays_year_hero"
           eventName="guide_click"
           destination={routes.home}
+          pageType="school_holidays_year"
+          year={year}
         />
       </Reveal>
 

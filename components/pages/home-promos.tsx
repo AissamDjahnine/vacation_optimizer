@@ -24,7 +24,7 @@ export function HomePromos({ language }: { language: AppLanguage }) {
             ? "Jump straight to the pages people search for"
             : "Aller directement aux pages les plus recherchées"}
         </h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {popularLinks.map((item) => (
             <Link
               key={item.href}
@@ -33,6 +33,7 @@ export function HomePromos({ language }: { language: AppLanguage }) {
                 trackEvent("guide_click", {
                   language,
                   source: "home_quick_links",
+                  page_type: "home_quick_links",
                   destination: item.href,
                 })
               }

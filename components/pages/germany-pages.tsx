@@ -672,6 +672,8 @@ export function GermanyCountryYearPage({
             source={`germany_country_${kind}_hero`}
             eventName="guide_click"
             destination={deRoutes.countryBridgesYear(year)}
+            pageType={`germany_country_${kind}`}
+            year={year}
             trustItems={
               locale === "en"
                 ? ["Official sources", "Free", "No account", "State-by-state"]
@@ -913,6 +915,8 @@ export function GermanyStateHolidaysPage({
           source="germany_state_holidays_hero"
           eventName="guide_click"
           destination={deRoutes.stateBridgesYear(year, state)}
+          pageType="germany_state_holidays"
+          year={year}
           trustItems={
             locale === "en"
               ? ["Official sources", "Free", "No account", "State-specific"]
@@ -1315,6 +1319,8 @@ export function GermanyStateSchoolHolidaysPage({
           source="germany_state_school_hero"
           eventName="guide_click"
           destination={deRoutes.stateBridgesYear(year, state)}
+          pageType="germany_state_school"
+          year={year}
           trustItems={
             locale === "en"
               ? ["KMK source", "Free", "No account", "Family focus"]

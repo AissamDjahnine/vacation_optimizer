@@ -101,13 +101,24 @@ export function SiteHeader({ language, host, germanyHost = false, germanyLocale 
                 }
                 {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
                 onClick={() => {
-                  if (item.href.includes("de.pontsmalins.com")) {
+                  const destination = external ? item.href : germanyHost ? item.href : localizedPath(item.href);
+
+                  if (item.href.includes("de.pontsmalins.com") || germanyHost || item.href.startsWith("/de")) {
                     trackEvent("germany_entry_click", {
                       language,
                       source: "site_header",
-                      destination: item.href,
+                      page_type: germanyHost ? "germany_header" : "site_header",
+                      destination,
                     });
+                    return;
                   }
+
+                  trackEvent(item.href === routes.annualPlannerYear(2026) ? "annual_plan_click" : "guide_click", {
+                    language,
+                    source: "site_header",
+                    page_type: germanyHost ? "germany_header" : "site_header",
+                    destination,
+                  });
                 }}
               className={cn(
                   "rounded-full px-4 py-2 text-sm font-semibold transition-colors",

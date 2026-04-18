@@ -24,8 +24,8 @@ const copy = {
       {
         title: "Sortie exploitable",
         body: "Chaque suggestion forte vous laisse comparer les options voyage directement, sans casser le flux de décision.",
-        href: routes.annualPlannerYear(2026),
-        cta: "Tester le plan annuel",
+        href: routes.bridgesYear(2026),
+        cta: "Voir les ponts 2026",
       },
     ],
   },
@@ -47,8 +47,8 @@ const copy = {
       {
         title: "Useful output",
         body: "Strong suggestions now expose travel comparison actions directly, without breaking the decision flow.",
-        href: routes.annualPlannerYear(2026),
-        cta: "Try the annual plan",
+        href: routes.bridgesYear(2026),
+        cta: "See bridge ideas 2026",
       },
     ],
   },
@@ -56,7 +56,7 @@ const copy = {
 
 export function HomeTrustStrip({ language }: { language: AppLanguage }) {
   const section = language === "en" ? copy.en : copy.fr;
-  const featuredItems = section.items.slice(0, 2);
+  const featuredItems = section.items;
 
   return (
     <section className="site-card space-y-5 p-6 sm:p-8">
@@ -79,6 +79,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
                 trackEvent(item.href === routes.annualPlannerYear(2026) ? "annual_plan_click" : "guide_click", {
                   language,
                   source: "home_trust_strip",
+                  page_type: "home_trust_strip",
                   destination: item.href,
                 })
               }
@@ -96,6 +97,7 @@ export function HomeTrustStrip({ language }: { language: AppLanguage }) {
             trackEvent("annual_plan_click", {
               language,
               source: "home_trust_strip_cta",
+              page_type: "home_trust_strip_cta",
               year: 2026,
             })
           }

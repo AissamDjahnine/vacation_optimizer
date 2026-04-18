@@ -1,6 +1,7 @@
 import { AnnualPlanner } from "@/components/planner/annual-planner";
 import { AuthorityBlock } from "@/components/content/authority-block";
 import { ContentHero } from "@/components/content/content-hero";
+import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
 import { RelatedLinks } from "@/components/content/related-links";
 import { schoolAuthority2026Block } from "@/content/official-cases";
@@ -37,6 +38,27 @@ export function AnnualPlannerPage({
       <p className="text-sm font-medium text-ink/60">
         {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
       </p>
+
+      <PrimaryActionPanel
+        language={language}
+        title={
+          language === "en"
+            ? `Open the strongest annual plan for ${year}`
+            : `Ouvrir le meilleur plan annuel ${year}`
+        }
+        description={
+          language === "en"
+            ? "Use the annual planner to spread your budget across the year, then compare the strongest retained breaks with the monthly and bridge pages."
+            : "Utilisez le plan annuel pour répartir votre budget sur l’année, puis comparez les meilleurs blocs retenus avec les pages mensuelles et les pages ponts."
+        }
+        primaryHref={routes.home}
+        primaryLabel={language === "en" ? "Open the monthly planner" : "Ouvrir le simulateur mensuel"}
+        source="annual_planner_hero"
+        eventName="annual_plan_click"
+        destination={routes.home}
+        pageType="annual_planner_page"
+        year={year}
+      />
 
       <AnnualPlanner language={language} year={year} />
 

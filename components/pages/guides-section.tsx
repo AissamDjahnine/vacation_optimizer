@@ -7,6 +7,24 @@ import { routes } from "@/lib/routes";
 
 const guides = [
   {
+    href: routes.bridgesYear(2026),
+    frTitle: "Ponts 2026",
+    enTitle: "Bridge ideas 2026",
+    frBody:
+      "Les meilleurs mois à ouvrir d’abord et les ponts à comparer avant de revenir au simulateur.",
+    enBody:
+      "The best months to open first and the bridge ideas worth comparing before going back to the planner.",
+  },
+  {
+    href: routes.holidaysYear(2026),
+    frTitle: "Jours fériés 2026",
+    enTitle: "Public holidays 2026",
+    frBody:
+      "Toutes les dates officielles 2026, avec les cas qui méritent un vrai test de pont.",
+    enBody:
+      "All official 2026 dates, with the holiday windows that deserve a real bridge-day check.",
+  },
+  {
     href: routes.annualPlannerYear(2026),
     frTitle: "Planifier toute l’année 2026",
     enTitle: "Plan the full year 2026",
@@ -78,7 +96,7 @@ const guides = [
 ];
 
 export function GuidesSection({ language }: { language: AppLanguage }) {
-  const featuredGuides = guides.slice(0, 4);
+  const featuredGuides = guides.slice(0, 6);
 
   return (
     <section className="site-card p-6 sm:p-8">
@@ -101,6 +119,7 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
               trackEvent(guide.href === routes.annualPlannerYear(2026) ? "annual_plan_click" : "guide_click", {
                 language,
                 source: "guides_section",
+                page_type: "guides_section",
                 destination: guide.href,
               })
             }
@@ -125,6 +144,7 @@ export function GuidesSection({ language }: { language: AppLanguage }) {
             trackEvent("guide_click", {
               language,
               source: "guides_section_footer",
+              page_type: "guides_section_footer",
               destination: routes.faq,
             })
           }

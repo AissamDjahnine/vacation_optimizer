@@ -91,6 +91,8 @@ export function HolidaysYearPage({
           source="holidays_year_hero"
           eventName="guide_click"
           destination={routes.home}
+          pageType="holidays_year"
+          year={year}
         />
       </Reveal>
 

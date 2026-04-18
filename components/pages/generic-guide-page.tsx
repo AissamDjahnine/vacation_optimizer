@@ -94,6 +94,7 @@ export function GenericGuidePage({
           source="guide_intro"
           eventName="guide_click"
           destination={routes.home}
+          pageType="guide_page"
           trustItems={
             language === "de"
               ? ["Offizielle Quellen", "Kostenlos", "Ohne Konto", "Direkte Einstiege"]

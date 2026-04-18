@@ -12,6 +12,8 @@ type PrimaryActionPanelProps = {
   eventName?: "annual_plan_click" | "guide_click";
   destination?: string;
   trustItems?: string[];
+  pageType?: string;
+  year?: number;
 };
 
 function defaultTrustItems(language: AppLanguage) {
@@ -34,6 +36,8 @@ export function PrimaryActionPanel({
   eventName = "guide_click",
   destination,
   trustItems,
+  pageType,
+  year,
 }: PrimaryActionPanelProps) {
   const chips = trustItems ?? defaultTrustItems(language);
 
@@ -58,6 +62,8 @@ export function PrimaryActionPanel({
               trackEvent(eventName, {
                 language,
                 source,
+                page_type: pageType,
+                year,
                 destination: destination ?? primaryHref,
               })
             }

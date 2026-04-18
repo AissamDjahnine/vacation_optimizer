@@ -115,6 +115,8 @@ export function BridgesYearPage({
           source="bridges_year_hero"
           eventName="guide_click"
           destination={routes.home}
+          pageType="bridges_year"
+          year={year}
         />
       </Reveal>
 

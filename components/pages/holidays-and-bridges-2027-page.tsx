@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { ContentHero } from "@/components/content/content-hero";
 import { HolidayTable } from "@/components/content/holiday-table";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
+import { trackEvent } from "@/lib/analytics";
 import { RelatedLinks } from "@/components/content/related-links";
 import { Reveal } from "@/components/motion/reveal";
 import { holidaysAuthority2027Block } from "@/content/official-cases";
@@ -167,6 +168,14 @@ export function HolidaysAndBridges2027Page({
             </div>
             <Link
               href={prefixForLanguage(routes.home, language)}
+              onClick={() =>
+                trackEvent("guide_click", {
+                  language,
+                  source: "holidays_and_bridges_2027_cta",
+                  page_type: "guide_page",
+                  destination: routes.home,
+                })
+              }
               className="rounded-full bg-coral px-6 py-3 text-lg font-bold text-white transition hover:-translate-y-0.5"
             >
               {language === "en" ? "Use the planner" : "Utiliser le simulateur"}
