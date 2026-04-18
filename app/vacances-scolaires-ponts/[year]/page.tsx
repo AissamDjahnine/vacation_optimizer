@@ -20,8 +20,8 @@ export async function generateMetadata({
     return buildNotFoundMetadata("fr");
   }
   return buildMetadata({
-    title: `Vacances scolaires et ponts ${year}`,
-    description: `Les périodes scolaires par zone, les repères familles et les meilleurs moments pour revenir au simulateur en ${year}.`,
+    title: `Vacances scolaires et ponts ${year} : zones, repères famille et dates utiles`,
+    description: `Les périodes par zone, les ponts utiles pour les familles et les meilleurs moments pour ouvrir le simulateur avec votre vraie zone en ${year}.`,
     path: `/vacances-scolaires-ponts/${year}`,
     enPath: `/en/vacances-scolaires-ponts/${year}`,
   });

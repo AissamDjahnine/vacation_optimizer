@@ -4,8 +4,8 @@ import { getHolidaysForYear } from "@/lib/page-data";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Ponts de mai 2026 : les meilleurs cas à tester d’abord",
-  description: "Les ponts de mai 2026 à ouvrir en premier : 1er mai, 8 mai, Ascension, et les meilleurs cas à tester selon votre budget.",
+  title: "Ponts de mai 2026 : meilleurs cas, jours fériés et week-ends prolongés",
+  description: "Les ponts de mai 2026 à ouvrir en premier, du 1er mai à l’Ascension, avec les cas les plus utiles à tester selon votre budget.",
   path: "/ponts-mai-2026",
   enPath: "/en/ponts-mai-2026",
 });

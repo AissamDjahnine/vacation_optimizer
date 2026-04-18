@@ -23,8 +23,8 @@ export async function generateMetadata({
   }
 
   return buildGermanMetadata({
-    title: `Feiertage ${state.name} ${year}: alle Termine`,
-    description: `Alle Feiertage in ${state.name} ${year} inklusive bundeseinheitlicher und landesspezifischer Tage mit offizieller Einordnung.`,
+    title: `Feiertage ${state.name} ${year}: alle Termine und Unterschiede`,
+    description: `Alle Feiertage in ${state.name} ${year} inklusive bundeseinheitlicher und landesspezifischer Tage, offizieller Einordnung und direktem Weg zu den Brückentagen.`,
     externalPath: `/feiertage/${state.slug}/${year}`,
   });
 }

@@ -518,6 +518,8 @@ export function AnnualPlanner({
                 period={segment.period}
                 rank={index + 1}
                 highlighted={index === 0}
+                travelSource="annual_page"
+                pageType="annual_planner"
               />
             ))}
           </div>

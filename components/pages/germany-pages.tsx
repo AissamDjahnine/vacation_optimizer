@@ -1,8 +1,10 @@
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
+import { FaqListSection } from "@/components/content/faq-list-section";
 import Link from "next/link";
 import Script from "next/script";
 import { ContentHero } from "@/components/content/content-hero";
 import { PageShell } from "@/components/content/page-shell";
+import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
 import { Reveal } from "@/components/motion/reveal";
 import { getGermanHolidayCoverageSummary, type GermanBridgeOpportunity } from "@/lib/germany/holidays";
 import type {
@@ -649,6 +651,35 @@ export function GermanyCountryYearPage({
         subtitle={{ fr: summary, en: summary }}
         language={locale}
       />
+      {kind !== "bridges" ? (
+        <Reveal>
+          <PrimaryActionPanel
+            language={locale}
+            title={
+              locale === "en"
+                ? `Turn ${titleMap[kind]} into bridge-day choices`
+                : `${titleMap[kind]} in konkrete Brückentag-Chancen übersetzen`
+            }
+            description={
+              locale === "en"
+                ? "Use this overview to spot the right state first, then switch to the bridge-day view for the same year when you want the most efficient leave windows."
+                : "Nutzen Sie diese Übersicht, um zuerst das richtige Bundesland einzugrenzen. Wechseln Sie danach in die Brückentage-Ansicht desselben Jahres für die effizientesten Urlaubsfenster."
+            }
+            primaryHref={localizePath(deRoutes.countryBridgesYear(year), locale)}
+            primaryLabel={
+              locale === "en" ? `Open bridge days Germany ${year}` : `Brückentage Deutschland ${year} öffnen`
+            }
+            source={`germany_country_${kind}_hero`}
+            eventName="guide_click"
+            destination={deRoutes.countryBridgesYear(year)}
+            trustItems={
+              locale === "en"
+                ? ["Official sources", "Free", "No account", "State-by-state"]
+                : ["Offizielle Quellen", "Kostenlos", "Ohne Konto", "Nach Bundesland"]
+            }
+          />
+        </Reveal>
+      ) : null}
       <Reveal>
         <section className="editorial-panel">
           <p className="editorial-kicker">
@@ -749,6 +780,17 @@ export function GermanyCountryYearPage({
           </section>
         </Reveal>
       ) : null}
+      <Reveal>
+        <FaqListSection
+          kicker={locale === "en" ? "FAQ" : "FAQ"}
+          title={
+            locale === "en"
+              ? `Questions about ${titleMap[kind]}`
+              : `Häufige Fragen zu ${titleMap[kind]}`
+          }
+          items={faqItems}
+        />
+      </Reveal>
       <LinkGrid
         locale={locale}
         title={locale === "en" ? "All states for this year" : "Alle Bundesländer für dieses Jahr"}
@@ -852,6 +894,33 @@ export function GermanyStateHolidaysPage({
         language={locale}
       />
       <Reveal>
+        <PrimaryActionPanel
+          language={locale}
+          title={
+            locale === "en"
+              ? `Check the best bridge days in ${displayState} ${year}`
+              : `Die besten Brückentage in ${displayState} ${year} prüfen`
+          }
+          description={
+            locale === "en"
+              ? "These holidays are the legal base. The bridge-day page for the same state turns them into concrete long-weekend opportunities."
+              : "Diese Feiertage sind die gesetzliche Basis. Die Brückentage-Seite desselben Bundeslands macht daraus konkrete lange Wochenenden."
+          }
+          primaryHref={localizePath(deRoutes.stateBridgesYear(year, state), locale)}
+          primaryLabel={
+            locale === "en" ? `Open bridge days ${displayState} ${year}` : `Brückentage ${displayState} ${year} öffnen`
+          }
+          source="germany_state_holidays_hero"
+          eventName="guide_click"
+          destination={deRoutes.stateBridgesYear(year, state)}
+          trustItems={
+            locale === "en"
+              ? ["Official sources", "Free", "No account", "State-specific"]
+              : ["Offizielle Quellen", "Kostenlos", "Ohne Konto", "Landesspezifisch"]
+          }
+        />
+      </Reveal>
+      <Reveal>
         <section className="editorial-panel space-y-5">
           <p className="editorial-kicker">
             {locale === "en" ? "Why this state differs" : "Warum dieses Bundesland anders ist"}
@@ -896,6 +965,17 @@ export function GermanyStateHolidaysPage({
             ))}
           </div>
         </section>
+      </Reveal>
+      <Reveal>
+        <FaqListSection
+          kicker={locale === "en" ? "FAQ" : "FAQ"}
+          title={
+            locale === "en"
+              ? `Questions about public holidays in ${displayState} ${year}`
+              : `Häufige Fragen zu Feiertagen in ${displayState} ${year}`
+          }
+          items={faqItems}
+        />
       </Reveal>
       <OfficialSourcesBlock locale={locale} sources={[meta.holidaySource]} />
       <LinkGrid
@@ -1076,6 +1156,17 @@ export function GermanyStateBridgesPage({
           </div>
         </section>
       </Reveal>
+      <Reveal>
+        <FaqListSection
+          kicker={locale === "en" ? "FAQ" : "FAQ"}
+          title={
+            locale === "en"
+              ? `Questions about bridge days in ${displayState} ${year}`
+              : `Häufige Fragen zu Brückentagen in ${displayState} ${year}`
+          }
+          items={faqItems}
+        />
+      </Reveal>
       <OfficialSourcesBlock locale={locale} sources={[meta.holidaySource]} />
       <LinkGrid
         locale={locale}
@@ -1205,6 +1296,33 @@ export function GermanyStateSchoolHolidaysPage({
         language={locale}
       />
       <Reveal>
+        <PrimaryActionPanel
+          language={locale}
+          title={
+            locale === "en"
+              ? `Match school holidays with bridge days in ${displayState} ${year}`
+              : `Schulferien und Brückentage in ${displayState} ${year} zusammenlesen`
+          }
+          description={
+            locale === "en"
+              ? "Read the family calendar first, then switch to the bridge-day page for the same state when you want the most efficient extensions."
+              : "Lesen Sie zuerst den Familienkalender. Wechseln Sie danach auf die Brückentage-Seite desselben Bundeslands für die effizientesten Verlängerungen."
+          }
+          primaryHref={localizePath(deRoutes.stateBridgesYear(year, state), locale)}
+          primaryLabel={
+            locale === "en" ? `Open bridge days ${displayState} ${year}` : `Brückentage ${displayState} ${year} öffnen`
+          }
+          source="germany_state_school_hero"
+          eventName="guide_click"
+          destination={deRoutes.stateBridgesYear(year, state)}
+          trustItems={
+            locale === "en"
+              ? ["KMK source", "Free", "No account", "Family focus"]
+              : ["KMK-Quelle", "Kostenlos", "Ohne Konto", "Familienfokus"]
+          }
+        />
+      </Reveal>
+      <Reveal>
         <section className="editorial-panel">
           <p className="editorial-kicker">
             {locale === "en" ? "Why this state differs" : "Warum dieses Bundesland anders ist"}
@@ -1249,6 +1367,17 @@ export function GermanyStateSchoolHolidaysPage({
             ))}
           </div>
         </section>
+      </Reveal>
+      <Reveal>
+        <FaqListSection
+          kicker={locale === "en" ? "FAQ" : "FAQ"}
+          title={
+            locale === "en"
+              ? `Questions about school holidays in ${displayState} ${year}`
+              : `Häufige Fragen zu Schulferien in ${displayState} ${year}`
+          }
+          items={faqItems}
+        />
       </Reveal>
       <OfficialSourcesBlock locale={locale} sources={[meta.schoolSource]} />
       <LinkGrid

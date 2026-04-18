@@ -6,7 +6,9 @@ import { enUS, fr } from "date-fns/locale";
 import { AuthorityBlock } from "@/components/content/authority-block";
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { ContentHero } from "@/components/content/content-hero";
+import { FaqListSection } from "@/components/content/faq-list-section";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
+import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
 import { RelatedLinks } from "@/components/content/related-links";
 import { SchoolPeriodCard } from "@/components/content/school-period-card";
 import { Reveal } from "@/components/motion/reveal";
@@ -81,6 +83,27 @@ export function SchoolHolidaysBridgesYearPage({
       <p className="text-sm font-medium text-ink/60">
         {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
       </p>
+
+      <Reveal>
+        <PrimaryActionPanel
+          language={language}
+          title={
+            language === "en"
+              ? `Check family-friendly bridge windows for ${year}`
+              : `Vérifier les ponts famille ${year}`
+          }
+          description={
+            language === "en"
+              ? "Pick the right zone first, then open the planner with that zone to decide whether you want to align with school breaks, avoid them, or accept overlap."
+              : "Choisissez d’abord la bonne zone, puis ouvrez le simulateur avec cette zone pour décider si vous voulez coller aux vacances, les éviter ou accepter un chevauchement."
+          }
+          primaryHref={prefixForLanguage(routes.home, language)}
+          primaryLabel={language === "en" ? "Open the planner with my zone" : "Voir les meilleurs ponts"}
+          source="school_holidays_year_hero"
+          eventName="guide_click"
+          destination={routes.home}
+        />
+      </Reveal>
 
       <ZoneLookupPanel
         language={language}
@@ -338,6 +361,43 @@ export function SchoolHolidaysBridgesYearPage({
             : []),
         ]}
       />
+      <Reveal>
+        <FaqListSection
+          kicker={language === "en" ? "FAQ" : "FAQ"}
+          title={
+            language === "en"
+              ? `Family planning questions for ${year}`
+              : `Questions fréquentes famille ${year}`
+          }
+          items={
+            language === "en"
+              ? [
+                  {
+                    question: `Should I start with my school zone or the planner in ${year}?`,
+                    answer:
+                      "Start with the correct zone on this page, then send that zone into the planner once you want to test exact dates and leave overlap rules.",
+                  },
+                  {
+                    question: "Why do school holidays change the value of the same bridge?",
+                    answer:
+                      "The same public holiday can be useful, neutral or crowded depending on whether your family wants to extend school breaks or avoid them.",
+                  },
+                ]
+              : [
+                  {
+                    question: `Faut-il commencer par la zone scolaire ou par le simulateur en ${year} ?`,
+                    answer:
+                      "Commencez par la bonne zone sur cette page, puis envoyez cette zone dans le simulateur quand vous voulez tester des dates exactes et vos règles de chevauchement.",
+                  },
+                  {
+                    question: "Pourquoi les vacances scolaires changent-elles la valeur d’un même pont ?",
+                    answer:
+                      "Un même jour férié peut être utile, neutre ou saturé selon que la famille veut prolonger les vacances scolaires ou au contraire les éviter.",
+                  },
+                ]
+          }
+        />
+      </Reveal>
     </PageShell>
   );
 }

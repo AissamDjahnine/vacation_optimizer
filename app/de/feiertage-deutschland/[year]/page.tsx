@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ year: str
     notFound();
   }
   return buildGermanMetadata({
-    title: `Feiertage ${year}: Deutschland nach Bundesland`,
-    description: `Alle Feiertage ${year} in Deutschland mit Fokus auf bundeseinheitliche und landesspezifische Unterschiede.`,
+    title: `Feiertage Deutschland ${year}: alle Termine nach Bundesland`,
+    description: `Alle Feiertage Deutschland ${year} mit Fokus auf bundeseinheitliche und landesspezifische Unterschiede sowie den schnellsten Weg zu den relevanten Brückentagen.`,
     externalPath: `/feiertage-deutschland/${year}`,
   });
 }
@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: Promise<{ year: string 
     <GermanyCountryYearPage
       kind="holidays"
       year={year}
-      summary={`Die Feiertagsübersicht für Deutschland ${year}, mit klarem Fokus auf Unterschiede zwischen den Bundesländern.`}
+      summary={`Die Feiertagsübersicht für Deutschland ${year}, mit klarem Fokus auf Unterschiede zwischen den Bundesländern und die daraus entstehenden Brückentag-Chancen.`}
       sources={germanNationalSources}
     />
   );

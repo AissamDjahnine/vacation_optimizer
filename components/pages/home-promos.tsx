@@ -7,9 +7,11 @@ import { routes } from "@/lib/routes";
 
 const popularLinks = [
   { href: routes.annualPlannerYear(2026), fr: "Plan annuel 2026", en: "Annual plan 2026" },
-  { href: routes.rtt2027, fr: "RTT 2027", en: "RTT 2027" },
+  { href: routes.bridgesYear(2026), fr: "Ponts 2026", en: "Bridge ideas 2026" },
+  { href: routes.holidaysYear(2026), fr: "Jours fériés 2026", en: "Public holidays 2026" },
   { href: routes.schoolHolidaysFamily2026, fr: "Vacances scolaires 2026", en: "School holidays 2026" },
   { href: routes.leaveGuide2026, fr: "Guide congés 2026", en: "Leave guide 2026" },
+  { href: routes.mayBridges2026, fr: "Ponts de mai 2026", en: "May bridge days 2026" },
 ] as const;
 
 export function HomePromos({ language }: { language: AppLanguage }) {

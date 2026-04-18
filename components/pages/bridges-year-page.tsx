@@ -1,6 +1,8 @@
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { ContentHero } from "@/components/content/content-hero";
+import { FaqListSection } from "@/components/content/faq-list-section";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
+import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
 import { RelatedLinks } from "@/components/content/related-links";
 import { Reveal } from "@/components/motion/reveal";
 import { ResultCard } from "@/components/planner/result-card";
@@ -94,6 +96,27 @@ export function BridgesYearPage({
       <p className="text-sm font-medium text-ink/60">
         {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
       </p>
+
+      <Reveal>
+        <PrimaryActionPanel
+          language={language}
+          title={
+            language === "en"
+              ? `Open the strongest bridge windows for ${year}`
+              : `Ouvrir les meilleurs ponts ${year}`
+          }
+          description={
+            language === "en"
+              ? "This page narrows the year down fast. Switch to the planner as soon as one month looks promising enough for your exact leave budget."
+              : "Cette page réduit l’année rapidement. Passez au simulateur dès qu’un mois semble assez prometteur pour votre vrai budget de congés."
+          }
+          primaryHref={prefixForLanguage(routes.home, language)}
+          primaryLabel={language === "en" ? "Open the planner" : "Voir les meilleurs ponts"}
+          source="bridges_year_hero"
+          eventName="guide_click"
+          destination={routes.home}
+        />
+      </Reveal>
 
       <Reveal>
         <section className="editorial-panel space-y-6">
@@ -213,6 +236,8 @@ export function BridgesYearPage({
             period={period}
             rank={index + 1}
             highlighted={index === 0}
+            travelSource="annual_page"
+            pageType="bridges_year"
           />
         ))}
 
@@ -248,6 +273,8 @@ export function BridgesYearPage({
                   language={language}
                   period={period}
                   rank={topPeriods.length + index + 1}
+                  travelSource="annual_page"
+                  pageType="bridges_year"
                 />
               ))}
             </div>
@@ -277,6 +304,43 @@ export function BridgesYearPage({
           { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
         ]}
       />
+      <Reveal>
+        <FaqListSection
+          kicker={language === "en" ? "FAQ" : "FAQ"}
+          title={
+            language === "en"
+              ? `Bridge-day questions for ${year}`
+              : `Questions fréquentes sur les ponts ${year}`
+          }
+          items={
+            language === "en"
+              ? [
+                  {
+                    question: `How should I use bridge ideas ${year} first?`,
+                    answer:
+                      "Use the strongest months on this page as a shortlist, then reopen the same month in the planner with your real leave budget and RTT settings.",
+                  },
+                  {
+                    question: `Why are the first bridge cards the most useful?`,
+                    answer:
+                      "They surface the best leave-efficiency ratio first, so you avoid testing weak months that are unlikely to beat the top windows.",
+                  },
+                ]
+              : [
+                  {
+                    question: `Comment utiliser d’abord les ponts ${year} ?`,
+                    answer:
+                      "Prenez les meilleurs mois de cette page comme présélection, puis rouvrez le même mois dans le simulateur avec votre vrai budget de congés et vos RTT.",
+                  },
+                  {
+                    question: `Pourquoi les premières cartes sont-elles les plus utiles ?`,
+                    answer:
+                      "Elles font remonter d’abord les meilleurs ratios jours gagnés / jours posés, ce qui évite de perdre du temps sur des mois faibles.",
+                  },
+                ]
+          }
+        />
+      </Reveal>
     </PageShell>
   );
 }

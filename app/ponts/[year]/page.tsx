@@ -20,8 +20,8 @@ export async function generateMetadata({
     return buildNotFoundMetadata("fr");
   }
   return buildMetadata({
-    title: `Ponts ${year} en France : meilleurs mois à tester`,
-    description: `Les meilleurs mois et les meilleurs ponts ${year} à tester en France avant de revenir au simulateur avec votre budget exact.`,
+    title: `Ponts ${year} en France : meilleurs week-ends prolongés à tester`,
+    description: `Les meilleurs ponts ${year} à tester en France, les mois à ouvrir en premier et les cas qui méritent un vrai calcul dans le simulateur.`,
     path: `/ponts/${year}`,
     enPath: `/en/ponts/${year}`,
   });

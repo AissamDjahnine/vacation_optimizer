@@ -1,4 +1,5 @@
 import { AuthorityBlock } from "@/components/content/authority-block";
+import { FaqListSection } from "@/components/content/faq-list-section";
 import { schoolAuthority2026Block } from "@/content/official-cases";
 import { schoolHolidaysFamily2026Content } from "@/content/school-holidays-family-2026";
 import { GenericGuidePage } from "@/components/pages/generic-guide-page";
@@ -75,6 +76,41 @@ export function SchoolHolidaysFamily2026Page({
             ))}
             </div>
           </section>
+          <FaqListSection
+            kicker={language === "en" ? "FAQ" : "FAQ"}
+            title={
+              language === "en"
+                ? "Family questions before using school holidays and bridge days"
+                : "Questions fréquentes famille avant d’utiliser vacances scolaires et ponts"
+            }
+            items={
+              language === "en"
+                ? [
+                    {
+                      question: "Should families start with the zone or the examples?",
+                      answer:
+                        "Start with the right zone first. Once the zone is correct, the examples below become much more useful because they match your real school calendar.",
+                    },
+                    {
+                      question: "When should I leave this guide and open the planner?",
+                      answer:
+                        "As soon as one example looks close to your real month or budget. The planner is where you decide whether to extend, avoid or tolerate school-holiday overlap.",
+                    },
+                  ]
+                : [
+                    {
+                      question: "Faut-il commencer par la zone ou par les exemples ?",
+                      answer:
+                        "Commencez par la bonne zone. Une fois la zone confirmée, les exemples deviennent beaucoup plus utiles car ils correspondent à votre vrai calendrier scolaire.",
+                    },
+                    {
+                      question: "Quand quitter ce guide pour ouvrir le simulateur ?",
+                      answer:
+                        "Dès qu’un exemple ressemble à votre vrai mois ou à votre budget. C’est dans le simulateur que vous décidez si vous prolongez, évitez ou tolérez le chevauchement avec les vacances scolaires.",
+                    },
+                  ]
+            }
+          />
           </section>
         </Reveal>
       }

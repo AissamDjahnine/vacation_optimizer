@@ -3,6 +3,7 @@ import Script from "next/script";
 import { ContentHero } from "@/components/content/content-hero";
 import { ContentSectionCard } from "@/components/content/content-section-card";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
+import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
 import { RelatedLinks } from "@/components/content/related-links";
 import { Reveal } from "@/components/motion/reveal";
 import type { GuideContent } from "@/content/content-models";
@@ -57,17 +58,48 @@ export function GenericGuidePage({
               <p className="mt-4 text-base leading-7 text-ink/74">
                 {language === "en"
                   ? "These pages are meant to answer one concrete planning question fast. The planner remains the place where your budget, RTT and school-holiday settings actually decide."
-                  : "Ces pages sont là pour répondre vite à une question concrète. Le simulateur reste l’endroit où votre budget, vos RTT et vos réglages vacances scolaires décident vraiment."}
+                  : language === "de"
+                    ? "Diese Seiten beantworten eine konkrete Planungsfrage schnell. Die eigentliche Entscheidung fällt aber erst dort, wo Budget, Urlaubstage und Familienlogik zusammenkommen."
+                    : "Ces pages sont là pour répondre vite à une question concrète. Le simulateur reste l’endroit où votre budget, vos RTT et vos réglages vacances scolaires décident vraiment."}
               </p>
-              <Link
-                href={prefixForLanguage(routes.home, language)}
-                className="mt-5 inline-flex rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink transition hover:border-coral hover:text-coral"
-              >
-                {language === "en" ? "Open the planner now" : "Ouvrir le simulateur maintenant"}
-              </Link>
             </div>
           </div>
         </section>
+      </Reveal>
+      <Reveal>
+        <PrimaryActionPanel
+          language={language}
+          title={
+            language === "en"
+              ? "Validate this guide with your real settings"
+              : language === "de"
+                ? "Diesen Ratgeber mit Ihren echten Einstellungen prüfen"
+                : "Valider ce guide avec vos vrais réglages"
+          }
+          description={
+            language === "en"
+              ? "Use the planner once one scenario looks close to your real leave budget, month, or family constraints."
+              : language === "de"
+                ? "Sobald ein Szenario zu Ihrem echten Budget, Monat oder Familienkontext passt, sollten Sie es im passenden Einstieg validieren."
+                : "Dès qu’un scénario ressemble à votre vrai budget, à votre mois cible ou à vos contraintes famille, validez-le dans le simulateur."
+          }
+          primaryHref={prefixForLanguage(routes.home, language)}
+          primaryLabel={
+            language === "en"
+              ? "Open the planner now"
+              : language === "de"
+                ? "Zum Planer"
+                : "Ouvrir le simulateur"
+          }
+          source="guide_intro"
+          eventName="guide_click"
+          destination={routes.home}
+          trustItems={
+            language === "de"
+              ? ["Offizielle Quellen", "Kostenlos", "Ohne Konto", "Direkte Einstiege"]
+              : undefined
+          }
+        />
       </Reveal>
       {extraBlocks}
       {content.sections.map((section, index) => (

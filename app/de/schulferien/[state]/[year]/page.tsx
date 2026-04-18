@@ -23,8 +23,8 @@ export async function generateMetadata({
   }
 
   return buildGermanMetadata({
-    title: `Schulferien ${state.name} ${year}: Ferienzeiten`,
-    description: `Die Schulferien in ${state.name} ${year} mit KMK-Quelle und klaren Zeitfenstern für Familienplanung.`,
+    title: `Schulferien ${state.name} ${year}: alle Ferienzeiten im Überblick`,
+    description: `Die Schulferien in ${state.name} ${year} mit KMK-Quelle, klaren Zeitfenstern für Familien und direktem Weg zu passenden Brückentagen.`,
     externalPath: `/schulferien/${state.slug}/${year}`,
   });
 }

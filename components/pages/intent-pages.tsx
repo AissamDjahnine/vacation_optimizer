@@ -1,4 +1,5 @@
 import { AuthorityBlock } from "@/components/content/authority-block";
+import { FaqListSection } from "@/components/content/faq-list-section";
 import { HolidayTable } from "@/components/content/holiday-table";
 import { SchoolPeriodCard } from "@/components/content/school-period-card";
 import { GenericGuidePage } from "@/components/pages/generic-guide-page";
@@ -69,6 +70,8 @@ export function Ascension2026Page({
                   period={period}
                   rank={index + 1}
                   highlighted={index === 0}
+                  travelSource="guide_page"
+                  pageType="guide_page"
                 />
               ))}
             </div>
@@ -101,27 +104,62 @@ export function MayBridges2026Page({
       content={mayBridges2026Content}
       path={prefixForLanguage(routes.mayBridges2026, language)}
       extraBlocks={
-        <section className="editorial-panel">
-          <div className="space-y-3">
-            <p className="editorial-kicker">{language === "en" ? "Shortlist" : "Short-list"}</p>
-            <h2 className="text-3xl font-black tracking-tight text-ink">
-              {language === "en"
-                ? "The first May cases worth opening"
-                : "Les premiers cas de mai à ouvrir"}
-            </h2>
-          </div>
-          <div className="mt-6 space-y-6">
-            {mayResults.map((period, index) => (
-              <ResultCard
-                key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
-                language={language}
-                period={period}
-                rank={index + 1}
-                highlighted={index === 0}
-              />
-            ))}
-          </div>
-        </section>
+        <div className="grid gap-6">
+          <section className="editorial-panel">
+            <div className="space-y-3">
+              <p className="editorial-kicker">{language === "en" ? "Shortlist" : "Short-list"}</p>
+              <h2 className="text-3xl font-black tracking-tight text-ink">
+                {language === "en"
+                  ? "The first May cases worth opening"
+                  : "Les premiers cas de mai à ouvrir"}
+              </h2>
+            </div>
+            <div className="mt-6 space-y-6">
+              {mayResults.map((period, index) => (
+                <ResultCard
+                  key={`${period.startDate.toISOString()}-${period.endDate.toISOString()}`}
+                  language={language}
+                  period={period}
+                  rank={index + 1}
+                  highlighted={index === 0}
+                  travelSource="guide_page"
+                  pageType="guide_page"
+                />
+              ))}
+            </div>
+          </section>
+          <FaqListSection
+            kicker={language === "en" ? "FAQ" : "FAQ"}
+            title={language === "en" ? "Questions about May bridge days" : "Questions fréquentes sur les ponts de mai"}
+            items={
+              language === "en"
+                ? [
+                    {
+                      question: "Which May holiday should I test first in 2026?",
+                      answer:
+                        "Start with the first card on this page, then compare it with the other May windows using your exact leave budget in the planner.",
+                    },
+                    {
+                      question: "Why are May bridge days so valuable?",
+                      answer:
+                        "May often clusters public holidays close to weekends, which makes it one of the fastest months for finding long breaks with few leave days.",
+                    },
+                  ]
+                : [
+                    {
+                      question: "Quel pont de mai faut-il tester en premier en 2026 ?",
+                      answer:
+                        "Commencez par la première carte de cette page, puis comparez-la aux autres fenêtres de mai avec votre budget exact dans le simulateur.",
+                    },
+                    {
+                      question: "Pourquoi les ponts de mai sont-ils si utiles ?",
+                      answer:
+                        "Mai regroupe souvent plusieurs jours fériés proches des week-ends, ce qui en fait l’un des mois les plus rapides pour obtenir de longues coupures avec peu de jours posés.",
+                    },
+                  ]
+            }
+          />
+        </div>
       }
     />
   );
@@ -164,6 +202,8 @@ export function Armistice2026Page({
                 period={period}
                 rank={index + 1}
                 highlighted={index === 0}
+                travelSource="guide_page"
+                pageType="guide_page"
               />
             ))}
           </div>
@@ -210,6 +250,8 @@ export function YearEnd2026Page({
                 period={period}
                 rank={index + 1}
                 highlighted={index === 0}
+                travelSource="guide_page"
+                pageType="guide_page"
               />
             ))}
           </div>
@@ -384,6 +426,8 @@ export function Rtt2027Page({
                   period={period}
                   rank={index + 1}
                   highlighted={index === 0}
+                  travelSource="guide_page"
+                  pageType="guide_page"
                 />
               ))}
             </div>
@@ -480,6 +524,8 @@ export function LeaveBudgetGuide2026Page({
                 period={period}
                 rank={index + 1}
                 highlighted={index === 0}
+                travelSource="guide_page"
+                pageType="guide_page"
               />
             ))}
           </div>
@@ -532,6 +578,8 @@ export function Assumption2026Page({
                 period={period}
                 rank={index + 1}
                 highlighted={index === 0}
+                travelSource="guide_page"
+                pageType="guide_page"
               />
             ))}
           </div>
@@ -584,6 +632,8 @@ export function AllSaints2026Page({
                 period={period}
                 rank={index + 1}
                 highlighted={index === 0}
+                travelSource="guide_page"
+                pageType="guide_page"
               />
             ))}
           </div>

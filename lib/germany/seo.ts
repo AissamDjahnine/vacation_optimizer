@@ -32,7 +32,7 @@ export function buildGermanSitemapEntry(
   externalPath: string,
   priority: number,
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
-  lastModified = new Date("2026-03-19T12:00:00.000Z"),
+  lastModified = new Date("2026-04-17T12:00:00.000Z"),
 ): MetadataRoute.Sitemap[number] {
   return {
     url: `${germanyBaseUrl}${externalPath}`,

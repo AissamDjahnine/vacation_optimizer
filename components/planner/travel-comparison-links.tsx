@@ -42,6 +42,11 @@ export function TravelComparisonLinks({
   className,
   compact = false,
   title = true,
+  source = "planner_result",
+  pageType = "planner_result",
+  rank,
+  daysOff,
+  leaveDaysUsed,
 }: {
   language: AppLanguage;
   startDate: Date;
@@ -49,6 +54,11 @@ export function TravelComparisonLinks({
   className?: string;
   compact?: boolean;
   title?: boolean;
+  source?: "planner_result" | "annual_page" | "guide_page" | "home_banner";
+  pageType?: string;
+  rank?: number;
+  daysOff?: number;
+  leaveDaysUsed?: number;
 }) {
   return (
     <div className={cn("space-y-3", className)}>
@@ -71,14 +81,24 @@ export function TravelComparisonLinks({
             href={provider.href}
             target="_blank"
             rel="noreferrer"
-            onClick={() =>
-              trackEvent("outbound_travel_compare", {
+            onClick={() => {
+              const basePayload = {
+                language,
+                source,
+                page_type: pageType,
                 provider: provider.id,
-                context: "planner_result",
+                year: startDate.getFullYear(),
+                month: startDate.getMonth() + 1,
+                rank,
+                days_off: daysOff,
+                leave_days_used: leaveDaysUsed,
                 start_date: startDate.toISOString().slice(0, 10),
                 end_date: endDate.toISOString().slice(0, 10),
-              })
-            }
+              };
+
+              trackEvent("result_cta_click", basePayload);
+              trackEvent("outbound_travel_compare", basePayload);
+            }}
             className={cn(
               "inline-flex h-11 w-full items-center justify-center rounded-2xl border px-4 py-2 text-sm font-bold shadow-sm transition hover:-translate-y-0.5",
               provider.className,

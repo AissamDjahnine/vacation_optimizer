@@ -20,8 +20,8 @@ export async function generateMetadata({
     return buildNotFoundMetadata("fr");
   }
   return buildMetadata({
-    title: `Jours fériés ${year} en France : calendrier complet`,
-    description: `Toutes les dates officielles des jours fériés ${year} en France, avec les repères qui valent un vrai test dans le simulateur.`,
+    title: `Jours fériés ${year} en France : dates, ponts et week-ends prolongés`,
+    description: `Toutes les dates officielles des jours fériés ${year} en France, les ponts à repérer d’abord et le bon moment pour revenir au simulateur.`,
     path: `/jours-feries/${year}`,
     enPath: `/en/jours-feries/${year}`,
   });

@@ -10,6 +10,8 @@ type ResultCardProps = {
   period: BestVacationPeriod;
   rank: number;
   highlighted?: boolean;
+  travelSource?: "planner_result" | "annual_page" | "guide_page" | "home_banner";
+  pageType?: string;
 };
 
 const dayStyles = {
@@ -20,7 +22,14 @@ const dayStyles = {
   school: "ring-2 ring-violet-300",
 };
 
-export function ResultCard({ language, period, rank, highlighted = false }: ResultCardProps) {
+export function ResultCard({
+  language,
+  period,
+  rank,
+  highlighted = false,
+  travelSource = "planner_result",
+  pageType = "planner_result",
+}: ResultCardProps) {
   const scoreTooltip =
     language === "en"
       ? "The score compares total days off to the leave days you actually need to book."
@@ -266,6 +275,11 @@ export function ResultCard({ language, period, rank, highlighted = false }: Resu
                   startDate={period.startDate}
                   endDate={period.endDate}
                   compact
+                  source={travelSource}
+                  pageType={pageType}
+                  rank={rank}
+                  daysOff={period.totalDaysOff}
+                  leaveDaysUsed={period.paidLeaveDaysUsed}
                 />
               ) : null}
             </div>

@@ -1,6 +1,8 @@
 import { AuthorityBlock } from "@/components/content/authority-block";
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
+import { FaqListSection } from "@/components/content/faq-list-section";
 import { HolidayTable } from "@/components/content/holiday-table";
+import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
 import { rulesAuthorityBlock } from "@/content/official-cases";
 import { ContentHero } from "@/components/content/content-hero";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
@@ -34,6 +36,7 @@ export function HolidaysYearPage({
     return day === 0 || day === 6;
   });
   const bestBridgeCandidates = weekdayHolidays.slice(0, 3);
+  const plannerHref = prefixForLanguage(routes.home, language);
   const updatedOn = new Intl.DateTimeFormat(language === "en" ? "en-US" : "fr-FR", {
     day: "numeric",
     month: "long",
@@ -69,6 +72,27 @@ export function HolidaysYearPage({
       <p className="text-sm font-medium text-ink/60">
         {language === "en" ? `Last updated: ${updatedOn}` : `Dernière mise à jour : ${updatedOn}`}
       </p>
+
+      <Reveal>
+        <PrimaryActionPanel
+          language={language}
+          title={
+            language === "en"
+              ? `Turn the ${year} calendar into real bridge ideas`
+              : `Transformer le calendrier ${year} en vrais ponts`
+          }
+          description={
+            language === "en"
+              ? "Use the official holiday dates as a shortlist, then open the planner to see which weekdays actually create the best days off for your budget."
+              : "Utilisez les dates officielles comme présélection, puis ouvrez le simulateur pour voir quels jours fériés créent vraiment les meilleurs ponts selon votre budget."
+          }
+          primaryHref={plannerHref}
+          primaryLabel={language === "en" ? "Open the planner" : "Voir les meilleurs ponts"}
+          source="holidays_year_hero"
+          eventName="guide_click"
+          destination={routes.home}
+        />
+      </Reveal>
 
       <AuthorityBlock block={rulesAuthorityBlock} language={language} />
 
@@ -196,6 +220,43 @@ export function HolidaysYearPage({
           { href: routes.home, label: { fr: "Retour au simulateur", en: "Back to planner" } },
         ]}
       />
+      <Reveal>
+        <FaqListSection
+          kicker={language === "en" ? "FAQ" : "FAQ"}
+          title={
+            language === "en"
+              ? `Questions people ask before using public holidays ${year}`
+              : `Questions fréquentes avant d’utiliser les jours fériés ${year}`
+          }
+          items={
+            language === "en"
+              ? [
+                  {
+                    question: `How should I use public holidays ${year} first?`,
+                    answer:
+                      "Start with the weekday holidays, then open the planner on the matching month to see whether one leave day unlocks a longer break.",
+                  },
+                  {
+                    question: `Do all public holidays ${year} create a bridge opportunity?`,
+                    answer:
+                      "No. Weekend holidays rarely change anything. The useful cases are the holidays that land near a Friday, Monday or a short leave window.",
+                  },
+                ]
+              : [
+                  {
+                    question: `Comment utiliser d’abord les jours fériés ${year} ?`,
+                    answer:
+                      "Commencez par les jours fériés qui tombent en semaine, puis ouvrez le simulateur sur le mois concerné pour voir si un ou deux jours posés suffisent à créer un vrai pont.",
+                  },
+                  {
+                    question: `Tous les jours fériés ${year} créent-ils un pont ?`,
+                    answer:
+                      "Non. Ceux qui tombent le week-end changent rarement quelque chose. Les cas utiles sont surtout ceux proches d’un vendredi, d’un lundi ou d’une courte fenêtre de congés.",
+                  },
+                ]
+          }
+        />
+      </Reveal>
     </PageShell>
   );
 }
