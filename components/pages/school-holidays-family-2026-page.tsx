@@ -78,6 +78,7 @@ export function SchoolHolidaysFamily2026Page({
           </section>
           <FaqListSection
             kicker={language === "en" ? "FAQ" : "FAQ"}
+            schemaId={`faq-school-family-2026-${language}`}
             title={
               language === "en"
                 ? "Family questions before using school holidays and bridge days"

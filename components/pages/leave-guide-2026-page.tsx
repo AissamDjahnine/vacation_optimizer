@@ -52,6 +52,7 @@ export function LeaveGuide2026Page({ language }: { language: AppLanguage }) {
           <Reveal>
             <FaqListSection
               kicker={language === "en" ? "FAQ" : "FAQ"}
+              schemaId={`faq-leave-guide-2026-${language}`}
               title={
                 language === "en"
                   ? "Questions before booking leave in 2026"

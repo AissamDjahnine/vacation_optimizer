@@ -366,6 +366,7 @@ export function SchoolHolidaysBridgesYearPage({
       <Reveal>
         <FaqListSection
           kicker={language === "en" ? "FAQ" : "FAQ"}
+          schemaId={`faq-school-holidays-year-${language}-${year}`}
           title={
             language === "en"
               ? `Family planning questions for ${year}`

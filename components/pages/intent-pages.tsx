@@ -130,6 +130,7 @@ export function MayBridges2026Page({
           </section>
           <FaqListSection
             kicker={language === "en" ? "FAQ" : "FAQ"}
+            schemaId={`faq-may-bridges-2026-${language}`}
             title={language === "en" ? "Questions about May bridge days" : "Questions fréquentes sur les ponts de mai"}
             items={
               language === "en"

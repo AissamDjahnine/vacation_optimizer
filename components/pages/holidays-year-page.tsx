@@ -225,6 +225,7 @@ export function HolidaysYearPage({
       <Reveal>
         <FaqListSection
           kicker={language === "en" ? "FAQ" : "FAQ"}
+          schemaId={`faq-holidays-year-${language}-${year}`}
           title={
             language === "en"
               ? `Questions people ask before using public holidays ${year}`

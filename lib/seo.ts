@@ -207,3 +207,44 @@ export function buildBreadcrumbSchema(items: BreadcrumbItem[]) {
     })),
   };
 }
+
+export type FaqSchemaItem = {
+  question: string;
+  answer: string;
+};
+
+export function buildFaqPageSchema(items: FaqSchemaItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function buildItemListSchema({
+  name,
+  items,
+}: {
+  name: string;
+  items: Array<{ name: string; url: string; description?: string }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: toAbsoluteUrl(item.url),
+      description: item.description,
+    })),
+  };
+}

@@ -309,6 +309,7 @@ export function BridgesYearPage({
       <Reveal>
         <FaqListSection
           kicker={language === "en" ? "FAQ" : "FAQ"}
+          schemaId={`faq-bridges-year-${language}-${year}`}
           title={
             language === "en"
               ? `Bridge-day questions for ${year}`

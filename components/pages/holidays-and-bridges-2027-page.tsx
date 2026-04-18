@@ -4,6 +4,7 @@ import { AuthorityBlock } from "@/components/content/authority-block";
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { ContentHero } from "@/components/content/content-hero";
 import { HolidayTable } from "@/components/content/holiday-table";
+import { LinkHubSection } from "@/components/content/link-hub-section";
 import { PageShell, defaultPageAside } from "@/components/content/page-shell";
 import { trackEvent } from "@/lib/analytics";
 import { RelatedLinks } from "@/components/content/related-links";
@@ -184,10 +185,81 @@ export function HolidaysAndBridges2027Page({
         </section>
       </Reveal>
 
+      <LinkHubSection
+        language={language}
+        kicker={language === "en" ? "Popular hubs" : "Hubs populaires"}
+        title={
+          language === "en"
+            ? "Main pages to keep 2027 planning crawlable"
+            : "Pages principales pour garder la planification 2027 bien reliée"
+        }
+        intro={
+          language === "en"
+            ? "These pages reinforce the 2027 cluster with nearby 2026 hubs, planner entry points, and the strongest seasonal bridge pages."
+            : "Ces pages renforcent le cluster 2027 avec les hubs 2026 voisins, les entrées du simulateur et les pages de ponts saisonnières les plus fortes."
+        }
+        source="holidays_and_bridges_2027_hub"
+        pageType="guide_hub_2027"
+        schemaId={`guide-hub-2027-${language}`}
+        items={[
+          {
+            href: routes.annualPlannerYear(2027),
+            title: language === "en" ? "Annual plan 2027" : "Plan annuel 2027",
+            body:
+              language === "en"
+                ? "Spread the 2027 leave budget across the full year once one promising season stands out."
+                : "Répartir le budget 2027 sur l’année entière dès qu’une saison prometteuse se détache.",
+          },
+          {
+            href: routes.bridgesYear(2027),
+            title: language === "en" ? "Bridge ideas 2027" : "Ponts 2027",
+            body:
+              language === "en"
+                ? "A bridge-focused reading of the same year, useful right after the holiday overview."
+                : "Une lecture orientée ponts de la même année, utile juste après la vue jours fériés.",
+          },
+          {
+            href: routes.holidaysYear(2027),
+            title: language === "en" ? "Public holidays 2027" : "Jours fériés 2027",
+            body:
+              language === "en"
+                ? "The official holiday reference behind the 2027 planning scenarios."
+                : "Le repère officiel des jours fériés derrière les scénarios de planification 2027.",
+          },
+          {
+            href: routes.schoolHolidaysBridgesYear(2027),
+            title:
+              language === "en" ? "School holidays and bridges 2027" : "Vacances scolaires et ponts 2027",
+            body:
+              language === "en"
+                ? "The family-planning version of the same year, useful for school-zone overlap decisions."
+                : "La version famille de la même année, utile pour les décisions de chevauchement avec les zones scolaires.",
+          },
+          {
+            href: routes.mayBridges2026,
+            title: language === "en" ? "May bridge days 2026" : "Ponts de mai 2026",
+            body:
+              language === "en"
+                ? "A proven seasonal template to compare against the first promising 2027 month."
+                : "Un modèle saisonnier éprouvé à comparer avec le premier mois prometteur de 2027.",
+          },
+          {
+            href: routes.leaveGuide2026,
+            title: language === "en" ? "Leave guide 2026" : "Guide congés 2026",
+            body:
+              language === "en"
+                ? "An editorial planning entry point that still supports early 2027 decision patterns."
+                : "Une entrée éditoriale de planification qui aide encore pour les premiers arbitrages 2027.",
+          },
+        ]}
+      />
+
       <RelatedLinks
         title={language === "en" ? "Continue reading" : "Aller plus loin"}
         links={holidaysAndBridges2027Content.relatedLinks ?? []}
         language={language}
+        source="holidays_and_bridges_2027_related"
+        pageType="guide_page"
       />
     </PageShell>
   );
