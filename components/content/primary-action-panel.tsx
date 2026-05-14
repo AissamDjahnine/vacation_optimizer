@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { trackEvent } from "@/lib/analytics";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import type { AppLanguage } from "@/lib/i18n";
 
 type PrimaryActionPanelProps = {
@@ -56,21 +55,20 @@ export function PrimaryActionPanel({
           <p className="max-w-3xl text-base leading-7 text-ink/72 sm:text-lg">{description}</p>
         </div>
         <div className="rounded-[1.8rem] border border-line bg-slate-50/70 p-5">
-          <Link
+          <TrackedLink
             href={primaryHref}
-            onClick={() =>
-              trackEvent(eventName, {
-                language,
-                source,
-                page_type: pageType,
-                year,
-                destination: destination ?? primaryHref,
-              })
-            }
+            analyticsEvent={eventName}
+            analyticsParams={{
+              language,
+              source,
+              page_type: pageType,
+              year,
+              destination: destination ?? primaryHref,
+            }}
             className="inline-flex w-full items-center justify-center rounded-full bg-coral px-6 py-3 text-center text-lg font-bold text-white transition hover:-translate-y-0.5 hover:bg-coral/90"
           >
             {primaryLabel}
-          </Link>
+          </TrackedLink>
           <div className="mt-4 flex flex-wrap gap-2">
             {chips.map((item) => (
               <span key={item} className="rounded-full border border-line bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-ink/68">

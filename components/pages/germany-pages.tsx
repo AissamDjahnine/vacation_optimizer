@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { FaqListSection } from "@/components/content/faq-list-section";
-import Link from "next/link";
 import Script from "next/script";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import { ContentHero } from "@/components/content/content-hero";
 import { PageShell } from "@/components/content/page-shell";
 import { PrimaryActionPanel } from "@/components/content/primary-action-panel";
@@ -22,7 +22,6 @@ import { deRoutes, toGermanyExternalPath } from "@/lib/germany/routes";
 import { germanyBaseUrl } from "@/lib/germany/seo";
 import { germanStateMap, germanStates } from "@/lib/germany/states";
 import { formatFullDate, formatShortRange } from "@/lib/formatting";
-import { trackEvent } from "@/lib/analytics";
 import { buildItemListSchema } from "@/lib/seo";
 
 function localizePath(path: string, locale: GermanyLocale) {
@@ -118,18 +117,6 @@ function LinkGrid({
         })),
       })
     : null;
-  const handleClick = (destination: string) => {
-    if (!source || !pageType) {
-      return;
-    }
-    trackEvent("guide_click", {
-      language: locale,
-      source,
-      page_type: pageType,
-      destination,
-    });
-  };
-
   return (
     <Reveal>
       <section className="editorial-panel">
@@ -146,15 +133,21 @@ function LinkGrid({
         <h2 className="mt-3 text-3xl font-black tracking-tight text-ink">{title}</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {visibleLinks.map((link) => (
-            <Link
+            <TrackedLink
               key={link.href}
               href={link.href}
-              onClick={() => handleClick(link.href)}
+              analyticsEvent="guide_click"
+              analyticsParams={{
+                language: locale,
+                source,
+                page_type: pageType,
+                destination: link.href,
+              }}
               className="rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
             >
               <h3 className="text-2xl font-black tracking-tight text-ink">{link.label}</h3>
               <p className="mt-3 text-sm leading-7 text-ink/72">{link.body}</p>
-            </Link>
+            </TrackedLink>
           ))}
         </div>
         {hiddenLinks.length > 0 ? (
@@ -164,15 +157,21 @@ function LinkGrid({
             </summary>
             <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {hiddenLinks.map((link) => (
-                <Link
+                <TrackedLink
                   key={link.href}
                   href={link.href}
-                  onClick={() => handleClick(link.href)}
+                  analyticsEvent="guide_click"
+                  analyticsParams={{
+                    language: locale,
+                    source,
+                    page_type: pageType,
+                    destination: link.href,
+                  }}
                   className="rounded-4xl border border-line bg-paper p-5 shadow-card transition hover:-translate-y-1 hover:border-coral hover:shadow-soft"
                 >
                   <h3 className="text-2xl font-black tracking-tight text-ink">{link.label}</h3>
                   <p className="mt-3 text-sm leading-7 text-ink/72">{link.body}</p>
-                </Link>
+                </TrackedLink>
               ))}
             </div>
           </details>
